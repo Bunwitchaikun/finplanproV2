@@ -1,20 +1,11 @@
-﻿# === Java / Maven ===
-target/
-pom.xml.tag
-pom.xml.releaseBackup
-pom.xml.versionsBackup
-release.properties
-
-# === IntelliJ ===
-.idea/
-*.iml
-out/
-
-# === OS / Misc ===
-.DS_Store
-Thumbs.db
-
-# === Logs ===
-*.log
+﻿# OS junk
 desktop.ini
 Thumbs.db
+.DS_Store
+# IDE
+.idea/
+.vscode/
+*.iml
+# Build
+target/
+*.log
