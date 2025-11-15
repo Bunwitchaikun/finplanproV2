@@ -1,4 +1,4 @@
-﻿✅ README.md V2
+✅ README.md V2
 
 # 🏦 FinPlanPro – Personal Finance & Retirement Planning Web Application
 **CS436 Final Project — Bangkok University**  
