@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>FinPlanPro</title>
+
+    <!-- Bootstrap 5 -->
+    <link th:href="@{/css/bootstrap.min.css}" rel="stylesheet"/>
+
+    <!-- Custom global styles -->
+    <link th:href="@{/css/style.css}" rel="stylesheet"/>
+</head>
+
+<body>
+
+<!-- Navbar Fragment -->
+<div th:replace="~{fragments/navbar :: navbar}"></div>
+
+<!-- Main Content -->
+<main role="main" class="container py-4">
+    <div th:replace="${content}"></div>
+</main>
+
+<!-- Footer Fragment (optional) -->
+<div th:replace="~{fragments/footer :: footer}"></div>
+
+<!-- Bootstrap JS -->
+<script th:src="@{/js/bootstrap.bundle.min.js}"></script>
+
+</body>
+</html>
