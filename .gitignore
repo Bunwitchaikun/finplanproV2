@@ -1,11 +1,21 @@
-﻿# OS junk
-desktop.ini
-Thumbs.db
-.DS_Store
-# IDE
-.idea/
-.vscode/
-*.iml
-# Build
+﻿# Maven
 target/
+log/
+logs/
 *.log
+.mvn/
+
+# IntelliJ
+.idea/
+*.iml
+out/
+
+# OS
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Env
+.env
+*.key
+*.pem
