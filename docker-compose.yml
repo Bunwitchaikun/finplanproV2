@@ -1,37 +1,17 @@
-version: '3.9'
+version: "3.8"
 
 services:
-  postgres:
+  db:
     image: postgres:15
-    container_name: finplanpro_postgres
-    restart: always
+    container_name: finplanpro-db
     environment:
-      POSTGRES_USER: finuser
-      POSTGRES_PASSWORD: finpass123
-      POSTGRES_DB: finplanpro_db
+      POSTGRES_DB: finplanpro
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
     ports:
       - "5432:5432"
     volumes:
-      - postgres_data:/var/lib/postgresql/data
-    networks:
-      - finnet
-
-  pgadmin:
-    image: dpage/pgadmin4
-    container_name: finplanpro_pgadmin
-    restart: always
-    environment:
-      PGADMIN_DEFAULT_EMAIL: admin@finpro.com
-      PGADMIN_DEFAULT_PASSWORD: admin123
-    ports:
-      - "5050:80"
-    depends_on:
-      - postgres
-    networks:
-      - finnet
-
-networks:
-  finnet:
+      - finplanpro_postgres_data:/var/lib/postgresql/data
 
 volumes:
-  postgres_data:
+  finplanpro_postgres_data:
