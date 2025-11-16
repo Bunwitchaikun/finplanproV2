@@ -1,60 +1,26 @@
--- ===============================
--- V1 INITIAL SCHEMA FOR FINPLANPRO
--- ===============================
-
--- 1) ROLE TABLE
 CREATE TABLE roles (
     id SERIAL PRIMARY KEY,
-    name VARCHAR(50) NOT NULL UNIQUE,
-    description TEXT
+    name VARCHAR(50) NOT NULL UNIQUE
 );
 
--- 2) USERS TABLE
 CREATE TABLE users (
     id SERIAL PRIMARY KEY,
-    email VARCHAR(150) NOT NULL UNIQUE,
-    password VARCHAR(200) NOT NULL,
-    enabled BOOLEAN NOT NULL DEFAULT TRUE,
-    created_at TIMESTAMP NOT NULL DEFAULT NOW(),
-    updated_at TIMESTAMP NOT NULL DEFAULT NOW()
+    username VARCHAR(150) NOT NULL UNIQUE,
+    password VARCHAR(255) NOT NULL,
+    email VARCHAR(255) NOT NULL UNIQUE,
+    enabled BOOLEAN DEFAULT TRUE
 );
 
--- 3) USER ROLES (MANY-TO-MANY)
 CREATE TABLE user_roles (
-    user_id INTEGER NOT NULL,
-    role_id INTEGER NOT NULL,
-    PRIMARY KEY (user_id, role_id),
-
-    CONSTRAINT fk_user_roles_user
-        FOREIGN KEY (user_id) REFERENCES users(id)
-        ON DELETE CASCADE,
-
-    CONSTRAINT fk_user_roles_role
-        FOREIGN KEY (role_id) REFERENCES roles(id)
-        ON DELETE CASCADE
+    user_id INT REFERENCES users(id) ON DELETE CASCADE,
+    role_id INT REFERENCES roles(id) ON DELETE CASCADE,
+    PRIMARY KEY (user_id, role_id)
 );
 
--- 4) USER PROFILES (User Basic Info)
 CREATE TABLE user_profiles (
     id SERIAL PRIMARY KEY,
-    user_id INTEGER NOT NULL UNIQUE,
-
-    full_name VARCHAR(120),
-    gender VARCHAR(20),
-    birth_date DATE,
-    phone VARCHAR(20),
-    marital_status VARCHAR(30),
-
-    created_at TIMESTAMP NOT NULL DEFAULT NOW(),
-    updated_at TIMESTAMP NOT NULL DEFAULT NOW(),
-
-    CONSTRAINT fk_user_profile_user
-        FOREIGN KEY (user_id) REFERENCES users(id)
-        ON DELETE CASCADE
+    user_id INT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    first_name VARCHAR(255),
+    last_name VARCHAR(255),
+    phone VARCHAR(50)
 );
-
--- Insert default roles
-INSERT INTO roles (name, description)
-VALUES
-    ('ROLE_USER', 'Default role for all users'),
-    ('ROLE_ADMIN', 'Administrator role');
