@@ -370,26 +370,5 @@ D10.9 Final Merge to main
  ✔️ GitLab history สวยงามแบบ professional
  ✔️ README สมบูรณ์พร้อมโชว์อาจารย์
 
-ถ้าบอสต้องการต่อไป:
-ผมสามารถช่วยทำเพิ่มได้อีก เช่น
-เขียน Branch Strategy Diagram
-
-
-เขียน README.md แบบสมบูรณ์
-
-
-วาง GitLab milestone
-
-
-วาด ER Diagram
-
-
-วาด Flowchart ทั้งโปรเจกต์
-
-
-เขียน API Spec พร้อม OpenAPI 3.0
-
-
-บอสอยากให้ผมทำส่วนไหนต่อก่อน?
 
 
