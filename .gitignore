@@ -1,18 +1,21 @@
-﻿# === Java / Maven ===
+﻿# Maven
 target/
-pom.xml.tag
-pom.xml.releaseBackup
-pom.xml.versionsBackup
-release.properties
+log/
+logs/
+*.log
+.mvn/
 
-# === IntelliJ ===
+# IntelliJ
 .idea/
 *.iml
 out/
 
-# === OS / Misc ===
+# OS
 .DS_Store
 Thumbs.db
+desktop.ini
 
-# === Logs ===
-*.log
+# Env
+.env
+*.key
+*.pem

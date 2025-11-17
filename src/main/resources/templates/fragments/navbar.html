@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<body>
+
+<!-- Navbar Fragment -->
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark px-3" th:fragment="navbar">
+
+    <a class="navbar-brand fw-bold" href="/" style="font-size: 1.3rem;">
+        FinPlanPro
+    </a>
+
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNavbar">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="mainNavbar">
+
+        <ul class="navbar-nav ms-auto">
+
+            <li class="nav-item">
+                <a class="nav-link" th:href="@{/dashboard}">Dashboard</a>
+            </li>
+
+            <li class="nav-item">
+                <a class="nav-link" th:href="@{/retirement/basic}">Retirement Basic</a>
+            </li>
+
+            <li class="nav-item">
+                <a class="nav-link" th:href="@{/retirement/advanced}">Retirement Advanced</a>
+            </li>
+
+            <li class="nav-item">
+                <a class="nav-link" th:href="@{/wealth}">Wealth</a>
+            </li>
+
+            <li class="nav-item">
+                <a class="nav-link" th:href="@{/insurance}">Insurance</a>
+            </li>
+
+            <li class="nav-item">
+                <a class="nav-link" th:href="@{/tax}">Tax</a>
+            </li>
+
+            <li class="nav-item">
+                <a class="nav-link" th:href="@{/profile}">Profile</a>
+            </li>
+
+            <li class="nav-item">
+                <a class="nav-link text-danger" th:href="@{/logout}">
+                    Logout
+                </a>
+            </li>
+
+        </ul>
+
+    </div>
+</nav>
+
+</body>
+</html>

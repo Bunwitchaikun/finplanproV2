@@ -1,51 +1,55 @@
-﻿# FinPlanPro Main V2
-# 📈 FinPlanPro — Personal Finance & Retirement Planning Web Application
+✅ README.md V2
 
-🔹 Project Overview
-ชื่อระบบ: FinPlanPro — ระบบช่วยวางแผนการเงินและแผนเกษียณส่วนบุคคล ซึ่งรองรับฟีเจอร์การเงินทั้งหมด เช่น แผนเกษียณ ความมั่งคั่ง ภาษี ประกัน และแดชบอร์ดสรุปผลแบบเรียลไทม์ (Web Application)
+# 🏦 FinPlanPro – Personal Finance & Retirement Planning Web Application
 
-วัตถุประสงค์หลัก:
-พัฒนาเว็บแอปพลิเคชันสำหรับวางแผนการเงินและการเกษียณโดยต่อยอดจากโปรเจกต์เดิมที่พัฒนาใน CS311 (Tkinter + SQLite)
-โดยเปลี่ยนเป็นระบบเว็บที่ทำงานด้วย Spring Boot + PostgreSQL + Thymeleaf ด้วย IntelliJ
-พร้อมเพิ่มความสามารถขั้นสูงด้าน Retirement Planning (แบบ 7 ขั้นตอนตามไฟล์ V.4)
-นำมาปรับโครงสร้างใหม่เป็น **ระบบเว็บระดับ Production-ready** พร้อมรองรับการขยายในอนาคต
+## 📌 Overview
+
+**FinPlanPro** คือระบบ Web Application สำหรับ **วางแผนการเงินส่วนบุคคล** และ **แผนเกษียณแบบครบวงจร**  
+พัฒนาต่อยอดจากโปรเจกต์ **CS311 (Python Desktop App)**  
+โดยปรับสถาปัตยกรรมใหม่ทั้งหมดเป็น **Spring Boot + PostgreSQL + Docker + Thymeleaf**
+
+ระบบสามารถช่วยผู้ใช้งานคำนวณด้านการเงิน เช่น
+- แผนค่าใช้จ่าย
+- แผนการเกษียณ (Basic + Advanced 7 Steps)
+- ทรัพย์สิน & หนี้สิน
+- กรมธรรม์ประกัน
+- ภาษี
+- Dashboard แบบสรุปภาพรวม
+
+โปรเจกต์นี้ออกแบบตามมาตรฐาน Software Engineering พร้อม Milestones ที่ชัดเจน (D1–D10)
 
 ---
 
-## 🚀 Tech Stack
+# 🛠 Tech Stack
 
 ### **Backend**
 - Java 17
 - Spring Boot 3.5.x
-    - Spring MVC
-    - Spring Data JPA
-    - Spring Security
-    - Spring Validation
-    - Spring Boot DevTools
-- PostgreSQL 15
+- Spring MVC
+- Spring Data JPA
+- Spring Security
+- Spring Validation
+- Actuator
 - Flyway Migration
 - Lombok
 
-## 🗄 Database
-- PostgreSQL 15
-- pgAdmin4
-- Docker + Docker Compose
-- 
 ### **Frontend**
-- Thymeleaf Template Engine
+- Thymeleaf
 - HTML5 / CSS3 / JS
 - Bootstrap 5
-- Chart.js (สำหรับ Dashboard)
+- Chart.js
 
-### **DevOps / Tools**
-- Maven
-- Docker & Docker Compose
-- Git + GitLab
-- IntelliJ IDEA
+### **Database**
+- PostgreSQL 15
+- Docker + docker-compose
 - pgAdmin4
-- GitLab Branching (main / develop / feature/*)
 
----
+### **Dev / Tools**
+- IntelliJ IDEA
+- Maven
+- Git + GitLab
+- Docker Desktop
+
 
 ## 🧱 Project Structure (High-level)
 
@@ -73,323 +77,319 @@ finplanpro/
  ├── README.md
  └── .gitignore
 
+—
 
-------------------------------------------
 
-# ▶ วิธีติดตั้งและรันระบบ
 
-## 1) เตรียมฐานข้อมูล (Docker)
-รันคำสั่ง:
+# 🧱 Installation & Setup
 
+## 1️⃣ Clone Repository  
 ```bash
-docker compose up -d
+git clone https://gitlab.com/YOUR_REPO_HERE/finplanpro.git
+cd finplanpro
 
-------------------------------------------
+2️⃣ Run PostgreSQL + pgAdmin (Docker)
+docker-compose up -d
 
-# 🚀 **D1 — Core Infrastructure & Environment (12–16 Tasks)**
+pgAdmin available at:
+ ➡ http://localhost:5050
+ Login:
+Email: admin@finplanpro.com
 
-## **D1.1 — Setup Project Structure**
 
-* D1.1.1 สร้าง Spring Boot Project (Maven, Java 17)
-* D1.1.2 สร้าง Base Packages (controller, service, repository, entity, dto, security, config, util)
-* D1.1.3 เพิ่ม package-info.java ให้ทุก package
-* D1.1.4 เพิ่ม .gitignore เวอร์ชัน Production
-* D1.1.5 จัดโครงสร้าง templates + fragments
-* D1.1.6 เพิ่ม layout.html (Base Layout)
-* D1.1.7 เพิ่ม navbar.html (เมนูหลักทั้งหมด)
-* D1.1.8 เพิ่ม footer.html (optional)
-* D1.1.9 สร้าง HomeController + redirect `/` → `/dashboard`
-* D1.1.10 จัดการ README.md เวอร์ชัน Final
-* D1.1.11 สร้าง health-check `/health`
-* D1.1.12 Commit Initial Structure
+Password: admin123
 
----
 
-## **D1.2 — Dependencies & Build System**
+Database info:
+Host: finplanpro-db
 
-* D1.2.1 เพิ่ม Spring Web / Thymeleaf / JPA / Security
-* D1.2.2 เพิ่ม PostgreSQL Driver
-* D1.2.3 เพิ่ม Lombok + Configure Annotation Processor
-* D1.2.4 เพิ่ม Actuator (Health Check / Info)
-* D1.2.5 เพิ่ม Thymeleaf Security Extras
-* D1.2.6 เพิ่ม Validation Starter
-* D1.2.7 เพิ่ม Devtools
-* D1.2.8 เพิ่ม Test (Spring Security Test)
-* D1.2.9 รัน `mvn clean package` ทดสอบ build
-* D1.2.10 Commit dependency verification
 
----
+Port: 5432
 
-## **D1.3 — Database & Flyway**
 
-* D1.3.1 สร้าง docker-compose (PostgreSQL + pgAdmin)
-* D1.3.2 เพิ่ม application.yml เชื่อม DB
-* D1.3.3 สร้างโฟลเดอร์ `db/migration` และ เขียนไฟล์ V1__init_schema.sql
-(users, roles, user_roles, user_profiles)
-* D1.3.4 อัพเดต HealthController และ Readme
-* D1.3.5 setup PostgreSQL + Flyway migration
-* D1.3.6 Refresh pgAdmin เพื่อสร้างตาราง พร้อม อัพเดตไฟล์อื่นๆ
-* D1.3.7 Complete D1 and First push
+DB: finplanpro
 
----
 
-# 🔐 **D2 — Authentication & User Profile (9–12 Tasks)**
+User: postgres
 
-## **D2.1 — Entities & Repository**
 
-* D2.1.1 สร้าง Entity: User, Role, UserRole
-* D2.1.2 สร้าง Entity: UserProfile (ข้อมูลพื้นฐาน)
-* D2.1.3 สร้าง Repository: UserRepository, RoleRepository, ProfileRepository
+Pass: postgres
 
-## **D2.2 — Security Configuration**
 
-* D2.2.1 สร้าง CustomUserDetails
-* D2.2.2 สร้าง CustomUserDetailsService
-* D2.2.3 เขียน SecurityConfig (formLogin, authorizeHttpRequests)
-* D2.2.4 Implement logout
 
-## **D2.3 — Register Flow**
+3️⃣ Configure application.yml
+(ไฟล์ในโปรเจกต์มีให้แล้ว)
+spring:
+  datasource:
+    url: jdbc:postgresql://finplanpro-db:5432/finplanpro
+    username: postgres
+    password: postgres
 
-* D2.3.1 เขียน DTO: RegisterRequest
-* D2.3.2 Validation (password match, unique email)
-* D2.3.3 RegisterController
-* D2.3.4 register.html template
 
-## **D2.4 — Login Flow**
+4️⃣ Run Migration (Flyway)
+เพียงเปิด Spring Boot แล้ว Flyway จะ migrate อัตโนมัติ
+mvn spring-boot:run
 
-* D2.4.1 login.html template
-* D2.4.2 Login success redirect `/dashboard`
+เมื่อสำเร็จ จะเห็น log:
+Flyway - Successfully applied 1 migration
 
-## **D2.5 — Profile Page**
 
-* D2.5.1 ProfileController
-* D2.5.2 profile.html template
-* D2.5.3 เพิ่มอัปเดตข้อมูลส่วนตัว
+5️⃣ Access Application
+http://localhost:8080
 
-## **D2.6 — Onboarding**
 
-* D2.6.1 หน้าตั้งค่าเบื้องต้นหลังสมัคร
-* D2.6.2 เก็บ data ลง user_profiles
+🧬 Database Schema (ERD)
+Entity หลัก 10 กลุ่ม (ตาม D2–D8)
+[users] 1---* [user_profiles]
+[users] *---* [roles]
+[users] 1---* [retirement_basic]
+[users] 1---* [retirement_advanced]
+[users] 1---* [assets]
+[users] 1---* [liabilities]
+[users] 1---* [insurance_policies]
+[users] 1---* [tax_records]
+[users] 1---* [net_worth_snapshots]
 
----
+Flyway Version 1 ประกอบด้วย:
+users
 
-# 💸 **D3 — Expense Planner (12–16 Tasks)**
 
-## **D3.1 — Entities**
+roles
 
-* D3.1.1 สร้าง Entity expense_categories
-* D3.1.2 สร้าง Entity expense_items
-* D3.1.3 Repository ทั้งสองตัว
 
-## **D3.2 — CRUD Expense Items**
+user_roles
 
-* D3.2.1 ExpenseController
-* D3.2.2 หน้า list `/expenses`
-* D3.2.3 add / edit / delete forms
-* D3.2.4 แยกหมวด FIXED / LIFESTYLE / SPECIAL
 
-## **D3.3 — FV Calculation**
+user_profiles
 
-* D3.3.1 เขียน Service คำนวณ FV ค่าใช้จ่าย
-* D3.3.2 รองรับ inflation เฉพาะหมวด
-* D3.3.3 รองรับ start_age/end_age
 
-## **D3.4 — Summary Page**
 
-* D3.4.1 `/expenses/summary`
-* D3.4.2 กราฟ Pie ต้นทุนแต่ละหมวด
-* D3.4.3 ค่าใช้จ่ายหลังเกษียณรายปี
+🏗️ MASTER PROJECT STRUCTURE (D1 – D10)
+โครงสร้างนี้คือ WBS เวอร์ชัน Developer + Task ละเอียดสุด ใช้ค่อย ๆ ทำทีละ Commit ได้เลย
 
----
-
-# 📈 **D4 — Retirement Capital/HAVE (10–14 Tasks)**
-
-## **D4.1 — Entity**
-
-* retirement_assets
-
-## **D4.2 — CRUD Retirement Assets**
-
-* Add/Edit/Delete หน่วยลงทุน
-* รองรับหลายประเภท: SSO, RMF, SSF, Provident Fund ฯลฯ
-
-## **D4.3 — FV Calculation**
-
-* FV lump sum
-* FV monthly series
-* รวม FV ทุกสินทรัพย์เป็น total retirement fund
-
-## **D4.4 — Summary Page**
-
-* ตารางสรุป
-* แผนภูมิ breakdown per asset type
-
----
-
-# 🏦 **D5 — Wealth Planner (Assets & Liabilities)**
-
-## **D5.1 — Entities**
-
-* assets
-* liabilities
-* net_worth_snapshots
-
-## **D5.2 — CRUD**
-
-* หน้า `/wealth`
-* Tab: Assets / Liabilities
-
-## **D5.3 — Net Worth Calculation**
-
-* รวม total_assets
-* รวม total_liabilities
-* คำนวณ net_worth
-
-## **D5.4 — Visualization**
-
-* Asset allocation chart
-* Net worth trend chart
-
----
-
-# 🛡 **D6 — Insurance Planner (8–12 Tasks)**
-
-## **D6.1 — Entity**
-
-* insurance_policies
-
-## **D6.2 — CRUD**
-
-* เพิ่มกรมธรรม์
-* ประเภทกรมธรรม์ (LIFE/HEALTH/ACCIDENT)
-
-## **D6.3 — Summary**
-
-* total premium per year
-* total coverage
-* coverage gap (ประเมินทุนประกันพอไหม)
-
----
-
-# 🧾 **D7 — Tax Planner (10–13 Tasks)**
-
-## **D7.1 — Entities**
-
-* tax_records
-* tax_deductions
-
-## **D7.2 — Calculator Logic**
-
-* Thai progressive tax
-* ระบบลดหย่อน
-* taxable_income
-* tax_payable
-* effective tax rate
-
-## **D7.3 — UI**
-* Form `/tax`
-* หน้า "History" `/tax/history`
-
----
-
-# 🧠 **D8 — Retirement Planner (Advanced — 7 Steps)**
-
-### (ยอดงานเยอะที่สุด)
-
-## **D8.1 — Entity + JSONB Fields**
-
-* retirement_plan_advanced
-  → มี step_completed / summary_json / details_json
-
-## **D8.2 — Step Wizard**
-
-1. YOU
-2. LIFE
-3. WANT
-4. EXPENSES
-5. HAVE
-6. DESIGN
-7. TEST
-
-แต่ละ Step = 1 Controller + 1 Template
-
-## **D8.3 — Data Integration**
-
-* เชื่อม D3: Expenses FV
-* เชื่อม D4: Assets FV
-* เชื่อม user_profile
-* เชื่อม tax/insurance (optional)
-
-## **D8.4 — Scenario Simulation**
-
-* return ต่ำ/กลาง/สูง
-* อายุเกษียณ +5 ปี
-* เงินเก็บเพิ่มเท่าไรถึงจะพอ
-
-## **D8.5 — Review Page**
-
-* กราฟทั้งหมด
-* รายงานช่อง Gap
-* คำแนะนำการแก้ไข
-
----
-
-# 📊 **D9 — Dashboard & Benchmark**
-
-## **D9.1 — Dashboard Summary**
-
-* net worth
-* retirement gap
-* insurance summary
-* tax summary
-
-## **D9.2 — Charts (Chart.js)**
-
-* net worth trend
-* asset allocation
-* retirement fund vs target
-
-## **D9.3 — Benchmark**
-
-* Scenario comparison
-* แสดง improvement if user contributes more
-
----
-
-# 🧪 **D10 — Testing & Deployment (10+ Tasks)**
-
-## **D10.1 — Unit Tests**
-
-* retirement calculation
-* FV expenses
-* FV retirement assets
-* tax calculator
-* net worth calculator
-
-## **D10.2 — Integration Tests**
-
-* Auth flow
-* Create Expense → Reflect in Retirement
-* Assets + Liabilities → Reflect dashboard
-
-## **D10.3 — Performance / Cleanup**
-
-* Indexes
-* Query optimization
-* Remove unused code
-
-## **D10.4 — Deployment**
-
-* application-prod.yml
-* DB credentials
-* Deploy บน **Render / Railway / Docker host**
-
-## **D10.5 — Documentation**
-
-* Final README
-* ERD diagram
-* User manual
-
---------------------------------------------
+🚀 D1 — Project Setup & Environment (Infrastructure Foundation)
+Branch: feature/D1-setup
+✅ D1.1 — Project Structure Initialization
+D1.1.1  สร้าง Spring Boot Project (Maven, Java 17)
+D1.1.2  สร้าง root packages: controller, service, repo, entity, dto, config, security
+D1.1.3  เพิ่ม package-info.java ทุกโฟลเดอร์
+D1.1.4  เพิ่ม .gitignore เวอร์ชัน Production
+D1.1.5  Setup Thymeleaf templates + fragments
+D1.1.6  layout.html (Base Layout)
+D1.1.7  navbar.html
+D1.1.8  footer.html
+D1.1.9  HomeController → redirect "/" → "/dashboard"
+D1.1.10 README เวอร์ชันเริ่มต้น
+D1.1.11 health-check `/health`
+D1.1.12 Commit: Initial Project Structure
+
+
+✅ D1.2 — Build System & Dependencies
+D1.2.1 Spring Web, Thymeleaf, JPA
+D1.2.2 PostgreSQL Driver
+D1.2.3 Lombok + Annotation Processor
+D1.2.4 Actuator
+D1.2.5 Spring Security + Thymeleaf Security
+D1.2.6 Validation Starter
+D1.2.7 Devtools
+D1.2.8 Spring Security Test
+D1.2.9 mvn clean package ทดสอบ build
+D1.2.10 Commit: Dependencies verified
+
+
+✅ D1.3 — Database & Flyway
+D1.3.1 docker-compose: PostgreSQL + pgAdmin
+D1.3.2 application.yml (DB connect)
+D1.3.3 db/migration/V1__init_schema.sql
+         - users
+         - roles
+         - user_roles
+         - user_profiles
+D1.3.4 อัปเดต HealthController & README
+D1.3.5 Run Flyway migration
+D1.3.6 Refresh pgAdmin → check tables
+D1.3.7 Commit: Flyway Initial Schema
+D1.3.8 Push → Merge Request → main
+
+
+🔐 D2 — Authentication & User Profile
+Branch: feature/D2-auth
+D2.1 Authentication (Login/Register/Forgot)
+D2.1.1 Entity: User, Role, UserRole
+D2.1.2 Password Encoder (BCrypt)
+D2.1.3 RegisterController + Form
+D2.1.4 LoginController + Form
+D2.1.5 Spring Security Config (Session-based)
+D2.1.6 Logout Handler
+D2.1.7 Forgot Password (email placeholder version)
+D2.1.8 Auth Test Cases
+D2.1.9 Thymeleaf Security Integration
+D2.1.10 Commit: Authentication Module
+
+
+D2.2 User Profile (from CS311 Desktop App)
+D2.2.1 Entity: UserProfile
+D2.2.2 ProfileRepository
+D2.2.3 ProfileService
+D2.2.4 ProfileController (view/edit/delete)
+D2.2.5 profile.html
+D2.2.6 Validation (email, DOB, gender)
+D2.2.7 Update Profile
+D2.2.8 Commit: Profile Module
+
+
+💸 D3 — Retirement Planner (Basic) — from CS311
+Branch: feature/D3-retirement-basic
+(นำ logic จาก Python Desktop App มา Web)
+D3.1 Entity: RetirementBasic
+D3.2 Controller: retirement/basic
+D3.3 Service: BasicCalculatorService
+D3.4 Input Fields:
+       - currentAge
+       - retireAge
+       - monthlyExpense
+       - inflationRate
+       - lifeExpectancy
+       - preRetireReturn
+       - postRetireReturn
+D3.5 Calculator Logic (แปลงจาก Python → Java)
+D3.6 UI: retirement_basic_form.html
+D3.7 Save/Load retirement plan
+D3.8 List view (table)
+D3.9 Delete plan
+D3.10 Commit: Retirement Basic
+
+
+🎯 D4 — Retirement Planner (Advanced – 7 Steps Duolingo Style)
+Branch: feature/D4-retirement-advanced
+อิงจากไฟล์ V.4 — 7 Stages: YOU → LIFE → WANT → HAVES → DESIGN → TEST → SAVE
+D4.1 Setup Flow Controller (Step-by-step Wizard)
+D4.2 Step 1 (YOU): DOB, Gender, Retire Age
+D4.3 Step 2 (LIFE): Health Quiz → Predict Life Expectancy
+D4.4 Step 3 (WANT): Lifestyle, desired monthly cost
+D4.5 Step 4 (EXPENSE): Basic + Special Cost (FV calculation)
+D4.6 Step 5 (HAVES): Assets, RMF/SSF, pension, annuity
+D4.7 Step 6 (DESIGN): Target Gap Solver
+D4.8 Step 7 (TEST): 4 Scenarios Simulation
+D4.9 Save retirement plan
+D4.10 Visualization Graph (3-layer chart)
+D4.11 Commit: Retirement Advanced Completed
+
+
+🧮 D5 — Assets & Liabilities Management
+Branch: feature/D5-assets-liabilities
+(อิงจาก Desktop App Python → Wealth Magic)
+D5.1 Entity: AssetsLiabilities
+D5.2 Form: asset/liability input fields
+D5.3 Service: calculate net worth
+D5.4 Save record
+D5.5 List all records
+D5.6 Edit record
+D5.7 Delete record
+D5.8 Visualization: Net worth trend (line chart)
+D5.9 Commit: Assets/Liabilities Module
+
+
+🏥 D6 — Insurance Management
+Branch: feature/D6-insurance
+(อิงจาก Insurance Module Desktop App)
+D6.1 Entity: InsurancePolicy
+D6.2 Entity: InsuranceDetail
+D6.3 Group by policy_number
+D6.4 Input form (all fields identicalกับ Python App)
+D6.5 Save/Update policy
+D6.6 Summary section (coverage total)
+D6.7 List all policies
+D6.8 Edit/Delete
+D6.9 Commit: Insurance Module
+
+
+🧾 D7 — Tax Calculator
+Branch: feature/D7-tax
+D7.1 Entity: TaxRecord
+D7.2 TaxFormController
+D7.3 TaxCalculationService
+D7.4 Input fields:
+       - monthly income
+       - expenses
+       - dependents
+       - parents
+       - special deductions
+       - insurance
+       - retirement fund
+D7.5 Calculate:
+       - net income
+       - tax payable
+D7.6 Save record
+D7.7 List view
+D7.8 Commit: Tax Module
+
+
+📊 D8 — Dashboard & Main Overview
+Branch: feature/D8-dashboard
+D8.1 Home Dashboard Controller
+D8.2 Summary Cards:
+       - Net Worth
+       - Retirement Progress
+       - Insurance Summary
+       - Tax Summary
+D8.3 Charts:
+       - Net worth 12-month chart
+       - Retirement gap mini chart
+D8.4 Dashboard UI in Thymeleaf
+D8.5 Commit: Dashboard Module
+
+
+📈 D9 — Visualization & Reporting
+Branch: feature/D9-visualization
+D9.1 PDF Generation (Retirement Plan Report)
+D9.2 Chart Export (PNG/SVG)
+D9.3 Net Worth Report
+D9.4 Retirement Summary Report
+D9.5 Commit: Reporting Module
+
+
+🧪 D10 — Testing, CI/CD, Final Review
+Branch: feature/D10-testing
+D10.1 Unit Tests ≥ 70%
+D10.2 Integration Tests ≥ 20%
+D10.3 Security Tests (authentication)
+D10.4 API Tests (Postman Collection)
+D10.5 UI Tests (Selenium optional)
+D10.6 Performance checks (p95 < 300ms)
+D10.7 Project Cleanup
+D10.8 Final README
+D10.9 Final Merge to main
+
+
+🎉 ผลลัพธ์ที่ได้เมื่อทำครบ D1–D10
+✔️ ระบบ Spring Boot เต็มระบบ
+ ✔️ ฟีเจอร์ทั้งหมดจาก Python Desktop ถูกแปลงเป็น Web App
+ ✔️ Retirement Planner Basic + Advanced (Duolingo Style)
+ ✔️ Dashboard พร้อมกราฟ
+ ✔️ GitLab history สวยงามแบบ professional
+ ✔️ README สมบูรณ์พร้อมโชว์อาจารย์
+
+ถ้าบอสต้องการต่อไป:
+ผมสามารถช่วยทำเพิ่มได้อีก เช่น
+เขียน Branch Strategy Diagram
+
+
+เขียน README.md แบบสมบูรณ์
+
+
+วาง GitLab milestone
+
+
+วาด ER Diagram
+
+
+วาด Flowchart ทั้งโปรเจกต์
+
+
+เขียน API Spec พร้อม OpenAPI 3.0
+
+
+บอสอยากให้ผมทำส่วนไหนต่อก่อน?
 
 
