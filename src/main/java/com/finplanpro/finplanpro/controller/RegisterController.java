@@ -33,13 +33,13 @@ public class RegisterController {
         User existingUser = userService.findUserByUsername(userDto.getUsername());
 
         if (existingUser != null && existingUser.getUsername() != null && !existingUser.getUsername().isEmpty()) {
-            result.rejectValue("username", null,
+            result.rejectValue("username", "username.exists",
                     "There is already an account registered with that username");
         }
 
         existingUser = userService.findUserByEmail(userDto.getEmail());
         if (existingUser != null && existingUser.getEmail() != null && !existingUser.getEmail().isEmpty()) {
-            result.rejectValue("email", null,
+            result.rejectValue("email", "email.exists",
                     "There is already an account registered with that email");
         }
 

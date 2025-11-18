@@ -16,7 +16,7 @@
                     <div class="card-body">
                         <div th:if="${success}" class="alert alert-success" th:text="${success}"></div>
                         <p class="text-center">Retirement plan summary placeholder</p>
-                        <a href="/retirement/advanced/step1" class="btn btn-primary">Start Over</a>
+                        <a th:href="@{/retirement/advanced/step1}" class="btn btn-primary">Start Over</a>
                     </div>
                 </div>
             </div>

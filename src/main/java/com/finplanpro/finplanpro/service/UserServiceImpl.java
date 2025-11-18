@@ -8,8 +8,7 @@ import com.finplanpro.finplanpro.repository.UserRepository;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.util.Arrays;
-import java.util.HashSet;
+import java.util.Set;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -37,7 +36,7 @@ public class UserServiceImpl implements UserService {
         if (role == null) {
             role = checkRoleExist();
         }
-        user.setRoles(new HashSet<>(Arrays.asList(role)));
+        user.setRoles(Set.of(role));
         userRepository.save(user);
     }
 
