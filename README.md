@@ -215,16 +215,16 @@ D1.3.8 Push → Merge Request → main
 🔐 D2 — Authentication & User Profile
 Branch: feature/D2-auth
 D2.1 Authentication (Login/Register/Forgot)
-D2.1.1 Entity: User, Role, UserRole
-D2.1.2 Password Encoder (BCrypt)
-D2.1.3 RegisterController + Form
-D2.1.4 LoginController + Form
-D2.1.5 Spring Security Config (Session-based)
-D2.1.6 Logout Handler
-D2.1.7 Forgot Password (email placeholder version)
-D2.1.8 Auth Test Cases
-D2.1.9 Thymeleaf Security Integration
-D2.1.10 Commit: Authentication Module
+✅ D2.1.1 Entity: User, Role, UserRole
+✅ D2.1.2 Password Encoder (BCrypt)
+✅ D2.1.3 RegisterController + Form
+✅ D2.1.4 LoginController + Form
+✅ D2.1.5 Spring Security Config (Session-based)
+✅ D2.1.6 Logout Handler
+✅ D2.1.7 Forgot Password (email placeholder version)
+✅ D2.1.8 Auth Test Cases
+✅ D2.1.9 Thymeleaf Security Integration
+✅ D2.1.10 Commit: Authentication Module
 
 
 D2.2 User Profile (from CS311 Desktop App)
