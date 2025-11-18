@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{layout :: layout(~{::title}, ~{::main})}">
+<head>
+    <title>Retirement Planner (Advanced) - Summary</title>
+</head>
+<body>
+<main role="main">
+    <div class="container mt-5">
+        <div class="row justify-content-center">
+            <div class="col-md-8">
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="text-center">Summary</h3>
+                    </div>
+                    <div class="card-body">
+                        <div th:if="${success}" class="alert alert-success" th:text="${success}"></div>
+                        <p class="text-center">Retirement plan summary placeholder</p>
+                        <a href="/retirement/advanced/step1" class="btn btn-primary">Start Over</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+</body>
+</html>

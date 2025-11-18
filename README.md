@@ -215,36 +215,36 @@ D1.3.8 Push → Merge Request → main
 🔐 D2 — Authentication & User Profile
 Branch: feature/D2-auth
 D2.1 Authentication (Login/Register/Forgot)
-D2.1.1 Entity: User, Role, UserRole
-D2.1.2 Password Encoder (BCrypt)
-D2.1.3 RegisterController + Form
-D2.1.4 LoginController + Form
-D2.1.5 Spring Security Config (Session-based)
-D2.1.6 Logout Handler
-D2.1.7 Forgot Password (email placeholder version)
-D2.1.8 Auth Test Cases
-D2.1.9 Thymeleaf Security Integration
-D2.1.10 Commit: Authentication Module
+✅ D2.1.1 Entity: User, Role, UserRole
+✅ D2.1.2 Password Encoder (BCrypt)
+✅ D2.1.3 RegisterController + Form
+✅ D2.1.4 LoginController + Form
+✅ D2.1.5 Spring Security Config (Session-based)
+✅ D2.1.6 Logout Handler
+✅ D2.1.7 Forgot Password (email placeholder version)
+✅ D2.1.8 Auth Test Cases
+✅ D2.1.9 Thymeleaf Security Integration
+✅ D2.1.10 Commit: Authentication Module
 
 
 D2.2 User Profile (from CS311 Desktop App)
-D2.2.1 Entity: UserProfile
-D2.2.2 ProfileRepository
-D2.2.3 ProfileService
-D2.2.4 ProfileController (view/edit/delete)
-D2.2.5 profile.html
-D2.2.6 Validation (email, DOB, gender)
-D2.2.7 Update Profile
-D2.2.8 Commit: Profile Module
+✅ D2.2.1 Entity: UserProfile
+✅ D2.2.2 ProfileRepository
+✅ D2.2.3 ProfileService
+✅ D2.2.4 ProfileController (view/edit/delete)
+✅ D2.2.5 profile.html
+✅ D2.2.6 Validation (email, DOB, gender)
+✅ D2.2.7 Update Profile
+✅ D2.2.8 Commit: Profile Module
 
 
 💸 D3 — Retirement Planner (Basic) — from CS311
 Branch: feature/D3-retirement-basic
 (นำ logic จาก Python Desktop App มา Web)
-D3.1 Entity: RetirementBasic
-D3.2 Controller: retirement/basic
-D3.3 Service: BasicCalculatorService
-D3.4 Input Fields:
+✅ D3.1 Entity: RetirementBasic
+✅ D3.2 Controller: retirement/basic
+✅ D3.3 Service: BasicCalculatorService
+✅ D3.4 Input Fields:
        - currentAge
        - retireAge
        - monthlyExpense
@@ -252,28 +252,28 @@ D3.4 Input Fields:
        - lifeExpectancy
        - preRetireReturn
        - postRetireReturn
-D3.5 Calculator Logic (แปลงจาก Python → Java)
-D3.6 UI: retirement_basic_form.html
-D3.7 Save/Load retirement plan
-D3.8 List view (table)
-D3.9 Delete plan
-D3.10 Commit: Retirement Basic
+✅ D3.5 Calculator Logic (แปลงจาก Python → Java)
+✅ D3.6 UI: retirement_basic_form.html
+✅ D3.7 Save/Load retirement plan
+✅ D3.8 List view (table)
+✅ D3.9 Delete plan
+✅ D3.10 Commit: Retirement Basic
 
 
 🎯 D4 — Retirement Planner (Advanced – 7 Steps Duolingo Style)
 Branch: feature/D4-retirement-advanced
 อิงจากไฟล์ V.4 — 7 Stages: YOU → LIFE → WANT → HAVES → DESIGN → TEST → SAVE
-D4.1 Setup Flow Controller (Step-by-step Wizard)
-D4.2 Step 1 (YOU): DOB, Gender, Retire Age
-D4.3 Step 2 (LIFE): Health Quiz → Predict Life Expectancy
-D4.4 Step 3 (WANT): Lifestyle, desired monthly cost
-D4.5 Step 4 (EXPENSE): Basic + Special Cost (FV calculation)
-D4.6 Step 5 (HAVES): Assets, RMF/SSF, pension, annuity
-D4.7 Step 6 (DESIGN): Target Gap Solver
-D4.8 Step 7 (TEST): 4 Scenarios Simulation
-D4.9 Save retirement plan
-D4.10 Visualization Graph (3-layer chart)
-D4.11 Commit: Retirement Advanced Completed
+✅ D4.1 Setup Flow Controller (Step-by-step Wizard)
+✅ D4.2 Step 1 (YOU): DOB, Gender, Retire Age
+✅ D4.3 Step 2 (LIFE): Health Quiz → Predict Life Expectancy
+✅ D4.4 Step 3 (WANT): Lifestyle, desired monthly cost
+✅ D4.5 Step 4 (EXPENSE): Basic + Special Cost (FV calculation)
+✅ D4.6 Step 5 (HAVES): Assets, RMF/SSF, pension, annuity
+✅ D4.7 Step 6 (DESIGN): Target Gap Solver
+✅ D4.8 Step 7 (TEST): 4 Scenarios Simulation
+✅ D4.9 Save retirement plan
+✅ D4.10 Visualization Graph (3-layer chart)
+✅ D4.11 Commit: Retirement Advanced Completed
 
 
 🧮 D5 — Assets & Liabilities Management
