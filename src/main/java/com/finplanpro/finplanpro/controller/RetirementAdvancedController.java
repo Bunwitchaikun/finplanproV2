@@ -92,7 +92,7 @@ public class RetirementAdvancedController {
     }
 
     @PostMapping("/summary")
-    public String processStep7(@AuthenticationPrincipal User user,
+    public String processStep7(@AuthenticationPrincipal(expression = "user") User user,
                                @ModelAttribute("retirementAdvanced") RetirementAdvanced retirementAdvanced,
                                SessionStatus sessionStatus,
                                RedirectAttributes redirectAttributes) {
