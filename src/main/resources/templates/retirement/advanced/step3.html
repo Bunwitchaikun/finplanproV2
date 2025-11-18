@@ -2,40 +2,18 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org"
       th:replace="~{layout :: layout(~{::title}, ~{::main})}">
 <head>
-    <title>Retirement Planner (Advanced) - Step 3</title>
+    <title>Advanced Retirement - Step 3</title>
 </head>
 <body>
 <main role="main">
-    <div class="container mt-5">
-        <div class="row justify-content-center">
-            <div class="col-md-8">
-                <div class="card">
-                    <div class="card-header">
-                        <h3 class="text-center">Step 3: WANT</h3>
-                    </div>
-                    <div class="card-body">
-                        <form th:action="@{/retirement/advanced/step4}" method="post">
-                            <div class="mb-3">
-                                <label for="lifestyle" class="form-label">Lifestyle</label>
-                                <select class="form-select" id="lifestyle" name="lifestyle" required>
-                                    <option value="BASIC">Basic</option>
-                                    <option value="COMFORTABLE">Comfortable</option>
-                                    <option value="LUXURY">Luxury</option>
-                                </select>
-                            </div>
-                            <div class="mb-3">
-                                <label for="monthlyCost" class="form-label">Desired Monthly Cost</label>
-                                <input type="number" class="form-control" id="monthlyCost" name="monthlyCost" required>
-                            </div>
-                            <div class="d-grid">
-                                <button type="submit" class="btn btn-primary">Next</button>
-                            </div>
-                        </form>
-                    </div>
-                </div>
-            </div>
+    <h1>Step 3: Your Wants</h1>
+    <form th:action="@{/retirement/advanced/step3}" th:object="${plan}" method="post">
+        <div>
+            <label for="lifestyle">Lifestyle:</label>
+            <input type="text" id="lifestyle" th:field="*{lifestyle}" required placeholder="e.g., Comfortable">
         </div>
-    </div>
+        <button type="submit">Next</button>
+    </form>
 </main>
 </body>
 </html>

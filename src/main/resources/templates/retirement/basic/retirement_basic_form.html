@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{layout :: layout(~{::title}, ~{::main})}">
+<head>
+    <title>Retirement Basic</title>
+</head>
+<body>
+<main role="main">
+    <div class="container-fluid">
+        <!-- Header -->
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h1 class="h3">Retirement Basic Planner</h1>
+        </div>
+
+        <!-- Success/Error Messages -->
+        <div th:if="${successMessage}" class="alert alert-success" th:text="${successMessage}"></div>
+        <div th:if="${errorMessage}" class="alert alert-danger" th:text="${errorMessage}"></div>
+
+        <!-- Form Card -->
+        <div class="card shadow-sm border-0 mb-4">
+            <div class="card-header bg-transparent">
+                <h5 class="mb-0">Create New Plan</h5>
+            </div>
+            <div class="card-body p-4">
+                <form th:action="@{/retirement/basic}" th:object="${newPlan}" method="post">
+                    <div class="row g-3">
+                        <div class="col-md-12">
+                            <label for="planName" class="form-label">Plan Name</label>
+                            <input type="text" class="form-control" id="planName" th:field="*{planName}" required placeholder="e.g., My Main Plan">
+                        </div>
+                        <div class="col-md-6">
+                            <label for="currentAge" class="form-label">Current Age</label>
+                            <input type="number" class="form-control" id="currentAge" th:field="*{currentAge}" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="retireAge" class="form-label">Retirement Age</label>
+                            <input type="number" class="form-control" id="retireAge" th:field="*{retireAge}" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="monthlyExpense" class="form-label">Current Monthly Expense</label>
+                            <input type="number" step="0.01" class="form-control" id="monthlyExpense" th:field="*{monthlyExpense}" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="lifeExpectancy" class="form-label">Life Expectancy</label>
+                            <input type="number" class="form-control" id="lifeExpectancy" th:field="*{lifeExpectancy}" required>
+                        </div>
+                        <div class="col-md-4">
+                            <label for="inflationRate" class="form-label">Inflation Rate (%)</label>
+                            <input type="number" step="0.01" class="form-control" id="inflationRate" th:field="*{inflationRate}" required>
+                        </div>
+                        <div class="col-md-4">
+                            <label for="preRetireReturn" class="form-label">Pre-Retirement Return (%)</label>
+                            <input type="number" step="0.01" class="form-control" id="preRetireReturn" th:field="*{preRetireReturn}" required>
+                        </div>
+                        <div class="col-md-4">
+                            <label for="postRetireReturn" class="form-label">Post-Retirement Return (%)</label>
+                            <input type="number" step="0.01" class="form-control" id="postRetireReturn" th:field="*{postRetireReturn}" required>
+                        </div>
+                    </div>
+                    <hr class="my-4">
+                    <button type="submit" class="btn btn-primary">Calculate & Save Plan</button>
+                </form>
+            </div>
+        </div>
+
+        <!-- Saved Plans Table -->
+        <div class="card shadow-sm border-0">
+            <div class="card-header bg-transparent">
+                <h5 class="mb-0">My Saved Plans</h5>
+            </div>
+            <div class="card-body">
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th>Plan Name</th>
+                            <th>Total Funds Needed</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:each="plan : ${userPlans}">
+                            <td th:text="${plan.planName}">My Plan</td>
+                            <td th:text="${#numbers.formatCurrency(plan.totalFundsNeeded)}">$1,000,000.00</td>
+                            <td>
+                                <form th:action="@{/retirement/basic/delete/{id}(id=${plan.id})}" method="post" onsubmit="return confirm('Are you sure you want to delete this plan?');">
+                                    <button type="submit" class="btn btn-sm btn-outline-danger">Delete</button>
+                                </form>
+                            </td>
+                        </tr>
+                        <tr th:if="${#lists.isEmpty(userPlans)}">
+                            <td colspan="3" class="text-center text-muted">No saved plans yet.</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+    </div>
+</main>
+</body>
+</html>

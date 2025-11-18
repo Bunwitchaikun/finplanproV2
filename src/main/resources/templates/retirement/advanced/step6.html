@@ -2,29 +2,24 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org"
       th:replace="~{layout :: layout(~{::title}, ~{::main})}">
 <head>
-    <title>Retirement Planner (Advanced) - Step 6</title>
+    <title>Advanced Retirement - Step 6</title>
 </head>
 <body>
 <main role="main">
-    <div class="container mt-5">
-        <div class="row justify-content-center">
-            <div class="col-md-8">
-                <div class="card">
-                    <div class="card-header">
-                        <h3 class="text-center">Step 6: DESIGN</h3>
-                    </div>
-                    <div class="card-body">
-                        <p class="text-center">Target Gap Solver placeholder</p>
-                        <form th:action="@{/retirement/advanced/step7}" method="post">
-                            <div class="d-grid">
-                                <button type="submit" class="btn btn-primary">Next</button>
-                            </div>
-                        </form>
-                    </div>
-                </div>
-            </div>
-        </div>
+    <h1>Step 6: Plan Design (Summary)</h1>
+    <div th:object="${plan}">
+        <p>Plan Name: <strong th:text="*{planName}"></strong></p>
+        <p>Total Funds Needed at Retirement: <strong th:text="${#numbers.formatCurrency(plan.totalFundsNeeded)}"></strong></p>
+        <p>Your Current Haves (for retirement): <strong th:text="${#numbers.formatCurrency(plan.currentAssets + plan.rmfSsf + plan.pension + plan.annuity)}"></strong></p>
+        <hr>
+        <h3>Funding Gap: <strong th:text="${#numbers.formatCurrency(plan.fundGap)}"
+                               th:class="${plan.fundGap.doubleValue() < 0 ? 'text-danger' : 'text-success'}"></strong></h3>
+        <p th:if="${plan.fundGap.doubleValue() < 0}" class="text-danger">You have a shortfall. You need to save more.</p>
+        <p th:if="${plan.fundGap.doubleValue() >= 0}" class="text-success">Congratulations! You are on track.</p>
     </div>
+    <form th:action="@{/retirement/advanced/step6}" method="post">
+        <button type="submit">Next: Test Scenarios</button>
+    </form>
 </main>
 </body>
 </html>

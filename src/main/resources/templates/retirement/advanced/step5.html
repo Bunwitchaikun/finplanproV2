@@ -2,44 +2,30 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org"
       th:replace="~{layout :: layout(~{::title}, ~{::main})}">
 <head>
-    <title>Retirement Planner (Advanced) - Step 5</title>
+    <title>Advanced Retirement - Step 5</title>
 </head>
 <body>
 <main role="main">
-    <div class="container mt-5">
-        <div class="row justify-content-center">
-            <div class="col-md-8">
-                <div class="card">
-                    <div class="card-header">
-                        <h3 class="text-center">Step 5: HAVES</h3>
-                    </div>
-                    <div class="card-body">
-                        <form th:action="@{/retirement/advanced/step6}" method="post">
-                            <div class="mb-3">
-                                <label for="assets" class="form-label">Assets</label>
-                                <input type="number" class="form-control" id="assets" name="assets" required>
-                            </div>
-                            <div class="mb-3">
-                                <label for="rmf" class="form-label">RMF/SSF</label>
-                                <input type="number" class="form-control" id="rmf" name="rmf" required>
-                            </div>
-                            <div class="mb-3">
-                                <label for="pension" class="form-label">Pension</label>
-                                <input type="number" class="form-control" id="pension" name="pension" required>
-                            </div>
-                            <div class="mb-3">
-                                <label for="annuity" class="form-label">Annuity</label>
-                                <input type="number" class="form-control" id="annuity" name="annuity" required>
-                            </div>
-                            <div class="d-grid">
-                                <button type="submit" class="btn btn-primary">Next</button>
-                            </div>
-                        </form>
-                    </div>
-                </div>
-            </div>
+    <h1>Step 5: Your Haves</h1>
+    <form th:action="@{/retirement/advanced/step5}" th:object="${plan}" method="post">
+        <div>
+            <label for="currentAssets">Current Liquid Assets:</label>
+            <input type="number" step="0.01" id="currentAssets" th:field="*{currentAssets}" required>
         </div>
-    </div>
+        <div>
+            <label for="rmfSsf">RMF/SSF:</label>
+            <input type="number" step="0.01" id="rmfSsf" th:field="*{rmfSsf}" required>
+        </div>
+        <div>
+            <label for="pension">Pension:</label>
+            <input type="number" step="0.01" id="pension" th:field="*{pension}" required>
+        </div>
+        <div>
+            <label for="annuity">Annuity:</label>
+            <input type="number" step="0.01" id="annuity" th:field="*{annuity}" required>
+        </div>
+        <button type="submit">Next</button>
+    </form>
 </main>
 </body>
 </html>
