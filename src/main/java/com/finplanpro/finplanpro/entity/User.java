@@ -1,6 +1,7 @@
 package com.finplanpro.finplanpro.entity;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Email;
 import lombok.*;
 
 import java.util.Set;
@@ -23,6 +24,7 @@ public class User {
     @Column(nullable = false, length = 255)
     private String password;
 
+    @Email
     @Column(nullable = false, unique = true, length = 255)
     private String email;
 

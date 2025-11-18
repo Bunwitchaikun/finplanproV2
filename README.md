@@ -228,14 +228,14 @@ D2.1 Authentication (Login/Register/Forgot)
 
 
 D2.2 User Profile (from CS311 Desktop App)
-D2.2.1 Entity: UserProfile
-D2.2.2 ProfileRepository
-D2.2.3 ProfileService
-D2.2.4 ProfileController (view/edit/delete)
-D2.2.5 profile.html
-D2.2.6 Validation (email, DOB, gender)
-D2.2.7 Update Profile
-D2.2.8 Commit: Profile Module
+✅ D2.2.1 Entity: UserProfile
+✅ D2.2.2 ProfileRepository
+✅ D2.2.3 ProfileService
+✅ D2.2.4 ProfileController (view/edit/delete)
+✅ D2.2.5 profile.html
+✅ D2.2.6 Validation (email, DOB, gender)
+✅ D2.2.7 Update Profile
+✅ D2.2.8 Commit: Profile Module
 
 
 💸 D3 — Retirement Planner (Basic) — from CS311

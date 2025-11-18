@@ -2,13 +2,12 @@ package com.finplanpro.finplanpro.controller;
 
 import com.finplanpro.finplanpro.entity.UserProfile;
 import com.finplanpro.finplanpro.service.ProfileService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.Optional;
 
@@ -42,8 +41,29 @@ public class ProfileController {
     }
 
     @PostMapping("/{id}/edit")
-    public String editProfile(UserProfile userProfile) {
-        profileService.save(userProfile);
-        return "redirect:/profile/" + userProfile.getId();
+    public String editProfile(@PathVariable Long id,
+                              @Valid @ModelAttribute("userProfile") UserProfile formProfile,
+                              BindingResult bindingResult) {
+
+        Optional<UserProfile> existingProfileOpt = profileService.findById(id);
+        if (existingProfileOpt.isEmpty()) {
+            return "redirect:/";
+        }
+
+        UserProfile existingProfile = existingProfileOpt.get();
+
+        if (bindingResult.hasErrors()) {
+            formProfile.setUser(existingProfile.getUser());
+            return "profile/edit-profile";
+        }
+
+        existingProfile.setFirstName(formProfile.getFirstName());
+        existingProfile.setLastName(formProfile.getLastName());
+        existingProfile.setDateOfBirth(formProfile.getDateOfBirth());
+        existingProfile.setGender(formProfile.getGender());
+
+        profileService.save(existingProfile);
+
+        return "redirect:/profile/" + id;
     }
 }

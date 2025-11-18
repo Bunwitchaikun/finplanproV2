@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{layout :: layout(~{::title}, ~{::main})}">
+<head>
+    <title>User Profile</title>
+</head>
+<body>
+<main role="main">
+    <div class="container mt-5">
+        <div class="row justify-content-center">
+            <div class="col-md-8">
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="text-center">User Profile</h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-4">
+                                <p><strong>First Name:</strong></p>
+                                <p><strong>Last Name:</strong></p>
+                                <p><strong>Date of Birth:</strong></p>
+                                <p><strong>Gender:</strong></p>
+                            </div>
+                            <div class="col-md-8">
+                                <p th:text="${userProfile.firstName}"></p>
+                                <p th:text="${userProfile.lastName}"></p>
+                                <p th:text="${userProfile.dateOfBirth}"></p>
+                                <p th:text="${userProfile.gender}"></p>
+                            </div>
+                        </div>
+                        <a th:href="@{/profile/{id}/edit(id=${userProfile.id})}" class="btn btn-primary">Edit Profile</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+</body>
+</html>

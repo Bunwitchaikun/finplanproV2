@@ -1,6 +1,8 @@
 package com.finplanpro.finplanpro.entity;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Past;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -22,8 +24,15 @@ public class UserProfile {
     @JoinColumn(name = "id")
     private User user;
 
+    @NotBlank
     private String firstName;
+
+    @NotBlank
     private String lastName;
+
+    @Past
     private LocalDate dateOfBirth;
+
+    @NotBlank
     private String gender;
 }
