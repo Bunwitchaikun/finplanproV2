@@ -241,10 +241,10 @@ D2.2 User Profile (from CS311 Desktop App)
 💸 D3 — Retirement Planner (Basic) — from CS311
 Branch: feature/D3-retirement-basic
 (นำ logic จาก Python Desktop App มา Web)
-D3.1 Entity: RetirementBasic
-D3.2 Controller: retirement/basic
-D3.3 Service: BasicCalculatorService
-D3.4 Input Fields:
+✅ D3.1 Entity: RetirementBasic
+✅ D3.2 Controller: retirement/basic
+✅ D3.3 Service: BasicCalculatorService
+✅ D3.4 Input Fields:
        - currentAge
        - retireAge
        - monthlyExpense
@@ -252,12 +252,12 @@ D3.4 Input Fields:
        - lifeExpectancy
        - preRetireReturn
        - postRetireReturn
-D3.5 Calculator Logic (แปลงจาก Python → Java)
-D3.6 UI: retirement_basic_form.html
-D3.7 Save/Load retirement plan
-D3.8 List view (table)
-D3.9 Delete plan
-D3.10 Commit: Retirement Basic
+✅ D3.5 Calculator Logic (แปลงจาก Python → Java)
+✅ D3.6 UI: retirement_basic_form.html
+✅ D3.7 Save/Load retirement plan
+✅ D3.8 List view (table)
+✅ D3.9 Delete plan
+✅ D3.10 Commit: Retirement Basic
 
 
 🎯 D4 — Retirement Planner (Advanced – 7 Steps Duolingo Style)
