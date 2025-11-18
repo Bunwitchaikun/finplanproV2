@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{layout :: layout(~{::title}, ~{::main})}">
+<head>
+    <title>Retirement Planner (Advanced) - Step 4</title>
+</head>
+<body>
+<main role="main">
+    <div class="container mt-5">
+        <div class="row justify-content-center">
+            <div class="col-md-8">
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="text-center">Step 4: EXPENSE</h3>
+                    </div>
+                    <div class="card-body">
+                        <form th:action="@{/retirement/advanced/step5}" method="post">
+                            <div class="mb-3">
+                                <label for="basicCost" class="form-label">Basic Cost</label>
+                                <input type="number" class="form-control" id="basicCost" name="basicCost" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="specialCost" class="form-label">Special Cost</label>
+                                <input type="number" class="form-control" id="specialCost" name="specialCost" required>
+                            </div>
+                            <div class="d-grid">
+                                <button type="submit" class="btn btn-primary">Next</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+</body>
+</html>

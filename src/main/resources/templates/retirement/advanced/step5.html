@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{layout :: layout(~{::title}, ~{::main})}">
+<head>
+    <title>Retirement Planner (Advanced) - Step 5</title>
+</head>
+<body>
+<main role="main">
+    <div class="container mt-5">
+        <div class="row justify-content-center">
+            <div class="col-md-8">
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="text-center">Step 5: HAVES</h3>
+                    </div>
+                    <div class="card-body">
+                        <form th:action="@{/retirement/advanced/step6}" method="post">
+                            <div class="mb-3">
+                                <label for="assets" class="form-label">Assets</label>
+                                <input type="number" class="form-control" id="assets" name="assets" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="rmf" class="form-label">RMF/SSF</label>
+                                <input type="number" class="form-control" id="rmf" name="rmf" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="pension" class="form-label">Pension</label>
+                                <input type="number" class="form-control" id="pension" name="pension" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="annuity" class="form-label">Annuity</label>
+                                <input type="number" class="form-control" id="annuity" name="annuity" required>
+                            </div>
+                            <div class="d-grid">
+                                <button type="submit" class="btn btn-primary">Next</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+</body>
+</html>
