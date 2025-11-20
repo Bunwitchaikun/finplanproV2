@@ -31,37 +31,37 @@
                         </div>
                         <div class="col-md-6">
                             <label for="currentAge" class="form-label">อายุปัจจุบัน</label>
-                            <input type="number" class="form-control" id="currentAge" th:field="*{currentAge}" required min="0" placeholder="เช่น 30">
+                            <input type="number" class="form-control" id="currentAge" th:field="*{currentAge}" required min="0" step="1" placeholder="เช่น 30">
                             <p th:if="${#fields.hasErrors('currentAge')}" class="text-danger mt-1" th:errors="*{currentAge}"></p>
                         </div>
                         <div class="col-md-6">
                             <label for="retireAge" class="form-label">อายุที่ต้องการเกษียณ</label>
-                            <input type="number" class="form-control" id="retireAge" th:field="*{retireAge}" required min="1" placeholder="เช่น 60">
+                            <input type="number" class="form-control" id="retireAge" th:field="*{retireAge}" required min="1" step="1" placeholder="เช่น 60">
                             <p th:if="${#fields.hasErrors('retireAge')}" class="text-danger mt-1" th:errors="*{retireAge}"></p>
                         </div>
                         <div class="col-md-6">
                             <label for="monthlyExpense" class="form-label">ค่าใช้จ่ายรายเดือนปัจจุบัน (บาท)</label>
-                            <input type="number" step="0.01" class="form-control" id="monthlyExpense" th:field="*{monthlyExpense}" required min="0" placeholder="เช่น 30000">
+                            <input type="number" step="10000" class="form-control" id="monthlyExpense" th:field="*{monthlyExpense}" required min="0" placeholder="เช่น 30000">
                             <p th:if="${#fields.hasErrors('monthlyExpense')}" class="text-danger mt-1" th:errors="*{monthlyExpense}"></p>
                         </div>
                         <div class="col-md-6">
                             <label for="lifeExpectancy" class="form-label">อายุขัยคาดการณ์</label>
-                            <input type="number" class="form-control" id="lifeExpectancy" th:field="*{lifeExpectancy}" required min="1" placeholder="เช่น 90">
+                            <input type="number" class="form-control" id="lifeExpectancy" th:field="*{lifeExpectancy}" required min="1" step="1" placeholder="เช่น 90">
                             <p th:if="${#fields.hasErrors('lifeExpectancy')}" class="text-danger mt-1" th:errors="*{lifeExpectancy}"></p>
                         </div>
                         <div class="col-md-4">
                             <label for="inflationRate" class="form-label">อัตราเงินเฟ้อ (%)</label>
-                            <input type="number" step="0.01" class="form-control" id="inflationRate" th:field="*{inflationRate}" required min="0" placeholder="เช่น 3">
+                            <input type="number" step="1" class="form-control" id="inflationRate" th:field="*{inflationRate}" required min="0" placeholder="เช่น 3">
                             <p th:if="${#fields.hasErrors('inflationRate')}" class="text-danger mt-1" th:errors="*{inflationRate}"></p>
                         </div>
                         <div class="col-md-4">
                             <label for="preRetireReturn" class="form-label">ผลตอบแทนก่อนเกษียณ (%)</label>
-                            <input type="number" step="0.01" class="form-control" id="preRetireReturn" th:field="*{preRetireReturn}" required min="0" placeholder="เช่น 8">
+                            <input type="number" step="1" class="form-control" id="preRetireReturn" th:field="*{preRetireReturn}" required min="0" placeholder="เช่น 8">
                             <p th:if="${#fields.hasErrors('preRetireReturn')}" class="text-danger mt-1" th:errors="*{preRetireReturn}"></p>
                         </div>
                         <div class="col-md-4">
                             <label for="postRetireReturn" class="form-label">ผลตอบแทนหลังเกษียณ (%)</label>
-                            <input type="number" step="0.01" class="form-control" id="postRetireReturn" th:field="*{postRetireReturn}" required min="0" placeholder="เช่น 3">
+                            <input type="number" step="1" class="form-control" id="postRetireReturn" th:field="*{postRetireReturn}" required min="0" placeholder="เช่น 3">
                             <p th:if="${#fields.hasErrors('postRetireReturn')}" class="text-danger mt-1" th:errors="*{postRetireReturn}"></p>
                         </div>
                     </div>
