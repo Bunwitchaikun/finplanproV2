@@ -36,12 +36,15 @@ public class RetirementBasicServiceImpl implements RetirementBasicService {
     @Override
     public List<RetirementBasic> findPlansByUser() {
         User user = getCurrentUser();
-        return retirementBasicRepository.findByUser(user);
+        List<RetirementBasic> plans = retirementBasicRepository.findByUser(user);
+        plans.forEach(this::populateDerivedFields);
+        return plans;
     }
     
     @Override
     public Optional<RetirementBasic> findById(Long id) {
-        return retirementBasicRepository.findById(id);
+        return retirementBasicRepository.findById(id)
+                .map(this::populateDerivedFields);
     }
 
     @Override
@@ -71,6 +74,9 @@ public class RetirementBasicServiceImpl implements RetirementBasicService {
     private RetirementBasic performCalculation(RetirementBasic plan) {
         if (plan.getMonthlyExpense() == null) {
             throw new IllegalArgumentException("กรุณากรอกค่าใช้จ่ายรายเดือน");
+        }
+        if (plan.getCurrentAge() == null || plan.getRetireAge() == null || plan.getLifeExpectancy() == null) {
+            throw new IllegalArgumentException("กรุณากรอกอายุปัจจุบัน อายุเกษียณ และอายุขัย");
         }
         int yearsToRetirement = plan.getRetireAge() - plan.getCurrentAge();
         int yearsInRetirement = plan.getLifeExpectancy() - plan.getRetireAge();
@@ -121,6 +127,16 @@ public class RetirementBasicServiceImpl implements RetirementBasicService {
         plan.setAnnualExpenseAtRetirement(annualExpenseAtRetirement.setScale(2, RoundingMode.HALF_UP));
         plan.setRequiredMonthlyInvestment(requiredMonthlyInvestment.setScale(2, RoundingMode.HALF_UP));
         plan.setTotalFundsNeeded(totalFundsNeeded.setScale(2, RoundingMode.HALF_UP));
+        plan.setYearsToRetirement(yearsToRetirement);
         return plan;
+    }
+
+    private RetirementBasic populateDerivedFields(RetirementBasic plan) {
+        try {
+            return performCalculation(plan);
+        } catch (IllegalArgumentException ex) {
+            // หากข้อมูลไม่ครบ/ไม่สมเหตุสมผล ให้คงค่าเดิมไว้
+            return plan;
+        }
     }
 }

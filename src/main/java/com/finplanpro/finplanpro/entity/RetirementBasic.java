@@ -27,11 +27,13 @@ public class RetirementBasic {
     private User user;
 
     // Input fields
+    @NotNull
     @Min(0)
-    private int currentAge;
+    private Integer currentAge;
 
+    @NotNull
     @Min(1)
-    private int retireAge;
+    private Integer retireAge;
 
     @NotBlank
     private String planName;
@@ -43,8 +45,9 @@ public class RetirementBasic {
     @DecimalMin(value = "0.0")
     private double inflationRate;
 
+    @NotNull
     @Min(1)
-    private int lifeExpectancy;
+    private Integer lifeExpectancy;
 
     @DecimalMin(value = "0.0")
     private double preRetireReturn;
@@ -64,4 +67,7 @@ public class RetirementBasic {
 
     @Transient
     private BigDecimal requiredMonthlyInvestment;
+
+    @Transient
+    private Integer yearsToRetirement;
 }

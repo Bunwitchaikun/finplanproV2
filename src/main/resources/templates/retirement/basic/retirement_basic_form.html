@@ -9,7 +9,7 @@
     <div class="container-fluid">
         <!-- Header -->
         <div class="d-flex justify-content-between align-items-center mb-4">
-            <h1 class="h3">ตัวช่วยวางแผนเกษียณ (พื้นฐาน)</h1>
+            <h1 class="h3">Retirement Planner ผู้ช่วยวางแผนเกษียณอย่างง่าย (พื้นฐาน)</h1>
         </div>
 
         <!-- Success/Error Messages -->
@@ -80,14 +80,14 @@
                 <div class="row row-cols-1 row-cols-md-2 g-3">
                     <div class="col">
                         <div class="p-3 bg-light rounded h-100">
-                            <p class="text-muted mb-1">ค่าใช้จ่ายรายเดือน ณ วันเกษียณ</p>
+                            <p class="text-muted mb-1">ค่าใช้จ่ายต่อเดือน ที่ตั้งเป้าไว้</p>
                             <h5 class="mb-0" th:text="'฿' + ${#numbers.formatDecimal(calcResult.retirementMonthlyExpense, 0, 'COMMA', 2, 'POINT')}">฿0.00</h5>
                         </div>
                     </div>
                     <div class="col">
                         <div class="p-3 bg-light rounded h-100">
-                            <p class="text-muted mb-1">ค่าใช้จ่ายปีแรกหลังเกษียณ (ปรับเงินเฟ้อ)</p>
-                            <h5 class="mb-0" th:text="'฿' + ${#numbers.formatDecimal(calcResult.annualExpenseAtRetirement, 0, 'COMMA', 2, 'POINT')}">฿0.00</h5>
+                            <p class="text-muted mb-1">เงินที่ต้องลงทุนรายเดือนตั้งแต่วันนี้</p>
+                            <h5 class="mb-0" th:text="'฿' + ${#numbers.formatDecimal(calcResult.requiredMonthlyInvestment, 0, 'COMMA', 2, 'POINT')}">฿0.00</h5>
                         </div>
                     </div>
                     <div class="col">
@@ -98,8 +98,14 @@
                     </div>
                     <div class="col">
                         <div class="p-3 bg-light rounded h-100">
-                            <p class="text-muted mb-1">เงินที่ต้องลงทุนรายเดือนตั้งแต่วันนี้</p>
-                            <h5 class="mb-0" th:text="'฿' + ${#numbers.formatDecimal(calcResult.requiredMonthlyInvestment, 0, 'COMMA', 2, 'POINT')}">฿0.00</h5>
+                            <p class="text-muted mb-1">ระยะเวลาในการหาเงิน (ปี)</p>
+                            <h5 class="mb-0" th:text="${calcResult.yearsToRetirement}">0</h5>
+                        </div>
+                    </div>
+                    <div class="col">
+                        <div class="p-3 bg-light rounded h-100">
+                            <p class="text-muted mb-1">ค่าใช้จ่ายปีแรกหลังเกษียณ (ปรับเงินเฟ้อ)</p>
+                            <h5 class="mb-0" th:text="'฿' + ${#numbers.formatDecimal(calcResult.annualExpenseAtRetirement, 0, 'COMMA', 2, 'POINT')}">฿0.00</h5>
                         </div>
                     </div>
                 </div>
@@ -116,14 +122,20 @@
                     <thead>
                         <tr>
                             <th>ชื่อแผน</th>
+                            <th>ค่าใช้จ่ายต่อเดือน ที่ตั้งเป้าไว้ (บาท)</th>
                             <th>เงินก้อนที่ต้องมี (บาท)</th>
+                            <th>เงินที่ต้องลงทุนรายเดือนตั้งแต่วันนี้</th>
+                            <th>ระยะเวลาในการหาเงิน (ปี)</th>
                             <th class="text-end">จัดการ</th>
                         </tr>
                     </thead>
                     <tbody>
                         <tr th:each="plan : ${userPlans}">
                             <td th:text="${plan.planName}">My Plan</td>
+                            <td th:text="'฿' + ${#numbers.formatDecimal(plan.retirementMonthlyExpense, 0, 'COMMA', 2, 'POINT')}">฿0.00</td>
                             <td th:text="'฿' + ${#numbers.formatDecimal(plan.totalFundsNeeded, 0, 'COMMA', 2, 'POINT')}">฿0.00</td>
+                            <td th:text="'฿' + ${#numbers.formatDecimal(plan.requiredMonthlyInvestment, 0, 'COMMA', 2, 'POINT')}">฿0.00</td>
+                            <td th:text="${plan.yearsToRetirement != null ? plan.yearsToRetirement : plan.retireAge - plan.currentAge}">0</td>
                             <td class="text-end">
                                 <form th:action="@{/retirement/basic/delete/{id}(id=${plan.id})}" method="post" onsubmit="return confirm('ต้องการลบแผนนี้หรือไม่?');" class="d-inline">
                                     <button type="submit" class="btn btn-sm btn-outline-danger">ลบ</button>
@@ -131,7 +143,7 @@
                             </td>
                         </tr>
                         <tr th:if="${#lists.isEmpty(userPlans)}">
-                            <td colspan="3" class="text-center text-muted">ยังไม่มีแผนที่บันทึก</td>
+                            <td colspan="6" class="text-center text-muted">ยังไม่มีแผนที่บันทึก</td>
                         </tr>
                     </tbody>
                 </table>

@@ -73,7 +73,6 @@ public class RetirementBasicController {
 
     private RetirementBasic defaultPlan() {
         RetirementBasic plan = new RetirementBasic();
-        plan.setPlanName("แผนเกษียณใหม่");
         plan.setRetireAge(60);
         plan.setLifeExpectancy(90);
         plan.setInflationRate(3.0);
@@ -85,7 +84,7 @@ public class RetirementBasicController {
     private RetirementBasicResult buildResult(RetirementBasic plan) {
         return RetirementBasicResult.builder()
                 .planName(plan.getPlanName())
-                .yearsToRetirement(plan.getRetireAge() - plan.getCurrentAge())
+                .yearsToRetirement(plan.getYearsToRetirement())
                 .yearsInRetirement(plan.getLifeExpectancy() - plan.getRetireAge())
                 .retirementMonthlyExpense(plan.getRetirementMonthlyExpense())
                 .annualExpenseAtRetirement(plan.getAnnualExpenseAtRetirement())
