@@ -29,7 +29,8 @@ public class SecurityConfig {
                 ).formLogin(
                         form -> form
                                 .loginPage("/login")
-                                .loginProcessingUrl("/login")
+                                .loginProcessingUrl("/process-login")
+                                .failureForwardUrl("/login?error=true")
                                 .defaultSuccessUrl("/dashboard", true)
                                 .permitAll()
                 ).logout(
