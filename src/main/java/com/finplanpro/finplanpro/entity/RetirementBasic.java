@@ -1,6 +1,10 @@
 package com.finplanpro.finplanpro.entity;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.DecimalMin;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -23,16 +27,41 @@ public class RetirementBasic {
     private User user;
 
     // Input fields
+    @Min(0)
     private int currentAge;
+
+    @Min(1)
     private int retireAge;
+
+    @NotBlank
+    private String planName;
+
+    @NotNull
+    @DecimalMin(value = "0.01")
     private BigDecimal monthlyExpense;
+
+    @DecimalMin(value = "0.0")
     private double inflationRate;
+
+    @Min(1)
     private int lifeExpectancy;
+
+    @DecimalMin(value = "0.0")
     private double preRetireReturn;
+
+    @DecimalMin(value = "0.0")
     private double postRetireReturn;
 
     // Calculation result
     private BigDecimal totalFundsNeeded;
     
-    private String planName;
+    // Derived values (not persisted)
+    @Transient
+    private BigDecimal retirementMonthlyExpense;
+
+    @Transient
+    private BigDecimal annualExpenseAtRetirement;
+
+    @Transient
+    private BigDecimal requiredMonthlyInvestment;
 }

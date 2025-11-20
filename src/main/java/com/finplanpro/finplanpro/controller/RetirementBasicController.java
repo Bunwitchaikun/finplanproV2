@@ -1,5 +1,6 @@
 package com.finplanpro.finplanpro.controller;
 
+import com.finplanpro.finplanpro.dto.RetirementBasicResult;
 import com.finplanpro.finplanpro.entity.RetirementBasic;
 import com.finplanpro.finplanpro.service.RetirementBasicService;
 import jakarta.validation.Valid;
@@ -9,6 +10,8 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.math.BigDecimal;
+import java.text.DecimalFormat;
 import java.util.List;
 
 @Controller
@@ -24,7 +27,7 @@ public class RetirementBasicController {
     @GetMapping
     public String showRetirementPage(Model model) {
         if (!model.containsAttribute("newPlan")) {
-            model.addAttribute("newPlan", new RetirementBasic());
+            model.addAttribute("newPlan", defaultPlan());
         }
         List<RetirementBasic> userPlans = retirementBasicService.findPlansByUser();
         model.addAttribute("userPlans", userPlans);
@@ -42,9 +45,15 @@ public class RetirementBasicController {
             return "redirect:/retirement/basic";
         }
 
-        RetirementBasic savedPlan = retirementBasicService.calculateAndSave(newPlan);
-        redirectAttributes.addFlashAttribute("successMessage",
-                "Plan '" + savedPlan.getPlanName() + "' saved successfully! Total funds needed: " + savedPlan.getTotalFundsNeeded());
+        try {
+            RetirementBasic savedPlan = retirementBasicService.calculateAndSave(newPlan);
+            redirectAttributes.addFlashAttribute("calcResult", buildResult(savedPlan));
+            redirectAttributes.addFlashAttribute("successMessage",
+                    "บันทึกแผน \"" + savedPlan.getPlanName() + "\" สำเร็จ ต้องเตรียมเงิน " + formatBaht(savedPlan.getTotalFundsNeeded()));
+        } catch (IllegalArgumentException ex) {
+            redirectAttributes.addFlashAttribute("errorMessage", ex.getMessage());
+            redirectAttributes.addFlashAttribute("newPlan", newPlan);
+        }
 
         return "redirect:/retirement/basic";
     }
@@ -60,5 +69,36 @@ public class RetirementBasicController {
             redirectAttributes.addFlashAttribute("errorMessage", "Error deleting plan.");
         }
         return "redirect:/retirement/basic";
+    }
+
+    private RetirementBasic defaultPlan() {
+        RetirementBasic plan = new RetirementBasic();
+        plan.setPlanName("แผนเกษียณใหม่");
+        plan.setRetireAge(60);
+        plan.setLifeExpectancy(90);
+        plan.setInflationRate(3.0);
+        plan.setPreRetireReturn(8.0);
+        plan.setPostRetireReturn(3.0);
+        return plan;
+    }
+
+    private RetirementBasicResult buildResult(RetirementBasic plan) {
+        return RetirementBasicResult.builder()
+                .planName(plan.getPlanName())
+                .yearsToRetirement(plan.getRetireAge() - plan.getCurrentAge())
+                .yearsInRetirement(plan.getLifeExpectancy() - plan.getRetireAge())
+                .retirementMonthlyExpense(plan.getRetirementMonthlyExpense())
+                .annualExpenseAtRetirement(plan.getAnnualExpenseAtRetirement())
+                .totalFundsNeeded(plan.getTotalFundsNeeded())
+                .requiredMonthlyInvestment(plan.getRequiredMonthlyInvestment())
+                .build();
+    }
+
+    private String formatBaht(BigDecimal value) {
+        if (value == null) {
+            return "-";
+        }
+        DecimalFormat formatter = new DecimalFormat("#,##0.00");
+        return "฿" + formatter.format(value);
     }
 }

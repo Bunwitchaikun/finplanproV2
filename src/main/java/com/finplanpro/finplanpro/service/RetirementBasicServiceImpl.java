@@ -29,31 +29,8 @@ public class RetirementBasicServiceImpl implements RetirementBasicService {
         User user = getCurrentUser();
         plan.setUser(user);
 
-        // --- Calculation Logic ---
-        int yearsToRetirement = plan.getRetireAge() - plan.getCurrentAge();
-        int yearsInRetirement = plan.getLifeExpectancy() - plan.getRetireAge();
-
-        // 1. Future Value of monthly expense at retirement
-        BigDecimal futureMonthlyExpense = plan.getMonthlyExpense()
-                .multiply(BigDecimal.valueOf(Math.pow(1 + (plan.getInflationRate() / 100), yearsToRetirement)));
-
-        // 2. Total funds needed at the start of retirement (using Present Value of an Annuity formula)
-        double realReturnRate = ((1 + (plan.getPostRetireReturn() / 100)) / (1 + (plan.getInflationRate() / 100))) - 1;
-
-        BigDecimal totalFunds;
-        if (realReturnRate == 0) {
-            totalFunds = futureMonthlyExpense.multiply(BigDecimal.valueOf(yearsInRetirement * 12L));
-        } else {
-            BigDecimal pvFactor = BigDecimal.valueOf(
-                (1 - Math.pow(1 + realReturnRate, -yearsInRetirement * 12)) / realReturnRate
-            );
-            totalFunds = futureMonthlyExpense.multiply(pvFactor);
-        }
-
-        plan.setTotalFundsNeeded(totalFunds.setScale(2, RoundingMode.HALF_UP));
-        // --- End Calculation Logic ---
-
-        return retirementBasicRepository.save(plan);
+        RetirementBasic calculated = performCalculation(plan);
+        return retirementBasicRepository.save(calculated);
     }
 
     @Override
@@ -89,5 +66,61 @@ public class RetirementBasicServiceImpl implements RetirementBasicService {
             throw new UsernameNotFoundException("User not found");
         }
         return user;
+    }
+
+    private RetirementBasic performCalculation(RetirementBasic plan) {
+        if (plan.getMonthlyExpense() == null) {
+            throw new IllegalArgumentException("กรุณากรอกค่าใช้จ่ายรายเดือน");
+        }
+        int yearsToRetirement = plan.getRetireAge() - plan.getCurrentAge();
+        int yearsInRetirement = plan.getLifeExpectancy() - plan.getRetireAge();
+
+        if (yearsToRetirement <= 0) {
+            throw new IllegalArgumentException("อายุเกษียณต้องมากกว่าอายุปัจจุบัน");
+        }
+        if (yearsInRetirement <= 0) {
+            throw new IllegalArgumentException("อายุขัยต้องมากกว่าอายุเกษียณ");
+        }
+
+        double inflationRate = plan.getInflationRate() / 100.0;
+        double postReturn = plan.getPostRetireReturn() / 100.0;
+        double preReturnMonthly = plan.getPreRetireReturn() / 100.0 / 12.0;
+
+        double inflationFactor = Math.pow(1 + inflationRate, yearsToRetirement);
+        BigDecimal retirementMonthlyExpense = plan.getMonthlyExpense()
+                .multiply(BigDecimal.valueOf(inflationFactor));
+        BigDecimal annualExpenseAtRetirement = retirementMonthlyExpense.multiply(BigDecimal.valueOf(12));
+
+        double realReturnRate = ((1 + postReturn) / (1 + inflationRate)) - 1;
+
+        BigDecimal totalFundsNeeded;
+        if (Math.abs(realReturnRate) < 1e-9) {
+            totalFundsNeeded = annualExpenseAtRetirement.multiply(BigDecimal.valueOf(yearsInRetirement));
+        } else {
+            double pvFactor = (1 - Math.pow(1 + realReturnRate, -yearsInRetirement)) / realReturnRate;
+            totalFundsNeeded = annualExpenseAtRetirement.multiply(BigDecimal.valueOf(pvFactor));
+        }
+
+        int monthsToRetirement = yearsToRetirement * 12;
+        BigDecimal requiredMonthlyInvestment;
+        if (monthsToRetirement <= 0) {
+            requiredMonthlyInvestment = BigDecimal.ZERO;
+        } else if (Math.abs(preReturnMonthly) < 1e-9) {
+            requiredMonthlyInvestment = totalFundsNeeded.divide(BigDecimal.valueOf(monthsToRetirement), 2, RoundingMode.HALF_UP);
+        } else {
+            double factor = Math.pow(1 + preReturnMonthly, monthsToRetirement) - 1;
+            if (factor <= 0) {
+                requiredMonthlyInvestment = totalFundsNeeded.divide(BigDecimal.valueOf(monthsToRetirement), 2, RoundingMode.HALF_UP);
+            } else {
+                double pmt = totalFundsNeeded.doubleValue() * preReturnMonthly / factor;
+                requiredMonthlyInvestment = BigDecimal.valueOf(pmt);
+            }
+        }
+
+        plan.setRetirementMonthlyExpense(retirementMonthlyExpense.setScale(2, RoundingMode.HALF_UP));
+        plan.setAnnualExpenseAtRetirement(annualExpenseAtRetirement.setScale(2, RoundingMode.HALF_UP));
+        plan.setRequiredMonthlyInvestment(requiredMonthlyInvestment.setScale(2, RoundingMode.HALF_UP));
+        plan.setTotalFundsNeeded(totalFundsNeeded.setScale(2, RoundingMode.HALF_UP));
+        return plan;
     }
 }
