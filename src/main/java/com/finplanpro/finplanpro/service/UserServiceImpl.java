@@ -3,6 +3,7 @@ package com.finplanpro.finplanpro.service;
 import com.finplanpro.finplanpro.dto.UserDto;
 import com.finplanpro.finplanpro.entity.Role;
 import com.finplanpro.finplanpro.entity.User;
+import com.finplanpro.finplanpro.entity.UserProfile;
 import com.finplanpro.finplanpro.repository.RoleRepository;
 import com.finplanpro.finplanpro.repository.UserRepository;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -31,6 +32,14 @@ public class UserServiceImpl implements UserService {
         user.setUsername(userDto.getUsername());
         user.setEmail(userDto.getEmail());
         user.setPassword(passwordEncoder.encode(userDto.getPassword()));
+
+        UserProfile userProfile = new UserProfile();
+        userProfile.setFirstName(userDto.getFirstName());
+        userProfile.setLastName(userDto.getLastName());
+        userProfile.setDateOfBirth(userDto.getDateOfBirth());
+        userProfile.setGender(userDto.getGender());
+        userProfile.setUser(user);
+        user.setUserProfile(userProfile);
 
         Role role = roleRepository.findByName("ROLE_USER");
         if (role == null) {
