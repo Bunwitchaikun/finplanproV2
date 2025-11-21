@@ -10,3 +10,4 @@ public class FinplanproApplication {
         SpringApplication.run(FinplanproApplication.class, args);
     }
 }
+

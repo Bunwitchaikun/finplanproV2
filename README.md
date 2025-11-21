@@ -263,17 +263,17 @@ Branch: feature/D3-retirement-basic
 🎯 D4 — Retirement Planner (Advanced – 7 Steps Duolingo Style)
 Branch: feature/D4-retirement-advanced
 อิงจากไฟล์ V.4 — 7 Stages: YOU → LIFE → WANT → HAVES → DESIGN → TEST → SAVE
-D4.1 Setup Flow Controller (Step-by-step Wizard)
-D4.2 Step 1 (YOU): DOB, Gender, Retire Age
-D4.3 Step 2 (LIFE): Health Quiz → Predict Life Expectancy
-D4.4 Step 3 (WANT): Lifestyle, desired monthly cost
-D4.5 Step 4 (EXPENSE): Basic + Special Cost (FV calculation)
-D4.6 Step 5 (HAVES): Assets, RMF/SSF, pension, annuity
-D4.7 Step 6 (DESIGN): Target Gap Solver
-D4.8 Step 7 (TEST): 4 Scenarios Simulation
-D4.9 Save retirement plan
-D4.10 Visualization Graph (3-layer chart)
-D4.11 Commit: Retirement Advanced Completed
+✅ D4.1 Setup Flow Controller (Step-by-step Wizard)
+✅ D4.2 Step 1 (YOU): DOB, Gender, Retire Age
+✅ D4.3 Step 2 (LIFE): Health Quiz → Predict Life Expectancy
+✅ D4.4 Step 3 (WANT): Lifestyle, desired monthly cost
+✅ D4.5 Step 4 (EXPENSE): Basic + Special Cost (FV calculation)
+✅ D4.6 Step 5 (HAVES): Assets, RMF/SSF, pension, annuity
+✅ D4.7 Step 6 (DESIGN): Target Gap Solver
+✅ D4.8 Step 7 (TEST): 4 Scenarios Simulation
+✅ D4.9 Save retirement plan
+✅ D4.10 Visualization Graph (3-layer chart)
+✅ D4.11 Commit: Retirement Advanced Completed
 
 
 🧮 D5 — Assets & Liabilities Management

@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{public-layout :: layout(~{::title}, ~{::main})}">
+<head>
+    <title>Login to FinPlanPro</title>
+</head>
+<body>
+<main role="main">
+    <div class="auth-card card shadow-lg p-4 p-md-5">
+        <div class="card-body">
+            <h2 class="text-center mb-4 fw-bold">Welcome Back!</h2>
+            <p class="text-center text-muted mb-4">Sign in to continue to FinPlanPro</p>
+
+            <div th:if="${loginError} or ${param.error}" class="alert alert-danger alert-dismissible fade show" role="alert">
+                <i class="bi bi-exclamation-triangle-fill me-2"></i>
+                กรอกรหัสไม่ถูกต้อง กรุณาตรวจสอบชื่อผู้ใช้หรือรหัสผ่าน
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+            <div th:if="${param.logout}" class="alert alert-success alert-dismissible fade show" role="alert">
+                <i class="bi bi-check-circle-fill me-2"></i>
+                You have been logged out.
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+
+            <form th:action="@{/process-login}" method="post">
+                <div class="mb-3">
+                    <label for="username" class="form-label">Username or Email</label>
+                    <input type="text" class="form-control form-control-lg" id="username" name="username" required autofocus placeholder="Enter your username or email">
+                </div>
+                <div class="mb-4">
+                    <label for="password" class="form-label">Password</label>
+                    <input type="password" class="form-control form-control-lg" id="password" name="password" required placeholder="Enter your password">
+                </div>
+                <div class="d-grid mb-3">
+                    <button type="submit" class="btn btn-primary btn-lg">Login</button>
+                </div>
+            </form>
+            <div class="text-center mt-3">
+                <span class="text-muted">Don't have an account? <a th:href="@{/register}" class="text-decoration-none fw-bold">Register here</a></span>
+            </div>
+        </div>
+    </div>
+</main>
+</body>
+</html>

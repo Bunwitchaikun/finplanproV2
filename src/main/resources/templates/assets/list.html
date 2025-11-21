@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{layout :: layout(~{::title}, ~{::main})}">
+<head>
+    <title>All Snapshots</title>
+</head>
+<body>
+<main role="main">
+    <div class="container-fluid">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h1 class="h3">My Net Worth Snapshots</h1>
+            <a th:href="@{/assets}" class="btn btn-primary">
+                <i class="bi bi-plus-lg me-2"></i>Create New Snapshot
+            </a>
+        </div>
+
+        <!-- Success/Error Messages -->
+        <div th:if="${successMessage}" class="alert alert-success" th:text="${successMessage}"></div>
+        <div th:if="${errorMessage}" class="alert alert-danger" th:text="${errorMessage}"></div>
+
+        <div class="card shadow-sm border-0">
+            <div class="card-body">
+                <div class="d-flex justify-content-end mb-3" th:if="${not #lists.isEmpty(snapshots)}">
+                    <form th:action="@{/assets/delete/all}" method="post" onsubmit="return confirm('Are you sure you want to delete ALL snapshots? This action cannot be undone.');">
+                        <button type="submit" class="btn btn-sm btn-danger">
+                            <i class="bi bi-trash3-fill me-2"></i>Delete All
+                        </button>
+                    </form>
+                </div>
+                <table class="table table-hover">
+                    <thead class="table-light">
+                        <tr>
+                            <th>Date</th>
+                            <th>Name</th>
+                            <th>Total Assets</th>
+                            <th>Total Liabilities</th>
+                            <th>Net Worth</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:each="snap : ${snapshots}">
+                            <td th:text="${#temporals.format(snap.snapshotDate, 'dd-MMM-yyyy')}"></td>
+                            <td th:text="${snap.snapshotName}"></td>
+                            <td class="text-success" th:text="${#numbers.formatCurrency(snap.totalAssets)}"></td>
+                            <td class="text-danger" th:text="${#numbers.formatCurrency(snap.totalLiabilities)}"></td>
+                            <td class="fw-bold" th:text="${#numbers.formatCurrency(snap.netWorth)}"></td>
+                            <td>
+                                <a th:href="@{/assets/edit/{id}(id=${snap.id})}" class="btn btn-sm btn-outline-primary">Edit</a>
+                                <form th:action="@{/assets/delete/{id}(id=${snap.id})}" method="post" class="d-inline" onsubmit="return confirm('Delete this snapshot?');">
+                                    <button type="submit" class="btn btn-sm btn-outline-danger">Delete</button>
+                                </form>
+                            </td>
+                        </tr>
+                        <tr th:if="${#lists.isEmpty(snapshots)}">
+                            <td colspan="6" class="text-center text-muted py-4">No snapshots found. Create your first one!</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</main>
+</body>
+</html>

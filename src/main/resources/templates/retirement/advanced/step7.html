@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{layout :: layout(~{::title}, ~{::main})}">
+<head>
+    <title>Advanced Retirement - Step 7</title>
+</head>
+<body>
+<main role="main">
+    <div class="container py-4">
+        <h2 class="mb-4">ขั้นที่ 7: ทดสอบแผน (แผน <span th:text="${planId}"></span>)</h2>
+        <p class="text-muted">ระบบจะจำลองสถานการณ์ต่าง ๆ หลังส่งฟอร์ม</p>
+        <form th:action="@{'/retirement/advanced/' + ${planId} + '/step/7'}" method="post">
+            <button class="btn btn-primary" type="submit">ดูผลสรุป</button>
+        </form>
+    </div>
+</main>
+</body>
+</html>

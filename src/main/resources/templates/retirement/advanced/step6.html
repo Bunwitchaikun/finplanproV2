@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{layout :: layout(~{::title}, ~{::main})}">
+<head>
+    <title>Advanced Retirement - Step 6</title>
+</head>
+<body>
+<main role="main">
+    <div class="container py-4">
+        <h2 class="mb-4">ขั้นที่ 6: ออกแบบแผน (แผน <span th:text="${planId}"></span>)</h2>
+        <form th:action="@{'/retirement/advanced/' + ${planId} + '/step/6'}" th:object="${form}" method="post" class="row g-3">
+            <div class="col-md-6">
+                <label class="form-label">ผลตอบแทนคาดหวังก่อนเกษียณ (%)</label>
+                <input type="number" class="form-control" th:field="*{expectedReturnRateBeforeRetirement}" step="0.01" min="0">
+            </div>
+            <div class="col-md-6">
+                <label class="form-label">ผลตอบแทนคาดหวังหลังเกษียณ (%)</label>
+                <input type="number" class="form-control" th:field="*{expectedReturnRateAfterRetirement}" step="0.01" min="0">
+            </div>
+            <div class="col-12">
+                <button class="btn btn-primary" type="submit">ต่อไป (Step 7)</button>
+            </div>
+        </form>
+    </div>
+</main>
+</body>
+</html>

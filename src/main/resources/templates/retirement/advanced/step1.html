@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{layout :: layout(~{::title}, ~{::main})}">
+<head>
+    <title>Advanced Retirement - Step 1: You</title>
+</head>
+<body>
+<main role="main">
+    <div class="container-fluid">
+        <!-- Header -->
+        <h1 class="h3 mb-4">Advanced Retirement Planner</h1>
+
+        <!-- Progress Bar -->
+        <div class="progress mb-4" style="height: 20px;">
+            <div class="progress-bar" role="progressbar" style="width: 14%;" aria-valuenow="14" aria-valuemin="0" aria-valuemax="100">Step 1 of 7</div>
+        </div>
+
+        <div class="card shadow-sm border-0">
+            <div class="card-body p-4">
+                <h5 class="card-title mb-4"><i class="bi bi-person-check me-2"></i>Step 1: About You</h5>
+                <form th:action="@{/retirement/advanced/step1}" th:object="${plan}" method="post" class="row g-3">
+                    <div class="col-md-12">
+                        <label for="planName" class="form-label">Plan Name</label>
+                        <input type="text" class="form-control" id="planName" th:field="*{planName}" required placeholder="e.g., My Dream Retirement">
+                    </div>
+                    <div class="col-md-4">
+                        <label for="dateOfBirth" class="form-label">Date of Birth</label>
+                        <input type="date" class="form-control" id="dateOfBirth" th:field="*{dateOfBirth}" required>
+                    </div>
+                    <div class="col-md-4">
+                        <label for="gender" class="form-label">Gender</label>
+                        <select class="form-select" id="gender" th:field="*{gender}">
+                            <option value="">-- Select Gender --</option>
+                            <option value="MALE">Male</option>
+                            <option value="FEMALE">Female</option>
+                        </select>
+                    </div>
+                    <div class="col-md-4">
+                        <label for="retireAge" class="form-label">Desired Retirement Age</label>
+                        <input type="number" class="form-control" id="retireAge" th:field="*{retireAge}" required placeholder="e.g., 60">
+                    </div>
+                    <div class="col-12 text-end mt-4">
+                        <button type="submit" class="btn btn-primary">Next: Your Life <i class="bi bi-arrow-right"></i></button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</main>
+</body>
+</html>

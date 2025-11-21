@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{layout :: layout(~{::title}, ~{::main})}">
+<head>
+    <title>Advanced Retirement - Step 2</title>
+</head>
+<body>
+<main role="main">
+    <div class="container py-4">
+        <h2 class="mb-4">ขั้นที่ 2: สุขภาพ (แผน <span th:text="${planId}"></span>)</h2>
+        <form th:action="@{'/retirement/advanced/' + ${planId} + '/step/2'}" th:object="${form}" method="post" class="row g-3">
+            <div class="col-md-6">
+                <label class="form-label">สุขภาพ</label>
+                <select class="form-select" th:field="*{healthStatus}">
+                    <option value="" disabled selected>เลือกสถานะ</option>
+                    <option value="Excellent">Excellent</option>
+                    <option value="Average">Average</option>
+                    <option value="Poor">Poor</option>
+                </select>
+            </div>
+            <div class="col-12">
+                <button class="btn btn-primary" type="submit">ต่อไป (Step 3)</button>
+            </div>
+        </form>
+    </div>
+</main>
+</body>
+</html>
