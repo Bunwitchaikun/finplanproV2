@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{layout :: layout(~{::title}, ~{::main})}">
+<head>
+    <title>All Insurance Policies</title>
+</head>
+<body>
+<main role="main">
+    <div class="container-fluid">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h1 class="h3">My Insurance Policies</h1>
+            <a th:href="@{/insurance}" class="btn btn-primary">
+                <i class="bi bi-plus-lg me-2"></i>Add New Policy
+            </a>
+        </div>
+
+        <div th:if="${successMessage}" class="alert alert-success" th:text="${successMessage}"></div>
+        <div th:if="${errorMessage}" class="alert alert-danger" th:text="${errorMessage}"></div>
+
+        <div class="card shadow-sm border-0">
+            <div class="card-body">
+                <form id="listForm" th:action="@{/insurance/delete-selected}" method="post">
+                    <div class="d-flex justify-content-between mb-3" th:if="${not #lists.isEmpty(policies)}">
+                        <div>
+                            <button type="submit" class="btn btn-sm btn-outline-danger" onclick="return confirm('Delete selected policies?');">
+                                <i class="bi bi-trash me-2"></i>Delete Selected
+                            </button>
+                        </div>
+                        <form th:action="@{/insurance/delete/all}" method="post" onsubmit="return confirm('Are you sure you want to delete ALL policies?');" class="d-inline">
+                            <button type="submit" class="btn btn-sm btn-danger">
+                                <i class="bi bi-trash3-fill me-2"></i>Delete All
+                            </button>
+                        </form>
+                    </div>
+                    <table class="table table-hover">
+                        <thead class="table-light">
+                            <tr>
+                                <th><input type="checkbox" onclick="$('input[name=selectedIds]').prop('checked', $(this).is(':checked'));"></th>
+                                <th>Policy Number</th>
+                                <th>Life Coverage</th>
+                                <th>Total Premium</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr th:each="p : ${policies}">
+                                <td><input type="checkbox" name="selectedIds" th:value="${p.id}"></td>
+                                <td th:text="${p.policyNumber}"></td>
+                                <td th:text="${#numbers.formatCurrency(p.lifeCoverage)}"></td>
+                                <td th:text="${#numbers.formatCurrency(p.totalPremium)}"></td>
+                                <td>
+                                    <a th:href="@{/insurance/edit/{id}(id=${p.id})}" class="btn btn-sm btn-outline-primary">Edit</a>
+                                </td>
+                            </tr>
+                            <tr th:if="${#lists.isEmpty(policies)}">
+                                <td colspan="5" class="text-center text-muted py-4">No policies found. Add your first one!</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </form>
+            </div>
+        </div>
+    </div>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</main>
+</body>
+</html>
