@@ -22,20 +22,20 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http.csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests((authorize) ->
-                        authorize.requestMatchers("/register/**").permitAll() // This now allows GET and POST
-                                .requestMatchers("/", "/login").permitAll()
+                        authorize.requestMatchers("/register/**", "/login/**").permitAll()
                                 .requestMatchers("/css/**", "/js/**", "/images/**").permitAll()
                                 .anyRequest().authenticated()
                 ).formLogin(
                         form -> form
                                 .loginPage("/login")
-                                .loginProcessingUrl("/process-login")
-                                .failureForwardUrl("/login?error=true")
+                                .loginProcessingUrl("/login")
                                 .defaultSuccessUrl("/dashboard", true)
+                                .failureUrl("/login?error=true")
                                 .permitAll()
                 ).logout(
                         logout -> logout
                                 .logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
+                                .logoutSuccessUrl("/login?logout=true")
                                 .permitAll()
                 );
         return http.build();

@@ -8,6 +8,7 @@ import com.finplanpro.finplanpro.repository.RoleRepository;
 import com.finplanpro.finplanpro.repository.UserRepository;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Set;
 
@@ -27,25 +28,29 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @Transactional
     public void saveUser(UserDto userDto) {
         User user = new User();
         user.setUsername(userDto.getUsername());
         user.setEmail(userDto.getEmail());
+        // Encode the password
         user.setPassword(passwordEncoder.encode(userDto.getPassword()));
 
+        // Create and associate UserProfile
         UserProfile userProfile = new UserProfile();
         userProfile.setFirstName(userDto.getFirstName());
         userProfile.setLastName(userDto.getLastName());
-        userProfile.setDateOfBirth(userDto.getDateOfBirth());
-        userProfile.setGender(userDto.getGender());
-        userProfile.setUser(user);
-        user.setUserProfile(userProfile);
+        userProfile.setUser(user); // Link profile to user
+        user.setUserProfile(userProfile); // Link user to profile
 
+        // Assign Role
         Role role = roleRepository.findByName("ROLE_USER");
         if (role == null) {
             role = checkRoleExist();
         }
         user.setRoles(Set.of(role));
+
+        // Save the user, and the profile will be saved automatically due to CascadeType.ALL
         userRepository.save(user);
     }
 
