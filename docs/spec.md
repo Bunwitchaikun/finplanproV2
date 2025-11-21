@@ -2906,7 +2906,7 @@ Branch: feature/D8-dashboard
 D8.1 Home Dashboard Controller
 D8.2 Summary Cards:
        - Net Worth
-       - Retirement Progress
+       - Retirement Goal
        - Insurance Summary
        - Tax Summary
 D8.3 Charts:
@@ -2918,13 +2918,16 @@ D8.5 Commit: Dashboard Module
 D8 Feature Description :
 D8 User Journey : 
 
-📈 D9 — Visualization & Reporting
-Branch: feature/D9-visualization
-D9.1 PDF Generation (Retirement Plan Report)
-D9.2 Chart Export (PNG/SVG)
-D9.3 Net Worth Report
-D9.4 Retirement Summary Report
-D9.5 Commit: Reporting Module
+📈 D9 — Final Update UX/UI Full Version
+Branch: feature/D9-UXUI
+D9.1 D1-setup UXUI
+D9.2 D2-auth-UXUI
+D9.3 D3-retire-basic-UXUI
+D9.4 D4-retirement-advanced-UXUI
+D9.5 D5-assets-liabilities-UXUI
+D9.6 D6-insurance-UXUI
+D9.7 D7-tax-UXUI
+D9.8 Commit: UX/UI Full Version
 
 
 🧪 D10 — Testing, CI/CD, Final Review
