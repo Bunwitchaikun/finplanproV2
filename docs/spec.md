@@ -2918,13 +2918,17 @@ D8.5 Commit: Dashboard Module
 D8 Feature Description :
 D8 User Journey : 
 
-📈 D9 — Visualization & Reporting
-Branch: feature/D9-visualization
-D9.1 PDF Generation (Retirement Plan Report)
-D9.2 Chart Export (PNG/SVG)
-D9.3 Net Worth Report
-D9.4 Retirement Summary Report
-D9.5 Commit: Reporting Module
+📈 D9 — Final update UX/UI
+Branch: feature/D9-UXUI
+D9.1 D1-setup UX/UI
+D9.2 D2-auth UX/UI
+D9.3 D3-retire-basic UX/UI
+D9.4 D4-retirement-advanced UX/UI
+D9.5 D5-assets-liabilities UX/UI
+D9.6 D6-insurance UX/UI
+D9.7 D7-tax UX/UI
+D9.8 D8-dashboard UX/UI
+D9.9 Commit: Final update UX/UI
 
 
 🧪 D10 — Testing, CI/CD, Final Review
