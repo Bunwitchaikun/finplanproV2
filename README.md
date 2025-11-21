@@ -279,15 +279,15 @@ Branch: feature/D4-retirement-advanced
 🧮 D5 — Assets & Liabilities Management
 Branch: feature/D5-assets-liabilities
 (อิงจาก Desktop App Python → Wealth Magic)
-D5.1 Entity: AssetsLiabilities
-D5.2 Form: asset/liability input fields
-D5.3 Service: calculate net worth
-D5.4 Save record
-D5.5 List all records
-D5.6 Edit record
-D5.7 Delete record
-D5.8 Visualization: Net worth trend (line chart)
-D5.9 Commit: Assets/Liabilities Module
+✅D5.1 Entity: AssetsLiabilities
+✅D5.2 Form: asset/liability input fields
+✅D5.3 Service: calculate net worth
+✅D5.4 Save record
+✅D5.5 List all records
+✅D5.6 Edit record
+✅D5.7 Delete record
+✅D5.8 Visualization: Net worth trend (line chart)
+✅D5.9 Commit: Assets/Liabilities Module
 
 
 🏥 D6 — Insurance Management
