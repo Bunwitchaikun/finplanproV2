@@ -6,19 +6,13 @@
 </head>
 <body>
 <main role="main">
-    <h1>Step 7: Test & Save</h1>
-    <p>This is a placeholder for the 4 Scenarios Simulation.</p>
-    
-    <div th:object="${plan}">
-        <p>Ready to save this plan?</p>
-        <p>Plan Name: <strong th:text="*{planName}"></strong></p>
-        <p>Funding Gap: <strong th:text="${#numbers.formatCurrency(plan.fundGap)}"></strong></p>
+    <div class="container py-4">
+        <h2 class="mb-4">ขั้นที่ 7: ทดสอบแผน (แผน <span th:text="${planId}"></span>)</h2>
+        <p class="text-muted">ระบบจะจำลองสถานการณ์ต่าง ๆ หลังส่งฟอร์ม</p>
+        <form th:action="@{'/retirement/advanced/' + ${planId} + '/step/7'}" method="post">
+            <button class="btn btn-primary" type="submit">ดูผลสรุป</button>
+        </form>
     </div>
-
-    <form th:action="@{/retirement/advanced/save}" method="post">
-        <button type="submit" class="btn btn-primary">Save Plan</button>
-        <a th:href="@{/retirement/advanced/start}" class="btn btn-secondary">Cancel</a>
-    </form>
 </main>
 </body>
 </html>

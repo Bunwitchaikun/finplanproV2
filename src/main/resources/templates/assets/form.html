@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{layout :: layout(~{::title}, ~{::main})}">
+<head>
+    <title>Assets & Liabilities</title>
+</head>
+<body>
+<main role="main">
+    <div class="container-fluid">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h1 class="h3" th:text="${snapshot.id == null ? 'Create New Snapshot' : 'Edit Snapshot'}"></h1>
+            <a th:href="@{/assets/list}" class="btn btn-outline-primary">
+                <i class="bi bi-list-ul me-2"></i>View All Snapshots
+            </a>
+        </div>
+
+        <form th:action="@{/assets}" th:object="${snapshot}" method="post">
+            <input type="hidden" th:field="*{id}" />
+            <input type="hidden" th:field="*{user}" />
+
+            <div class="card shadow-sm border-0">
+                <div class="card-body p-4">
+                    <div class="row g-3 mb-3">
+                        <div class="col-md-6">
+                            <label for="snapshotName" class="form-label">Snapshot Name</label>
+                            <input type="text" class="form-control" id="snapshotName" th:field="*{snapshotName}" required placeholder="e.g., Q4 2025">
+                        </div>
+                        <div class="col-md-6">
+                            <label for="snapshotDate" class="form-label">Snapshot Date</label>
+                            <input type="date" class="form-control" id="snapshotDate" th:field="*{snapshotDate}" required>
+                        </div>
+                    </div>
+                    <hr>
+                    <div class="row g-4">
+                        <!-- Assets Column -->
+                        <div class="col-lg-6">
+                            <h4><i class="bi bi-plus-circle-fill text-success me-2"></i>Assets</h4>
+                            <div class="mb-2">
+                                <label for="cashAndEquivalents" class="form-label">Cash & Equivalents</label>
+                                <input type="number" step="0.01" class="form-control" id="cashAndEquivalents" th:field="*{cashAndEquivalents}">
+                            </div>
+                            <div class="mb-2">
+                                <label for="stocks" class="form-label">Stocks</label>
+                                <input type="number" step="0.01" class="form-control" id="stocks" th:field="*{stocks}">
+                            </div>
+                            <div class="mb-2">
+                                <label for="funds" class="form-label">Funds</label>
+                                <input type="number" step="0.01" class="form-control" id="funds" th:field="*{funds}">
+                            </div>
+                            <div class="mb-2">
+                                <label for="realEstate" class="form-label">Real Estate</label>
+                                <input type="number" step="0.01" class="form-control" id="realEstate" th:field="*{realEstate}">
+                            </div>
+                            <div class="mb-2">
+                                <label for="otherAssets" class="form-label">Other Assets</label>
+                                <input type="number" step="0.01" class="form-control" id="otherAssets" th:field="*{otherAssets}">
+                            </div>
+                        </div>
+
+                        <!-- Liabilities Column -->
+                        <div class="col-lg-6">
+                            <h4><i class="bi bi-dash-circle-fill text-danger me-2"></i>Liabilities</h4>
+                            <div class="mb-2">
+                                <label for="creditCardDebt" class="form-label">Credit Card Debt</label>
+                                <input type="number" step="0.01" class="form-control" id="creditCardDebt" th:field="*{creditCardDebt}">
+                            </div>
+                            <div class="mb-2">
+                                <label for="homeLoan" class="form-label">Home Loan</label>
+                                <input type="number" step="0.01" class="form-control" id="homeLoan" th:field="*{homeLoan}">
+                            </div>
+                            <div class="mb-2">
+                                <label for="carLoan" class="form-label">Car Loan</label>
+                                <input type="number" step="0.01" class="form-control" id="carLoan" th:field="*{carLoan}">
+                            </div>
+                            <div class="mb-2">
+                                <label for="otherLiabilities" class="form-label">Other Liabilities</label>
+                                <input type="number" step="0.01" class="form-control" id="otherLiabilities" th:field="*{otherLiabilities}">
+                            </div>
+                        </div>
+                    </div>
+                    <hr class="my-4">
+                    <button type="submit" class="btn btn-primary px-4">
+                        <i class="bi bi-save me-2"></i>
+                        <span th:text="${snapshot.id == null ? 'Save Snapshot' : 'Update Snapshot'}"></span>
+                    </button>
+                </div>
+            </div>
+        </form>
+    </div>
+</main>
+</body>
+</html>

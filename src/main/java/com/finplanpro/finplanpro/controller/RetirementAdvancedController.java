@@ -2,10 +2,8 @@ package com.finplanpro.finplanpro.controller;
 
 import com.finplanpro.finplanpro.entity.RetirementAdvanced;
 import com.finplanpro.finplanpro.service.RetirementAdvancedService;
-import jakarta.validation.Valid;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.support.SessionStatus;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
@@ -27,7 +25,7 @@ public class RetirementAdvancedController {
     }
 
     private void addActiveMenu(Model model) {
-        model.addAttribute("activeMenu", "retirement");
+        model.addAttribute("activeMenu", "retirement_advanced");
     }
 
     @GetMapping("/start")
@@ -37,7 +35,7 @@ public class RetirementAdvancedController {
     }
 
     @GetMapping("/step1")
-    public String showStep1(Model model) {
+    public String showStep1(Model model, @ModelAttribute("plan") RetirementAdvanced plan) {
         addActiveMenu(model);
         return "retirement/advanced/step1";
     }
@@ -48,7 +46,7 @@ public class RetirementAdvancedController {
     }
 
     @GetMapping("/step2")
-    public String showStep2(Model model) {
+    public String showStep2(Model model, @ModelAttribute("plan") RetirementAdvanced plan) {
         addActiveMenu(model);
         return "retirement/advanced/step2";
     }
@@ -59,7 +57,7 @@ public class RetirementAdvancedController {
     }
 
     @GetMapping("/step3")
-    public String showStep3(Model model) {
+    public String showStep3(Model model, @ModelAttribute("plan") RetirementAdvanced plan) {
         addActiveMenu(model);
         return "retirement/advanced/step3";
     }
@@ -70,7 +68,7 @@ public class RetirementAdvancedController {
     }
 
     @GetMapping("/step4")
-    public String showStep4(Model model) {
+    public String showStep4(Model model, @ModelAttribute("plan") RetirementAdvanced plan) {
         addActiveMenu(model);
         return "retirement/advanced/step4";
     }
@@ -81,7 +79,7 @@ public class RetirementAdvancedController {
     }
 
     @GetMapping("/step5")
-    public String showStep5(Model model) {
+    public String showStep5(Model model, @ModelAttribute("plan") RetirementAdvanced plan) {
         addActiveMenu(model);
         return "retirement/advanced/step5";
     }
@@ -90,7 +88,7 @@ public class RetirementAdvancedController {
     public String processStep5(@ModelAttribute("plan") RetirementAdvanced plan) {
         return "redirect:/retirement/advanced/step6";
     }
-    
+
     @GetMapping("/step6")
     public String showStep6(Model model, @ModelAttribute("plan") RetirementAdvanced plan) {
         addActiveMenu(model);
@@ -104,7 +102,7 @@ public class RetirementAdvancedController {
     }
 
     @GetMapping("/step7")
-    public String showStep7(Model model) {
+    public String showStep7(Model model, @ModelAttribute("plan") RetirementAdvanced plan) {
         addActiveMenu(model);
         return "retirement/advanced/step7";
     }

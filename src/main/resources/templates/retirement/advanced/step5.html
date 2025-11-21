@@ -6,26 +6,46 @@
 </head>
 <body>
 <main role="main">
-    <h1>Step 5: Your Haves</h1>
-    <form th:action="@{/retirement/advanced/step5}" th:object="${plan}" method="post">
-        <div>
-            <label for="currentAssets">Current Liquid Assets:</label>
-            <input type="number" step="0.01" id="currentAssets" th:field="*{currentAssets}" required>
-        </div>
-        <div>
-            <label for="rmfSsf">RMF/SSF:</label>
-            <input type="number" step="0.01" id="rmfSsf" th:field="*{rmfSsf}" required>
-        </div>
-        <div>
-            <label for="pension">Pension:</label>
-            <input type="number" step="0.01" id="pension" th:field="*{pension}" required>
-        </div>
-        <div>
-            <label for="annuity">Annuity:</label>
-            <input type="number" step="0.01" id="annuity" th:field="*{annuity}" required>
-        </div>
-        <button type="submit">Next</button>
-    </form>
+    <div class="container py-4">
+        <h2 class="mb-4">ขั้นที่ 5: สินทรัพย์ / เงินลงทุน (แผน <span th:text="${planId}"></span>)</h2>
+        <form th:action="@{'/retirement/advanced/' + ${planId} + '/step/5'}" th:object="${form}" method="post" class="row g-3">
+            <div class="col-md-6">
+                <label class="form-label">กองทุนสำรองเลี้ยงชีพ / Provident Fund</label>
+                <input type="number" class="form-control" th:field="*{providentFund}" min="0" step="1000">
+            </div>
+            <div class="col-md-6">
+                <label class="form-label">RMF</label>
+                <input type="number" class="form-control" th:field="*{rmf}" min="0" step="1000">
+            </div>
+            <div class="col-md-6">
+                <label class="form-label">SSF</label>
+                <input type="number" class="form-control" th:field="*{ssf}" min="0" step="1000">
+            </div>
+            <div class="col-md-6">
+                <label class="form-label">บำนาญ / Annuity</label>
+                <input type="number" class="form-control" th:field="*{annuity}" min="0" step="1000">
+            </div>
+            <div class="col-md-6">
+                <label class="form-label">หุ้น / Stocks</label>
+                <input type="number" class="form-control" th:field="*{stocks}" min="0" step="1000">
+            </div>
+            <div class="col-md-6">
+                <label class="form-label">ทอง / Gold</label>
+                <input type="number" class="form-control" th:field="*{gold}" min="0" step="1000">
+            </div>
+            <div class="col-md-6">
+                <label class="form-label">สินทรัพย์อื่น ๆ</label>
+                <input type="number" class="form-control" th:field="*{otherAssets}" min="0" step="1000">
+            </div>
+            <div class="col-md-6">
+                <label class="form-label">คาดการณ์อัตราเติบโตก่อนเกษียณ</label>
+                <input type="number" class="form-control" th:field="*{growthRate}" step="0.01" placeholder="เช่น 0.05">
+            </div>
+            <div class="col-12">
+                <button class="btn btn-primary" type="submit">ต่อไป (Step 6)</button>
+            </div>
+        </form>
+    </div>
 </main>
 </body>
 </html>

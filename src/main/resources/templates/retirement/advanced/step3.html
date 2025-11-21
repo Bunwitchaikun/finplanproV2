@@ -6,14 +6,42 @@
 </head>
 <body>
 <main role="main">
-    <h1>Step 3: Your Wants</h1>
-    <form th:action="@{/retirement/advanced/step3}" th:object="${plan}" method="post">
-        <div>
-            <label for="lifestyle">Lifestyle:</label>
-            <input type="text" id="lifestyle" th:field="*{lifestyle}" required placeholder="e.g., Comfortable">
-        </div>
-        <button type="submit">Next</button>
-    </form>
+    <div class="container py-4">
+        <h2 class="mb-4">ขั้นที่ 3: ไลฟ์สไตล์หลังเกษียณ (แผน <span th:text="${planId}"></span>)</h2>
+        <form th:action="@{'/retirement/advanced/' + ${planId} + '/step/3'}" th:object="${form}" method="post" class="row g-3">
+            <div class="col-md-6">
+                <label class="form-label">ไลฟ์สไตล์</label>
+                <input type="text" class="form-control" th:field="*{lifestyle}" placeholder="เช่น Minimal / Comfortable / Luxury">
+            </div>
+            <div class="col-md-6">
+                <label class="form-label">ค่าใช้จ่ายต่อเดือนปัจจุบัน</label>
+                <input type="number" class="form-control" th:field="*{currentMonthlyExpense}" min="0" step="1000">
+            </div>
+            <div class="col-md-6">
+                <label class="form-label">อัตราเงินเฟ้อที่คาด</label>
+                <input type="number" class="form-control" th:field="*{inflationRate}" min="0" step="0.01" placeholder="เช่น 0.03">
+            </div>
+            <div class="col-md-6">
+                <label class="form-label">ต้องการรายได้เสริม?</label>
+                <select class="form-select" th:field="*{wantsAdditionalIncome}">
+                    <option value="" disabled selected>เลือก</option>
+                    <option value="true" th:value="true">Yes</option>
+                    <option value="false" th:value="false">No</option>
+                </select>
+            </div>
+            <div class="col-md-6">
+                <label class="form-label">รายได้เสริมต่อเดือน</label>
+                <input type="number" class="form-control" th:field="*{additionalIncomeAmount}" min="0" step="1000">
+            </div>
+            <div class="col-md-6">
+                <label class="form-label">ระยะเวลาให้รายได้เสริม (ปี)</label>
+                <input type="number" class="form-control" th:field="*{additionalIncomeYears}" min="0" step="1">
+            </div>
+            <div class="col-12">
+                <button class="btn btn-primary" type="submit">ต่อไป (Step 4)</button>
+            </div>
+        </form>
+    </div>
 </main>
 </body>
 </html>

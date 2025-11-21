@@ -51,7 +51,7 @@ public class RetirementAdvancedServiceImpl implements RetirementAdvancedService 
         double realReturnRate = ((1 + (POST_RETIRE_RETURN_RATE / 100)) / (1 + (AVG_INFLATION_RATE / 100))) - 1;
         
         BigDecimal livingExpensesTotal;
-        if (realReturnRate == 0) {
+        if (Math.abs(realReturnRate) < 1e-9) { // Compare double with a small tolerance
             livingExpensesTotal = futureMonthlyExpense.multiply(BigDecimal.valueOf(yearsInRetirement * 12L));
         } else {
              BigDecimal pvFactor = BigDecimal.valueOf(

@@ -6,18 +6,34 @@
 </head>
 <body>
 <main role="main">
-    <h1>Step 4: Your Expenses</h1>
-    <form th:action="@{/retirement/advanced/step4}" th:object="${plan}" method="post">
-        <div>
-            <label for="desiredMonthlyExpense">Desired Monthly Expense (Today's Value):</label>
-            <input type="number" step="0.01" id="desiredMonthlyExpense" th:field="*{desiredMonthlyExpense}" required>
-        </div>
-        <div>
-            <label for="specialExpense">One-time Special Expense (Today's Value):</label>
-            <input type="number" step="0.01" id="specialExpense" th:field="*{specialExpense}" required>
-        </div>
-        <button type="submit">Next</button>
-    </form>
+    <div class="container py-4">
+        <h2 class="mb-4">ขั้นที่ 4: รายจ่ายละเอียด (แผน <span th:text="${planId}"></span>)</h2>
+        <form th:action="@{'/retirement/advanced/' + ${planId} + '/step/4'}" th:object="${form}" method="post" class="row g-3">
+            <div class="col-md-6">
+                <label class="form-label">ค่าใช้จ่ายพื้นฐาน</label>
+                <input type="number" class="form-control" th:field="*{basicLivingCost}" min="0" step="1000">
+            </div>
+            <div class="col-md-6">
+                <label class="form-label">ค่ารักษาพยาบาล</label>
+                <input type="number" class="form-control" th:field="*{healthCost}" min="0" step="1000">
+            </div>
+            <div class="col-md-6">
+                <label class="form-label">ค่าใช้จ่ายครอบครัว</label>
+                <input type="number" class="form-control" th:field="*{familyCost}" min="0" step="1000">
+            </div>
+            <div class="col-md-6">
+                <label class="form-label">ค่าใช้จ่าย event พิเศษ</label>
+                <input type="number" class="form-control" th:field="*{specialEventsCost}" min="0" step="1000">
+            </div>
+            <div class="col-md-6">
+                <label class="form-label">อัตราเงินเฟ้อ</label>
+                <input type="number" class="form-control" th:field="*{inflationRate}" min="0" step="0.01" placeholder="เช่น 0.03">
+            </div>
+            <div class="col-12">
+                <button class="btn btn-primary" type="submit">ต่อไป (Step 5)</button>
+            </div>
+        </form>
+    </div>
 </main>
 </body>
 </html>

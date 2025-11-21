@@ -6,20 +6,22 @@
 </head>
 <body>
 <main role="main">
-    <h1>Step 6: Plan Design (Summary)</h1>
-    <div th:object="${plan}">
-        <p>Plan Name: <strong th:text="*{planName}"></strong></p>
-        <p>Total Funds Needed at Retirement: <strong th:text="${#numbers.formatCurrency(plan.totalFundsNeeded)}"></strong></p>
-        <p>Your Current Haves (for retirement): <strong th:text="${#numbers.formatCurrency(plan.currentAssets + plan.rmfSsf + plan.pension + plan.annuity)}"></strong></p>
-        <hr>
-        <h3>Funding Gap: <strong th:text="${#numbers.formatCurrency(plan.fundGap)}"
-                               th:class="${plan.fundGap.doubleValue() < 0 ? 'text-danger' : 'text-success'}"></strong></h3>
-        <p th:if="${plan.fundGap.doubleValue() < 0}" class="text-danger">You have a shortfall. You need to save more.</p>
-        <p th:if="${plan.fundGap.doubleValue() >= 0}" class="text-success">Congratulations! You are on track.</p>
+    <div class="container py-4">
+        <h2 class="mb-4">ขั้นที่ 6: ออกแบบแผน (แผน <span th:text="${planId}"></span>)</h2>
+        <form th:action="@{'/retirement/advanced/' + ${planId} + '/step/6'}" th:object="${form}" method="post" class="row g-3">
+            <div class="col-md-6">
+                <label class="form-label">ผลตอบแทนคาดหวังก่อนเกษียณ (%)</label>
+                <input type="number" class="form-control" th:field="*{expectedReturnRateBeforeRetirement}" step="0.01" min="0">
+            </div>
+            <div class="col-md-6">
+                <label class="form-label">ผลตอบแทนคาดหวังหลังเกษียณ (%)</label>
+                <input type="number" class="form-control" th:field="*{expectedReturnRateAfterRetirement}" step="0.01" min="0">
+            </div>
+            <div class="col-12">
+                <button class="btn btn-primary" type="submit">ต่อไป (Step 7)</button>
+            </div>
+        </form>
     </div>
-    <form th:action="@{/retirement/advanced/step6}" method="post">
-        <button type="submit">Next: Test Scenarios</button>
-    </form>
 </main>
 </body>
 </html>

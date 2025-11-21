@@ -1,21 +1,15 @@
 DROP TABLE IF EXISTS retirement_advanced;
 
 CREATE TABLE retirement_advanced (
-    id BIGSERIAL PRIMARY KEY,
-    user_id BIGINT NOT NULL,
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    user_id BIGINT NOT NULL REFERENCES users(id),
     plan_name VARCHAR(255),
-    date_of_birth DATE,
-    gender VARCHAR(255),
-    retire_age INT,
-    life_expectancy INT,
-    lifestyle VARCHAR(255),
-    desired_monthly_expense NUMERIC(19, 2),
-    special_expense NUMERIC(19, 2),
-    current_assets NUMERIC(19, 2),
-    rmf_ssf NUMERIC(19, 2),
-    pension NUMERIC(19, 2),
-    annuity NUMERIC(19, 2),
-    total_funds_needed NUMERIC(19, 2),
-    fund_gap NUMERIC(19, 2),
-    CONSTRAINT fk_user FOREIGN KEY (user_id) REFERENCES users(id)
+    current_step INT DEFAULT 1,
+    is_advanced BOOLEAN DEFAULT TRUE,
+    advanced_data JSONB,
+    target_fund NUMERIC(19,2),
+    monthly_investment_required NUMERIC(19,2),
+    final_life_expectancy INT,
+    created_at TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP
 );
