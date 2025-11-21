@@ -2906,7 +2906,7 @@ Branch: feature/D8-dashboard
 D8.1 Home Dashboard Controller
 D8.2 Summary Cards:
        - Net Worth
-       - Retirement Progress
+       - Retirement Goal
        - Insurance Summary
        - Tax Summary
 D8.3 Charts:
