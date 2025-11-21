@@ -1,7 +1,9 @@
 package com.finplanpro.finplanpro.controller;
 
-import com.finplanpro.finplanpro.entity.TaxRecord;
-import com.finplanpro.finplanpro.service.TaxService;
+import com.finplanpro.finplanpro.dto.TaxRequestDTO;
+import com.finplanpro.finplanpro.dto.TaxResultDTO;
+import com.finplanpro.finplanpro.service.TaxCalculationService;
+import com.finplanpro.finplanpro.service.TaxRecordService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -14,35 +16,49 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 @RequestMapping("/tax")
 public class TaxController {
 
-    private final TaxService taxService;
+    private final TaxCalculationService calculationService;
+    private final TaxRecordService recordService;
 
-    public TaxController(TaxService taxService) {
-        this.taxService = taxService;
+    public TaxController(TaxCalculationService calculationService, TaxRecordService recordService) {
+        this.calculationService = calculationService;
+        this.recordService = recordService;
     }
 
     @GetMapping
     public String showTaxForm(Model model) {
-        if (!model.containsAttribute("taxRecord")) {
-            model.addAttribute("taxRecord", new TaxRecord());
+        if (!model.containsAttribute("taxRequest")) {
+            model.addAttribute("taxRequest", new TaxRequestDTO());
         }
         model.addAttribute("activeMenu", "tax");
         return "tax/form";
     }
 
     @PostMapping("/calculate")
-    public String calculateTax(@ModelAttribute TaxRecord taxRecord, RedirectAttributes redirectAttributes) {
-        TaxRecord calculatedRecord = taxService.calculateTax(taxRecord);
-        redirectAttributes.addFlashAttribute("taxRecord", calculatedRecord);
+    public String calculateTax(@ModelAttribute("taxRequest") TaxRequestDTO taxRequest, RedirectAttributes redirectAttributes) {
+        TaxResultDTO result = calculationService.calculateTax(taxRequest);
+        
+        redirectAttributes.addFlashAttribute("taxRequest", taxRequest);
+        redirectAttributes.addFlashAttribute("taxResult", result);
         redirectAttributes.addFlashAttribute("showResult", true);
+        
         return "redirect:/tax";
     }
 
     @PostMapping("/save")
-    public String saveTaxRecord(@ModelAttribute TaxRecord taxRecord, RedirectAttributes redirectAttributes) {
-        // Recalculate before saving to ensure data integrity
-        TaxRecord finalRecord = taxService.calculateTax(taxRecord);
-        taxService.save(finalRecord);
-        redirectAttributes.addFlashAttribute("successMessage", "Tax record for year " + finalRecord.getTaxYear() + " has been saved.");
-        return "redirect:/tax"; // Or redirect to a list view if you create one
+    public String saveTaxRecord(@ModelAttribute("taxRequest") TaxRequestDTO taxRequest, RedirectAttributes redirectAttributes) {
+        
+        // Recalculate to ensure data integrity before saving
+        TaxResultDTO finalResult = calculationService.calculateTax(taxRequest);
+        recordService.save(taxRequest, finalResult);
+        
+        redirectAttributes.addFlashAttribute("successMessage", "Tax calculation for year " + taxRequest.getTaxYear() + " has been saved.");
+        return "redirect:/tax/list";
+    }
+
+    @GetMapping("/list")
+    public String showListPage(Model model) {
+        model.addAttribute("records", recordService.findRecordsByUser());
+        model.addAttribute("activeMenu", "tax");
+        return "tax/list";
     }
 }

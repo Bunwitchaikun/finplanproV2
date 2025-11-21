@@ -24,29 +24,9 @@ public class TaxRecord {
 
     private int taxYear;
 
-    // Income
-    private BigDecimal monthlyIncome = BigDecimal.ZERO;
-    private BigDecimal otherAnnualIncome = BigDecimal.ZERO;
-
-    // Deductions
-    private boolean hasSpouse = false;
-    private int childrenCount = 0;
-    private int parentCount = 0;
-    private int disabledCareCount = 0;
-
-    // Insurance & Funds
-    private BigDecimal lifeInsurancePremium = BigDecimal.ZERO;
-    private BigDecimal healthInsurancePremium = BigDecimal.ZERO;
-    private BigDecimal parentHealthInsurancePremium = BigDecimal.ZERO;
-    private BigDecimal pensionInsurancePremium = BigDecimal.ZERO;
-    private BigDecimal providentFund = BigDecimal.ZERO;
-    private BigDecimal rmf = BigDecimal.ZERO;
-    private BigDecimal ssf = BigDecimal.ZERO;
-    private BigDecimal nac = BigDecimal.ZERO; // National Savings Fund (กอช.)
-
-    // Calculated Results
-    private BigDecimal totalIncome = BigDecimal.ZERO;
-    private BigDecimal totalDeduction = BigDecimal.ZERO;
-    private BigDecimal netTaxableIncome = BigDecimal.ZERO;
-    private BigDecimal taxPayable = BigDecimal.ZERO;
+    // Results to be saved
+    private BigDecimal annualIncome;
+    private BigDecimal totalDeduction;
+    private BigDecimal netIncome;
+    private BigDecimal taxPayable;
 }

@@ -1,0 +1,57 @@
+package com.finplanpro.finplanpro.service;
+
+import com.finplanpro.finplanpro.dto.TaxRequestDTO;
+import com.finplanpro.finplanpro.dto.TaxResultDTO;
+import com.finplanpro.finplanpro.entity.TaxRecord;
+import com.finplanpro.finplanpro.entity.User;
+import com.finplanpro.finplanpro.repository.TaxRecordRepository;
+import com.finplanpro.finplanpro.repository.UserRepository;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
+
+@Service
+public class TaxRecordServiceImpl implements TaxRecordService {
+
+    private final TaxRecordRepository taxRecordRepository;
+    private final UserRepository userRepository;
+
+    public TaxRecordServiceImpl(TaxRecordRepository taxRecordRepository, UserRepository userRepository) {
+        this.taxRecordRepository = taxRecordRepository;
+        this.userRepository = userRepository;
+    }
+
+    @Override
+    public void save(TaxRequestDTO request, TaxResultDTO result) {
+        User user = getCurrentUser();
+        
+        TaxRecord record = new TaxRecord();
+        record.setUser(user);
+        record.setTaxYear(request.getTaxYear());
+        record.setAnnualIncome(result.getAnnualIncome());
+        record.setTotalDeduction(result.getTotalExpenseDeduction().add(result.getTotalAllowance()));
+        record.setNetIncome(result.getNetIncome());
+        record.setTaxPayable(result.getTaxAmount());
+
+        taxRecordRepository.save(record);
+    }
+
+    @Override
+    public List<TaxRecord> findRecordsByUser() {
+        return taxRecordRepository.findByUserOrderByTaxYearDesc(getCurrentUser());
+    }
+
+    private User getCurrentUser() {
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
+        User user = userRepository.findByEmail(username);
+        if (user == null) {
+            user = userRepository.findByUsername(username);
+        }
+        if (user == null) {
+            throw new UsernameNotFoundException("User not found");
+        }
+        return user;
+    }
+}
