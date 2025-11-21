@@ -1,117 +1,119 @@
 package com.finplanpro.finplanpro.service;
 
-import com.finplanpro.finplanpro.entity.RetirementAdvanced;
-import com.finplanpro.finplanpro.entity.User;
-import com.finplanpro.finplanpro.repository.RetirementAdvancedRepository;
-import com.finplanpro.finplanpro.repository.UserRepository;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import com.finplanpro.finplanpro.dto.*;
+import com.finplanpro.finplanpro.service.calculation.FinancialCalculator;
+import com.finplanpro.finplanpro.service.calculation.ScenarioSimulator;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.time.LocalDate;
-import java.time.temporal.ChronoUnit;
+import java.time.Period;
 import java.util.List;
-import java.util.Optional;
 
 @Service
+@RequiredArgsConstructor
 public class RetirementAdvancedServiceImpl implements RetirementAdvancedService {
 
-    private final RetirementAdvancedRepository retirementAdvancedRepository;
-    private final UserRepository userRepository;
+    private final FinancialCalculator financialCalculator;
+    private final ScenarioSimulator scenarioSimulator;
 
-    // Assume average inflation and investment returns for calculation
-    private static final double AVG_INFLATION_RATE = 3.0;
-    private static final double POST_RETIRE_RETURN_RATE = 5.0;
+    @Override
+    public Step1YouDTO calculateStep1(Step1YouDTO input) {
+        LocalDate today = LocalDate.now();
+        LocalDate retirementDate = LocalDate.of(input.getRetireYear(), input.getRetireMonth(), 1);
 
-    public RetirementAdvancedServiceImpl(RetirementAdvancedRepository retirementAdvancedRepository, UserRepository userRepository) {
-        this.retirementAdvancedRepository = retirementAdvancedRepository;
-        this.userRepository = userRepository;
+        int currentAge = Period.between(input.getDateOfBirth(), today).getYears();
+        int retirementAge = Period.between(input.getDateOfBirth(), retirementDate).getYears();
+        int yearsToRetirement = retirementAge - currentAge;
+
+        input.setCurrentAge(currentAge);
+        input.setRetirementAge(retirementAge);
+        input.setYearsToRetirement(yearsToRetirement);
+        return input;
     }
 
     @Override
-    public RetirementAdvanced save(RetirementAdvanced plan) {
-        User user = getCurrentUser();
-        plan.setUser(user);
-        return retirementAdvancedRepository.save(plan);
+    public Step2LifeDTO calculateStep2(Step2LifeDTO input, int retirementAge) {
+        int adjustment = switch (input.getHealthLevel()) {
+            case "perfect" -> 3;
+            case "minor" -> 1;
+            case "moderate" -> -1;
+            case "major" -> -3;
+            default -> 0; // unknown
+        };
+        int lifeExpectancy = 90 + adjustment;
+        input.setLifeExpectancy(lifeExpectancy);
+        input.setYearsAfterRetirement(lifeExpectancy - retirementAge);
+        return input;
     }
 
     @Override
-    public RetirementAdvanced calculate(RetirementAdvanced plan) {
-        // --- Calculation Logic from Step 1 to 7 ---
-        long yearsToRetirement = ChronoUnit.YEARS.between(LocalDate.now(), plan.getDateOfBirth().plusYears(plan.getRetireAge()));
-        long yearsInRetirement = plan.getLifeExpectancy() - plan.getRetireAge();
+    public Step3WantsDTO calculateStep3IncomeProjection(Step3WantsDTO input) {
+        // This is a placeholder for a more complex projection logic
+        return input;
+    }
 
-        // 1. Future Value of monthly expense at retirement
-        BigDecimal futureMonthlyExpense = plan.getDesiredMonthlyExpense()
-                .multiply(BigDecimal.valueOf(Math.pow(1 + (AVG_INFLATION_RATE / 100), yearsToRetirement)));
-
-        // 2. Total funds needed for living expenses (using PV of Annuity)
-        double realReturnRate = ((1 + (POST_RETIRE_RETURN_RATE / 100)) / (1 + (AVG_INFLATION_RATE / 100))) - 1;
-        
-        BigDecimal livingExpensesTotal;
-        if (Math.abs(realReturnRate) < 1e-9) { // Compare double with a small tolerance
-            livingExpensesTotal = futureMonthlyExpense.multiply(BigDecimal.valueOf(yearsInRetirement * 12L));
-        } else {
-             BigDecimal pvFactor = BigDecimal.valueOf(
-                (1 - Math.pow(1 + realReturnRate, -yearsInRetirement * 12)) / realReturnRate
+    @Override
+    public Step4ExpenseDTO calculateSpecialExpensesFV(Step4ExpenseDTO input, int yearsToRetirement) {
+        input.getItems().forEach(item -> {
+            BigDecimal fv = financialCalculator.calculateFV(
+                item.getAmountToday(),
+                item.getInflationRate(),
+                yearsToRetirement
             );
-            livingExpensesTotal = futureMonthlyExpense.multiply(pvFactor);
-        }
-
-        // 3. Add Future Value of special one-time expense
-        BigDecimal futureSpecialExpense = plan.getSpecialExpense()
-                .multiply(BigDecimal.valueOf(Math.pow(1 + (AVG_INFLATION_RATE / 100), yearsToRetirement)));
-
-        BigDecimal totalFundsNeeded = livingExpensesTotal.add(futureSpecialExpense);
-        plan.setTotalFundsNeeded(totalFundsNeeded.setScale(2, RoundingMode.HALF_UP));
-
-        // 4. Calculate total current assets available for retirement
-        BigDecimal totalHaves = plan.getCurrentAssets()
-                .add(plan.getRmfSsf())
-                .add(plan.getPension())
-                .add(plan.getAnnuity());
-
-        // 5. Calculate the gap
-        BigDecimal fundGap = totalHaves.subtract(totalFundsNeeded);
-        plan.setFundGap(fundGap.setScale(2, RoundingMode.HALF_UP));
-
-        return plan;
-    }
-
-    @Override
-    public List<RetirementAdvanced> findPlansByUser() {
-        User user = getCurrentUser();
-        return retirementAdvancedRepository.findByUser(user);
-    }
-
-    @Override
-    public Optional<RetirementAdvanced> findById(Long id) {
-        return retirementAdvancedRepository.findById(id);
-    }
-
-    @Override
-    public void deleteById(Long id) {
-        User user = getCurrentUser();
-        retirementAdvancedRepository.findById(id).ifPresent(plan -> {
-            if (plan.getUser().equals(user)) {
-                retirementAdvancedRepository.deleteById(id);
-            } else {
-                throw new SecurityException("User not authorized to delete this plan");
-            }
+            item.setFutureValue(fv.setScale(2, RoundingMode.HALF_UP));
         });
+        BigDecimal totalFv = input.getItems().stream()
+                .map(Step4ExpenseDTO.SpecialExpenseItem::getFutureValue)
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
+        input.setTotalSpecialExpensesFV(totalFv);
+        return input;
     }
 
-    private User getCurrentUser() {
-        String username = SecurityContextHolder.getContext().getAuthentication().getName();
-        User user = userRepository.findByEmail(username);
-        if (user == null) {
-            user = userRepository.findByUsername(username);
-        }
-        if (user == null) {
-            throw new UsernameNotFoundException("User not found");
-        }
-        return user;
+    @Override
+    public Step5HavesDTO calculateAssetsFV(Step5HavesDTO input, int yearsToRetirement) {
+        input.getAssets().forEach(asset -> {
+            BigDecimal fv = financialCalculator.calculateFV(
+                asset.getValueToday(),
+                asset.getReturnRate(),
+                yearsToRetirement
+            );
+            asset.setFutureValue(fv.setScale(2, RoundingMode.HALF_UP));
+        });
+        BigDecimal totalFv = input.getAssets().stream()
+                .map(Step5HavesDTO.AssetItem::getFutureValue)
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
+        input.setTotalAssetsFV(totalFv);
+        return input;
+    }
+
+    @Override
+    public DesignResultDTO calculateDesignGap(BigDecimal monthlyCostToday, BigDecimal inflation, int yearsToRetirement, int yearsAfterRetirement, BigDecimal returnBeforeRetirement, BigDecimal returnAfterRetirement, BigDecimal totalAssetsFV, BigDecimal totalSpecialExpensesFV) {
+        
+        BigDecimal monthlyCostAtRetirement = financialCalculator.calculateFV(monthlyCostToday, inflation, yearsToRetirement);
+
+        BigDecimal r = returnAfterRetirement;
+        BigDecimal targetFund = financialCalculator.calculatePV(monthlyCostAtRetirement.multiply(BigDecimal.valueOf(12)), r, yearsAfterRetirement);
+
+        BigDecimal targetAll = targetFund.add(totalSpecialExpensesFV);
+
+        BigDecimal gap = targetAll.subtract(totalAssetsFV);
+
+        BigDecimal pmt = financialCalculator.calculatePMT(gap, returnBeforeRetirement, yearsToRetirement * 12);
+
+        return DesignResultDTO.builder()
+                .monthlyCostAtRetirement(monthlyCostAtRetirement.setScale(2, RoundingMode.HALF_UP))
+                .targetFund(targetFund.setScale(2, RoundingMode.HALF_UP))
+                .targetAll(targetAll.setScale(2, RoundingMode.HALF_UP))
+                .gap(gap.setScale(2, RoundingMode.HALF_UP))
+                .requiredMonthlyInvestment(pmt.setScale(2, RoundingMode.HALF_UP))
+                .build();
+    }
+
+    @Override
+    public List<ScenarioResultDTO> runScenarios(DesignResultDTO baseDesign) {
+        return scenarioSimulator.runScenarios(baseDesign);
     }
 }

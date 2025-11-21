@@ -1,17 +1,44 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org"
-      th:replace="~{layout :: layout(~{::title}, ~{::main})}">
+      th:replace="~{layout :: layout(~{::title}, ~{::main}, ~{})}">
 <head>
-    <title>Advanced Retirement - Step 7</title>
+    <title>Advanced Retirement - Step 7: Test & Save</title>
 </head>
 <body>
 <main role="main">
-    <div class="container py-4">
-        <h2 class="mb-4">ขั้นที่ 7: ทดสอบแผน (แผน <span th:text="${planId}"></span>)</h2>
-        <p class="text-muted">ระบบจะจำลองสถานการณ์ต่าง ๆ หลังส่งฟอร์ม</p>
-        <form th:action="@{'/retirement/advanced/' + ${planId} + '/step/7'}" method="post">
-            <button class="btn btn-primary" type="submit">ดูผลสรุป</button>
-        </form>
+    <div class="container-fluid">
+        <h1 class="h3 mb-4">Advanced Retirement Planner</h1>
+        <div class="progress mb-4" style="height: 20px;">
+            <div class="progress-bar bg-success" role="progressbar" style="width: 100%;" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100">Step 7 of 7</div>
+        </div>
+        <div class="card shadow-sm border-0">
+            <div class="card-body p-4">
+                <h5 class="card-title mb-4"><i class="bi bi-clipboard-check me-2"></i>ขั้นตอนที่ 7: ทดสอบและสรุปแผน</h5>
+                
+                <h6><i class="bi bi-exclamation-triangle"></i> ผลการทดสอบความแข็งแกร่งของแผน (Stress Test)</h6>
+                <div class="row g-3 mb-4">
+                    <div th:each="scenario : ${scenarios}" class="col-md-6">
+                        <div class="alert" th:classappend="${scenario.success} ? 'alert-success' : 'alert-warning'">
+                            <h6 class="alert-heading" th:text="${scenario.scenarioName}"></h6>
+                            <p th:text="${scenario.description}"></p>
+                        </div>
+                    </div>
+                </div>
+
+                <h6><i class="bi bi-check2-circle"></i> แผนปฏิบัติการ (Action Plan)</h6>
+                <ul class="list-group mb-4">
+                    <li class="list-group-item"><b>เป้าหมาย:</b> คุณต้องมีเงิน <strong th:text="${#numbers.formatDecimal(planData.designResult.targetAll, 0, 'COMMA', 0, 'POINT')}"></span> บาท ณ วันเกษียณ</li>
+                    <li class="list-group-item"><b>สิ่งที่ต้องทำ:</b> เริ่มลงทุนเพิ่มเดือนละ <strong th:text="${#numbers.formatDecimal(planData.designResult.requiredMonthlyInvestment, 0, 'COMMA', 0, 'POINT')}"></span> บาท</li>
+                </ul>
+
+                <form th:action="@{/retirement/advanced/save}" method="post">
+                    <div class="col-12 d-flex justify-content-between mt-4">
+                        <a th:href="@{/retirement/advanced/step6}" class="btn btn-secondary"><i class="bi bi-arrow-left"></i> ย้อนกลับ</a>
+                        <button type="submit" class="btn btn-success btn-lg"><i class="bi bi-save"></i> บันทึกแผนนี้</button>
+                    </div>
+                </form>
+            </div>
+        </div>
     </div>
 </main>
 </body>

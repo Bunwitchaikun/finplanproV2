@@ -1,51 +1,74 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org"
-      th:replace="~{layout :: layout(~{::title}, ~{::main})}">
+      th:replace="~{layout :: layout(~{::title}, ~{::main}, ~{::scripts})}">
 <head>
-    <title>Advanced Retirement - Step 5</title>
+    <title>Advanced Retirement - Step 5: Haves</title>
 </head>
 <body>
 <main role="main">
-    <div class="container py-4">
-        <h2 class="mb-4">ขั้นที่ 5: สินทรัพย์ / เงินลงทุน (แผน <span th:text="${planId}"></span>)</h2>
-        <form th:action="@{'/retirement/advanced/' + ${planId} + '/step/5'}" th:object="${form}" method="post" class="row g-3">
-            <div class="col-md-6">
-                <label class="form-label">กองทุนสำรองเลี้ยงชีพ / Provident Fund</label>
-                <input type="number" class="form-control" th:field="*{providentFund}" min="0" step="1000">
+    <div class="container-fluid">
+        <h1 class="h3 mb-4">Advanced Retirement Planner</h1>
+        <div class="progress mb-4" style="height: 20px;">
+            <div class="progress-bar" role="progressbar" style="width: 70%;" aria-valuenow="70" aria-valuemin="0" aria-valuemax="100">Step 5 of 7</div>
+        </div>
+        <div class="card shadow-sm border-0">
+            <div class="card-body p-4">
+                <h5 class="card-title mb-4"><i class="bi bi-safe me-2"></i>ขั้นตอนที่ 5: ทุนเกษียณที่มีอยู่</h5>
+                <form th:action="@{/retirement/advanced/step5}" th:object="${step5Dto}" method="post">
+                    
+                    <div id="asset-items-container">
+                        <!-- Initial Row -->
+                        <div class="row g-3 align-items-end mb-3">
+                            <div class="col-md-4">
+                                <label class="form-label">ชื่อสินทรัพย์</label>
+                                <input type="text" class="form-control" name="assets[0].assetName" placeholder="เช่น กองทุน RMF">
+                            </div>
+                            <div class="col-md-3">
+                                <label class="form-label">มูลค่าปัจจุบัน (บาท)</label>
+                                <input type="number" step="10000" class="form-control" name="assets[0].valueToday" placeholder="เช่น 500000">
+                            </div>
+                            <div class="col-md-3">
+                                <label class="form-label">ผลตอบแทนคาดหวัง (% ต่อปี)</label>
+                                <input type="number" step="0.5" class="form-control" name="assets[0].returnRate" value="5.0">
+                            </div>
+                        </div>
+                    </div>
+
+                    <button type="button" id="add-asset-btn" class="btn btn-outline-secondary mt-2">
+                        <i class="bi bi-plus-lg"></i> Add More
+                    </button>
+
+                    <div class="col-12 d-flex justify-content-between mt-4">
+                        <a th:href="@{/retirement/advanced/step4}" class="btn btn-secondary"><i class="bi bi-arrow-left"></i> ย้อนกลับ</a>
+                        <button type="submit" class="btn btn-primary">ต่อไป <i class="bi bi-arrow-right"></i></button>
+                    </div>
+                </form>
             </div>
-            <div class="col-md-6">
-                <label class="form-label">RMF</label>
-                <input type="number" class="form-control" th:field="*{rmf}" min="0" step="1000">
-            </div>
-            <div class="col-md-6">
-                <label class="form-label">SSF</label>
-                <input type="number" class="form-control" th:field="*{ssf}" min="0" step="1000">
-            </div>
-            <div class="col-md-6">
-                <label class="form-label">บำนาญ / Annuity</label>
-                <input type="number" class="form-control" th:field="*{annuity}" min="0" step="1000">
-            </div>
-            <div class="col-md-6">
-                <label class="form-label">หุ้น / Stocks</label>
-                <input type="number" class="form-control" th:field="*{stocks}" min="0" step="1000">
-            </div>
-            <div class="col-md-6">
-                <label class="form-label">ทอง / Gold</label>
-                <input type="number" class="form-control" th:field="*{gold}" min="0" step="1000">
-            </div>
-            <div class="col-md-6">
-                <label class="form-label">สินทรัพย์อื่น ๆ</label>
-                <input type="number" class="form-control" th:field="*{otherAssets}" min="0" step="1000">
-            </div>
-            <div class="col-md-6">
-                <label class="form-label">คาดการณ์อัตราเติบโตก่อนเกษียณ</label>
-                <input type="number" class="form-control" th:field="*{growthRate}" step="0.01" placeholder="เช่น 0.05">
-            </div>
-            <div class="col-12">
-                <button class="btn btn-primary" type="submit">ต่อไป (Step 6)</button>
-            </div>
-        </form>
+        </div>
     </div>
 </main>
+
+<th:block th:fragment="scripts">
+    <script>
+        document.getElementById('add-asset-btn').addEventListener('click', function() {
+            const container = document.getElementById('asset-items-container');
+            const index = container.children.length;
+            const newRow = `
+                <div class="row g-3 align-items-end mb-3">
+                    <div class="col-md-4">
+                        <input type="text" class="form-control" name="assets[${index}].assetName" placeholder="ชื่อสินทรัพย์">
+                    </div>
+                    <div class="col-md-3">
+                        <input type="number" step="10000" class="form-control" name="assets[${index}].valueToday" placeholder="มูลค่าปัจจุบัน">
+                    </div>
+                    <div class="col-md-3">
+                        <input type="number" step="0.5" class="form-control" name="assets[${index}].returnRate" value="5.0">
+                    </div>
+                </div>`;
+            container.insertAdjacentHTML('beforeend', newRow);
+        });
+    </script>
+</th:block>
+
 </body>
 </html>

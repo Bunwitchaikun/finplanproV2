@@ -1,26 +1,47 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org"
-      th:replace="~{layout :: layout(~{::title}, ~{::main})}">
+      th:replace="~{layout :: layout(~{::title}, ~{::main}, ~{})}">
 <head>
-    <title>Advanced Retirement - Step 6</title>
+    <title>Advanced Retirement - Step 6: Design</title>
 </head>
 <body>
 <main role="main">
-    <div class="container py-4">
-        <h2 class="mb-4">ขั้นที่ 6: ออกแบบแผน (แผน <span th:text="${planId}"></span>)</h2>
-        <form th:action="@{'/retirement/advanced/' + ${planId} + '/step/6'}" th:object="${form}" method="post" class="row g-3">
-            <div class="col-md-6">
-                <label class="form-label">ผลตอบแทนคาดหวังก่อนเกษียณ (%)</label>
-                <input type="number" class="form-control" th:field="*{expectedReturnRateBeforeRetirement}" step="0.01" min="0">
+    <div class="container-fluid">
+        <h1 class="h3 mb-4">Advanced Retirement Planner</h1>
+        <div class="progress mb-4" style="height: 20px;">
+            <div class="progress-bar" role="progressbar" style="width: 84%;" aria-valuenow="84" aria-valuemin="0" aria-valuemax="100">Step 6 of 7</div>
+        </div>
+        <div class="card shadow-sm border-0">
+            <div class="card-body p-4">
+                <h5 class="card-title mb-4"><i class="bi bi-graph-up me-2"></i>ขั้นตอนที่ 6: ออกแบบและวิเคราะห์แผน</h5>
+                <div th:object="${designResult}">
+                    <dl class="row">
+                        <dt class="col-sm-5">ค่าใช้จ่ายต่อเดือนที่ต้องการ ณ วันเกษียณ:</dt>
+                        <dd class="col-sm-7" th:text="${#numbers.formatDecimal(monthlyCostAtRetirement, 1, 'COMMA', 2, 'POINT')} + ' THB'"></dd>
+
+                        <dt class="col-sm-5">เงินทุนที่ต้องมีสำหรับค่าใช้จ่ายดำรงชีพ:</dt>
+                        <dd class="col-sm-7" th:text="${#numbers.formatDecimal(targetFund, 1, 'COMMA', 2, 'POINT')} + ' THB'"></dd>
+
+                        <dt class="col-sm-5">เงินทุนเป้าหมายทั้งหมด (รวมค่าใช้จ่ายพิเศษ):</dt>
+                        <dd class="col-sm-7" th:text="${#numbers.formatDecimal(targetAll, 1, 'COMMA', 2, 'POINT')} + ' THB'"></dd>
+                        
+                        <hr class="my-2">
+
+                        <dt class="col-sm-5 h5">เงินทุนที่ยังขาด/เกิน (Gap):</dt>
+                        <dd class="col-sm-7 h5" th:classappend="*{gap.doubleValue() < 0 ? 'text-danger' : 'text-success'}" th:text="${#numbers.formatDecimal(gap, 1, 'COMMA', 2, 'POINT')} + ' THB'"></dd>
+
+                        <dt class="col-sm-5 h5">เงินที่ต้องลงทุนเพิ่มต่อเดือน:</dt>
+                        <dd class="col-sm-7 h5 text-primary" th:text="${#numbers.formatDecimal(requiredMonthlyInvestment, 1, 'COMMA', 2, 'POINT')} + ' THB'"></dd>
+                    </dl>
+                </div>
+                <form th:action="@{/retirement/advanced/step6}" method="post">
+                    <div class="col-12 d-flex justify-content-between mt-4">
+                        <a th:href="@{/retirement/advanced/step5}" class="btn btn-secondary"><i class="bi bi-arrow-left"></i> ย้อนกลับ</a>
+                        <button type="submit" class="btn btn-primary">ต่อไป <i class="bi bi-arrow-right"></i></button>
+                    </div>
+                </form>
             </div>
-            <div class="col-md-6">
-                <label class="form-label">ผลตอบแทนคาดหวังหลังเกษียณ (%)</label>
-                <input type="number" class="form-control" th:field="*{expectedReturnRateAfterRetirement}" step="0.01" min="0">
-            </div>
-            <div class="col-12">
-                <button class="btn btn-primary" type="submit">ต่อไป (Step 7)</button>
-            </div>
-        </form>
+        </div>
     </div>
 </main>
 </body>

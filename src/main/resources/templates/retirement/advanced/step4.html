@@ -1,39 +1,74 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org"
-      th:replace="~{layout :: layout(~{::title}, ~{::main})}">
+      th:replace="~{layout :: layout(~{::title}, ~{::main}, ~{::scripts})}">
 <head>
-    <title>Advanced Retirement - Step 4</title>
+    <title>Advanced Retirement - Step 4: Special Expenses</title>
 </head>
 <body>
 <main role="main">
-    <div class="container py-4">
-        <h2 class="mb-4">ขั้นที่ 4: รายจ่ายละเอียด (แผน <span th:text="${planId}"></span>)</h2>
-        <form th:action="@{'/retirement/advanced/' + ${planId} + '/step/4'}" th:object="${form}" method="post" class="row g-3">
-            <div class="col-md-6">
-                <label class="form-label">ค่าใช้จ่ายพื้นฐาน</label>
-                <input type="number" class="form-control" th:field="*{basicLivingCost}" min="0" step="1000">
+    <div class="container-fluid">
+        <h1 class="h3 mb-4">Advanced Retirement Planner</h1>
+        <div class="progress mb-4" style="height: 20px;">
+            <div class="progress-bar" role="progressbar" style="width: 56%;" aria-valuenow="56" aria-valuemin="0" aria-valuemax="100">Step 4 of 7</div>
+        </div>
+        <div class="card shadow-sm border-0">
+            <div class="card-body p-4">
+                <h5 class="card-title mb-4"><i class="bi bi-gem me-2"></i>ขั้นตอนที่ 4: ค่าใช้จ่ายพิเศษ</h5>
+                <form th:action="@{/retirement/advanced/step4}" th:object="${step4Dto}" method="post">
+                    
+                    <div id="expense-items-container">
+                        <!-- Initial Row -->
+                        <div class="row g-3 align-items-end mb-3">
+                            <div class="col-md-4">
+                                <label class="form-label">ชื่อรายการ</label>
+                                <input type="text" class="form-control" name="items[0].name" placeholder="เช่น ท่องเที่ยวรอบโลก">
+                            </div>
+                            <div class="col-md-3">
+                                <label class="form-label">จำนวนเงิน (บาท)</label>
+                                <input type="number" step="10000" class="form-control" name="items[0].amountToday" placeholder="เช่น 1000000">
+                            </div>
+                            <div class="col-md-3">
+                                <label class="form-label">อัตราเงินเฟ้อ (%)</label>
+                                <input type="number" step="0.1" class="form-control" name="items[0].inflationRate" value="3.0">
+                            </div>
+                        </div>
+                    </div>
+
+                    <button type="button" id="add-expense-btn" class="btn btn-outline-secondary mt-2">
+                        <i class="bi bi-plus-lg"></i> Add More
+                    </button>
+                    
+                    <div class="col-12 d-flex justify-content-between mt-4">
+                        <a th:href="@{/retirement/advanced/step3}" class="btn btn-secondary"><i class="bi bi-arrow-left"></i> ย้อนกลับ</a>
+                        <button type="submit" class="btn btn-primary">ต่อไป <i class="bi bi-arrow-right"></i></button>
+                    </div>
+                </form>
             </div>
-            <div class="col-md-6">
-                <label class="form-label">ค่ารักษาพยาบาล</label>
-                <input type="number" class="form-control" th:field="*{healthCost}" min="0" step="1000">
-            </div>
-            <div class="col-md-6">
-                <label class="form-label">ค่าใช้จ่ายครอบครัว</label>
-                <input type="number" class="form-control" th:field="*{familyCost}" min="0" step="1000">
-            </div>
-            <div class="col-md-6">
-                <label class="form-label">ค่าใช้จ่าย event พิเศษ</label>
-                <input type="number" class="form-control" th:field="*{specialEventsCost}" min="0" step="1000">
-            </div>
-            <div class="col-md-6">
-                <label class="form-label">อัตราเงินเฟ้อ</label>
-                <input type="number" class="form-control" th:field="*{inflationRate}" min="0" step="0.01" placeholder="เช่น 0.03">
-            </div>
-            <div class="col-12">
-                <button class="btn btn-primary" type="submit">ต่อไป (Step 5)</button>
-            </div>
-        </form>
+        </div>
     </div>
 </main>
+
+<th:block th:fragment="scripts">
+    <script>
+        document.getElementById('add-expense-btn').addEventListener('click', function() {
+            const container = document.getElementById('expense-items-container');
+            const index = container.children.length;
+            const newRow = `
+                <div class="row g-3 align-items-end mb-3">
+                    <div class="col-md-4">
+                        <input type="text" class="form-control" name="items[${index}].name" placeholder="ชื่อรายการ">
+                    </div>
+                    <div class="col-md-3">
+                        <input type="number" step="10000" class="form-control" name="items[${index}].amountToday" placeholder="จำนวนเงิน">
+                    </div>
+                    <div class="col-md-3">
+                        <input type="number" step="0.1" class="form-control" name="items[${index}].inflationRate" value="3.0">
+                    </div>
+                </div>`;
+            container.insertAdjacentHTML('beforeend', newRow);
+        });
+    </script>
+</th:block>
+
 </body>
 </html>
