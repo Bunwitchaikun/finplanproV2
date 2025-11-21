@@ -2493,13 +2493,23 @@ D7.1 Entity: TaxRecord
 D7.2 TaxFormController
 D7.3 TaxCalculationService
 D7.4 Input fields:
-       - monthly income
-       - expenses
-       - dependents
-       - parents
-       - special deductions
-       - insurance
-       - retirement fund
+       -monthlyIncome
+        customExpense     
+        incomeType    
+        children     
+        childbirth    
+        parents  
+        spouse
+        disability
+        lifeInsurance
+        healthInsuranceSelf
+        healthInsuranceParents
+        pension
+        providentFund
+        rmf
+        ssf
+        
+        socialSecurity
 D7.5 Calculate:
        - net income
        - tax payable

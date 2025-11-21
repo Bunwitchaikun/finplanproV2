@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{layout :: layout(~{::title}, ~{::main})}">
+<head>
+    <title>Saved Tax Records</title>
+</head>
+<body>
+<main role="main">
+    <div class="container-fluid">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h1 class="h3">My Saved Tax Records</h1>
+            <a th:href="@{/tax}" class="btn btn-primary">
+                <i class="bi bi-calculator me-2"></i>New Calculation
+            </a>
+        </div>
+
+        <div th:if="${successMessage}" class="alert alert-success" th:text="${successMessage}"></div>
+
+        <div class="card shadow-sm border-0">
+            <div class="card-body">
+                <table class="table table-hover">
+                    <thead class="table-light">
+                        <tr>
+                            <th>Tax Year</th>
+                            <th>Annual Income</th>
+                            <th>Total Deduction</th>
+                            <th>Net Taxable Income</th>
+                            <th>Tax Payable</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:each="rec : ${records}">
+                            <td th:text="${rec.taxYear}"></td>
+                            <td th:text="${#numbers.formatDecimal(rec.annualIncome, 1, 'COMMA', 2, 'POINT')} + ' THB'"></td>
+                            <td th:text="${#numbers.formatDecimal(rec.totalDeduction, 1, 'COMMA', 2, 'POINT')} + ' THB'"></td>
+                            <td class="fw-bold" th:text="${#numbers.formatDecimal(rec.netIncome, 1, 'COMMA', 2, 'POINT')} + ' THB'"></td>
+                            <td class="text-danger fw-bold" th:text="${#numbers.formatDecimal(rec.taxPayable, 1, 'COMMA', 2, 'POINT')} + ' THB'"></td>
+                        </tr>
+                        <tr th:if="${#lists.isEmpty(records)}">
+                            <td colspan="5" class="text-center text-muted py-4">No saved records yet.</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</main>
+</body>
+</html>
