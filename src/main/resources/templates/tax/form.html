@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org"
-      th:replace="~{layout :: layout(~{::title}, ~{::main})}">
+      th:replace="~{layout :: layout(~{::title}, ~{::main}, ~{})}">
 <head>
     <title>ระบบคำนวณภาษี</title>
 </head>
@@ -93,21 +93,21 @@
             <div class="card shadow-sm border-0">
                 <div class="card-header bg-success text-white"><h5 class="mb-0">ผลการคำนวณ</h5></div>
                 <div class="card-body p-4">
-                    <dl class="row">
-                        <dt class="col-sm-4">รายได้ทั้งปี</dt>
-                        <dd class="col-sm-8" th:text="${#numbers.formatDecimal(taxResult.annualIncome, 1, 'COMMA', 2, 'POINT')} + ' THB'"></dd>
-                        <dt class="col-sm-4">ค่าใช้จ่ายที่หักได้</dt>
-                        <dd class="col-sm-8" th:text="${#numbers.formatDecimal(taxResult.totalExpenseDeduction, 1, 'COMMA', 2, 'POINT')} + ' THB'"></dd>
-                        <dt class="col-sm-4">ค่าลดหย่อนรวม</dt>
-                        <dd class="col-sm-8" th:text="${#numbers.formatDecimal(taxResult.totalAllowance, 1, 'COMMA', 2, 'POINT')} + ' THB'"></dd>
-                        <dt class="col-sm-4">เงินได้สุทธิ</dt>
-                        <dd class="col-sm-8 fw-bold" th:text="${#numbers.formatDecimal(taxResult.netIncome, 1, 'COMMA', 2, 'POINT')} + ' THB'"></dd>
-                        <hr class="my-2">
-                        <dt class="col-sm-4 h4">จำนวนภาษีที่ต้องจ่าย</dt>
-                        <dd class="col-sm-8 h4 text-danger fw-bold" th:text="${#numbers.formatDecimal(taxResult.taxAmount, 1, 'COMMA', 2, 'POINT')} + ' THB'"></dd>
-                    </dl>
-                    <hr>
                     <form th:action="@{/tax/save}" th:object="${taxRequest}" method="post">
+                        <dl class="row">
+                            <dt class="col-sm-4">รายได้ทั้งปี</dt>
+                            <dd class="col-sm-8" th:text="${#numbers.formatDecimal(taxResult.annualIncome, 1, 'COMMA', 2, 'POINT')} + ' THB'"></dd>
+                            <dt class="col-sm-4">ค่าใช้จ่ายที่หักได้</dt>
+                            <dd class="col-sm-8" th:text="${#numbers.formatDecimal(taxResult.totalExpenseDeduction, 1, 'COMMA', 2, 'POINT')} + ' THB'"></dd>
+                            <dt class="col-sm-4">ค่าลดหย่อนรวม</dt>
+                            <dd class="col-sm-8" th:text="${#numbers.formatDecimal(taxResult.totalAllowance, 1, 'COMMA', 2, 'POINT')} + ' THB'"></dd>
+                            <dt class="col-sm-4">เงินได้สุทธิ</dt>
+                            <dd class="col-sm-8 fw-bold" th:text="${#numbers.formatDecimal(taxResult.netIncome, 1, 'COMMA', 2, 'POINT')} + ' THB'"></dd>
+                            <hr class="my-2">
+                            <dt class="col-sm-4 h4">จำนวนภาษีที่ต้องจ่าย</dt>
+                            <dd class="col-sm-8 h4 text-danger fw-bold" th:text="${#numbers.formatDecimal(taxResult.taxAmount, 1, 'COMMA', 2, 'POINT')} + ' THB'"></dd>
+                        </dl>
+                        <hr>
                         <button type="submit" class="btn btn-success px-4">
                             <i class="bi bi-save me-2"></i>บันทึกข้อมูลการคำนวณนี้
                         </button>
