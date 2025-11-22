@@ -45,7 +45,8 @@ public class RetirementAdvancedController {
     }
 
     @PostMapping("/step1")
-    public String processStep1(@ModelAttribute("step1Dto") Step1YouDTO step1Dto, @ModelAttribute("planData") RetirementPlanData planData) {
+    public String processStep1(@ModelAttribute("step1Dto") Step1YouDTO step1Dto,
+            @ModelAttribute("planData") RetirementPlanData planData) {
         Step1YouDTO result = retirementService.calculateStep1(step1Dto);
         planData.setStep1(result);
         return "redirect:/retirement/advanced/step2";
@@ -59,7 +60,8 @@ public class RetirementAdvancedController {
     }
 
     @PostMapping("/step2")
-    public String processStep2(@ModelAttribute("step2Dto") Step2LifeDTO step2Dto, @ModelAttribute("planData") RetirementPlanData planData) {
+    public String processStep2(@ModelAttribute("step2Dto") Step2LifeDTO step2Dto,
+            @ModelAttribute("planData") RetirementPlanData planData) {
         Step2LifeDTO result = retirementService.calculateStep2(step2Dto, planData.getStep1().getRetirementAge());
         planData.setStep2(result);
         return "redirect:/retirement/advanced/step3";
@@ -73,7 +75,8 @@ public class RetirementAdvancedController {
     }
 
     @PostMapping("/step3")
-    public String processStep3(@ModelAttribute("step3Dto") Step3WantsDTO step3Dto, @ModelAttribute("planData") RetirementPlanData planData) {
+    public String processStep3(@ModelAttribute("step3Dto") Step3WantsDTO step3Dto,
+            @ModelAttribute("planData") RetirementPlanData planData) {
         planData.setStep3(step3Dto);
         return "redirect:/retirement/advanced/step4";
     }
@@ -86,9 +89,20 @@ public class RetirementAdvancedController {
     }
 
     @PostMapping("/step4")
-    public String processStep4(@ModelAttribute("step4Dto") Step4ExpenseDTO step4Dto, @ModelAttribute("planData") RetirementPlanData planData) {
-        Step4ExpenseDTO result = retirementService.calculateSpecialExpensesFV(step4Dto, planData.getStep1().getYearsToRetirement());
+    public String processStep4(@RequestParam(required = false) String action,
+            @ModelAttribute("step4Dto") Step4ExpenseDTO step4Dto,
+            @ModelAttribute("planData") RetirementPlanData planData,
+            Model model) {
+        Step4ExpenseDTO result = retirementService.calculateSpecialExpensesFV(step4Dto,
+                planData.getStep1().getYearsToRetirement());
         planData.setStep4(result);
+
+        if ("calculate".equals(action)) {
+            model.addAttribute("step4Dto", result);
+            addActiveMenu(model);
+            return "retirement/advanced/step4";
+        }
+
         return "redirect:/retirement/advanced/step5";
     }
 
@@ -100,8 +114,10 @@ public class RetirementAdvancedController {
     }
 
     @PostMapping("/step5")
-    public String processStep5(@ModelAttribute("step5Dto") Step5HavesDTO step5Dto, @ModelAttribute("planData") RetirementPlanData planData) {
-        Step5HavesDTO result = retirementService.calculateAssetsFV(step5Dto, planData.getStep1().getYearsToRetirement());
+    public String processStep5(@ModelAttribute("step5Dto") Step5HavesDTO step5Dto,
+            @ModelAttribute("planData") RetirementPlanData planData) {
+        Step5HavesDTO result = retirementService.calculateAssetsFV(step5Dto,
+                planData.getStep1().getYearsToRetirement());
         planData.setStep5(result);
         return "redirect:/retirement/advanced/step6";
     }
@@ -111,7 +127,7 @@ public class RetirementAdvancedController {
     public String showStep6(Model model, @ModelAttribute("planData") RetirementPlanData planData) {
         BigDecimal returnBefore = new BigDecimal("0.08");
         BigDecimal returnAfter = new BigDecimal("0.05");
-        
+
         DesignResultDTO result = retirementService.calculateDesignGap(
                 planData.getStep3().getAfterTaxIncome(),
                 new BigDecimal("0.03"),
@@ -120,8 +136,7 @@ public class RetirementAdvancedController {
                 returnBefore,
                 returnAfter,
                 planData.getStep5().getTotalAssetsFV(),
-                planData.getStep4().getTotalSpecialExpensesFV()
-        );
+                planData.getStep4().getTotalRetirementExpensesFV());
         planData.setDesignResult(result);
         model.addAttribute("designResult", result);
         addActiveMenu(model);

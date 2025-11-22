@@ -1,74 +1,389 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org"
-      th:replace="~{layout :: layout(~{::title}, ~{::main}, ~{::scripts})}">
+    th:replace="~{layout :: layout(~{::title}, ~{::main}, ~{::scripts})}">
+
 <head>
-    <title>Advanced Retirement - Step 4: Special Expenses</title>
+    <title>Advanced Retirement - Step 4: Expenses</title>
 </head>
+
 <body>
-<main role="main">
-    <div class="container-fluid">
-        <h1 class="h3 mb-4">Advanced Retirement Planner</h1>
-        <div class="progress mb-4" style="height: 20px;">
-            <div class="progress-bar" role="progressbar" style="width: 56%;" aria-valuenow="56" aria-valuemin="0" aria-valuemax="100">Step 4 of 7</div>
-        </div>
-        <div class="card shadow-sm border-0">
-            <div class="card-body p-4">
-                <h5 class="card-title mb-4"><i class="bi bi-gem me-2"></i>ขั้นตอนที่ 4: ค่าใช้จ่ายพิเศษ</h5>
-                <form th:action="@{/retirement/advanced/step4}" th:object="${step4Dto}" method="post">
-                    
-                    <div id="expense-items-container">
-                        <!-- Initial Row -->
-                        <div class="row g-3 align-items-end mb-3">
-                            <div class="col-md-4">
-                                <label class="form-label">ชื่อรายการ</label>
-                                <input type="text" class="form-control" name="items[0].name" placeholder="เช่น ท่องเที่ยวรอบโลก">
+    <main role="main">
+        <div class="container-fluid">
+            <h1 class="h3 mb-4">Advanced Retirement Planner</h1>
+            <div class="progress mb-4" style="height: 20px;">
+                <div class="progress-bar" role="progressbar" style="width: 56%;" aria-valuenow="56" aria-valuemin="0"
+                    aria-valuemax="100">Step 4 of 7</div>
+            </div>
+            <div class="card shadow-sm border-0">
+                <div class="card-body p-4">
+                    <h5 class="card-title mb-4"><i class="bi bi-wallet2 me-2"></i>ขั้นตอนที่ 4: ประมาณการค่าใช้จ่าย
+                        (Basic & Special)</h5>
+
+                    <form th:action="@{/retirement/advanced/step4}" th:object="${step4Dto}" method="post">
+
+                        <div class="row">
+                            <!-- LEFT COLUMN: Basic Cost -->
+                            <div class="col-md-6 border-end">
+                                <h6 class="text-primary mb-3">Basic Cost (ค่าใช้จ่ายพื้นฐาน)</h6>
+                                <div id="basic-items-container">
+                                    <!-- Predefined Basic Items -->
+                                    <th:block th:if="${step4Dto.basicItems == null or step4Dto.basicItems.empty}">
+                                        <!-- 1. Food -->
+                                        <div class="row g-2 align-items-center mb-2">
+                                            <div class="col-5">
+                                                <input type="text" class="form-control form-control-sm"
+                                                    name="basicItems[0].name" value="ค่าอาหาร" readonly>
+                                            </div>
+                                            <div class="col-4">
+                                                <input type="number" class="form-control form-control-sm"
+                                                    name="basicItems[0].amountToday" placeholder="บาท/เดือน">
+                                            </div>
+                                            <div class="col-3">
+                                                <input type="number" step="0.1" class="form-control form-control-sm"
+                                                    name="basicItems[0].inflationRate" value="3.0">
+                                            </div>
+                                        </div>
+                                        <!-- 2. Travel -->
+                                        <div class="row g-2 align-items-center mb-2">
+                                            <div class="col-5">
+                                                <input type="text" class="form-control form-control-sm"
+                                                    name="basicItems[1].name" value="ค่าเดินทาง/น้ำมัน" readonly>
+                                            </div>
+                                            <div class="col-4">
+                                                <input type="number" class="form-control form-control-sm"
+                                                    name="basicItems[1].amountToday" placeholder="บาท/เดือน">
+                                            </div>
+                                            <div class="col-3">
+                                                <input type="number" step="0.1" class="form-control form-control-sm"
+                                                    name="basicItems[1].inflationRate" value="3.0">
+                                            </div>
+                                        </div>
+                                        <!-- 3. Health -->
+                                        <div class="row g-2 align-items-center mb-2">
+                                            <div class="col-5">
+                                                <input type="text" class="form-control form-control-sm"
+                                                    name="basicItems[2].name" value="ค่ารักษาพยาบาล" readonly>
+                                            </div>
+                                            <div class="col-4">
+                                                <input type="number" class="form-control form-control-sm"
+                                                    name="basicItems[2].amountToday" placeholder="บาท/ปี">
+                                            </div>
+                                            <div class="col-3">
+                                                <input type="number" step="0.1" class="form-control form-control-sm"
+                                                    name="basicItems[2].inflationRate" value="7.0">
+                                            </div>
+                                        </div>
+                                        <!-- 4. Utilities -->
+                                        <div class="row g-2 align-items-center mb-2">
+                                            <div class="col-5">
+                                                <input type="text" class="form-control form-control-sm"
+                                                    name="basicItems[3].name" value="ค่าน้ำ/ไฟ/โทรศัพท์" readonly>
+                                            </div>
+                                            <div class="col-4">
+                                                <input type="number" class="form-control form-control-sm"
+                                                    name="basicItems[3].amountToday" placeholder="บาท/เดือน">
+                                            </div>
+                                            <div class="col-3">
+                                                <input type="number" step="0.1" class="form-control form-control-sm"
+                                                    name="basicItems[3].inflationRate" value="3.0">
+                                            </div>
+                                        </div>
+                                        <!-- 5. Car Insurance -->
+                                        <div class="row g-2 align-items-center mb-2">
+                                            <div class="col-5">
+                                                <input type="text" class="form-control form-control-sm"
+                                                    name="basicItems[4].name" value="ประกัน/บำรุงรักษารถ" readonly>
+                                            </div>
+                                            <div class="col-4">
+                                                <input type="number" class="form-control form-control-sm"
+                                                    name="basicItems[4].amountToday" placeholder="บาท/ปี">
+                                            </div>
+                                            <div class="col-3">
+                                                <input type="number" step="0.1" class="form-control form-control-sm"
+                                                    name="basicItems[4].inflationRate" value="3.0">
+                                            </div>
+                                        </div>
+                                        <!-- 6. Social -->
+                                        <div class="row g-2 align-items-center mb-2">
+                                            <div class="col-5">
+                                                <input type="text" class="form-control form-control-sm"
+                                                    name="basicItems[5].name" value="ค่าซอง/ออกงาน" readonly>
+                                            </div>
+                                            <div class="col-4">
+                                                <input type="number" class="form-control form-control-sm"
+                                                    name="basicItems[5].amountToday" placeholder="บาท/ปี">
+                                            </div>
+                                            <div class="col-3">
+                                                <input type="number" step="0.1" class="form-control form-control-sm"
+                                                    name="basicItems[5].inflationRate" value="1.0">
+                                            </div>
+                                        </div>
+                                        <!-- 7. Entertainment -->
+                                        <div class="row g-2 align-items-center mb-2">
+                                            <div class="col-5">
+                                                <input type="text" class="form-control form-control-sm"
+                                                    name="basicItems[6].name" value="สันทนาการ/ท่องเที่ยว" readonly>
+                                            </div>
+                                            <div class="col-4">
+                                                <input type="number" class="form-control form-control-sm"
+                                                    name="basicItems[6].amountToday" placeholder="บาท/ปี">
+                                            </div>
+                                            <div class="col-3">
+                                                <input type="number" step="0.1" class="form-control form-control-sm"
+                                                    name="basicItems[6].inflationRate" value="5.0">
+                                            </div>
+                                        </div>
+                                    </th:block>
+
+                                    <th:block th:each="item, stat : ${step4Dto.basicItems}">
+                                        <div class="row g-2 align-items-center mb-2">
+                                            <div class="col-5">
+                                                <input type="text" class="form-control form-control-sm"
+                                                    th:field="*{basicItems[__${stat.index}__].name}"
+                                                    placeholder="ชื่อรายการ">
+                                            </div>
+                                            <div class="col-4">
+                                                <input type="number" class="form-control form-control-sm"
+                                                    th:field="*{basicItems[__${stat.index}__].amountToday}"
+                                                    placeholder="จำนวนเงิน">
+                                            </div>
+                                            <div class="col-3">
+                                                <input type="number" step="0.1" class="form-control form-control-sm"
+                                                    th:field="*{basicItems[__${stat.index}__].inflationRate}">
+                                            </div>
+                                        </div>
+                                    </th:block>
+                                </div>
+                                <button type="button" id="add-basic-btn" class="btn btn-sm btn-outline-secondary mt-2">
+                                    <i class="bi bi-plus-lg"></i> Add Basic Item
+                                </button>
+
+                                <!-- Basic Cost Output -->
+                                <div class="mt-4 p-3 bg-light rounded">
+                                    <div class="d-flex justify-content-between">
+                                        <span>รวมค่าใช้จ่ายพื้นฐาน (ปัจจุบัน):</span>
+                                        <strong class="text-primary"
+                                            th:text="${#numbers.formatDecimal(step4Dto.totalBasicExpensesToday ?: 0, 1, 'COMMA', 2, 'POINT')}">0.00</strong>
+                                    </div>
+                                    <div class="d-flex justify-content-between mt-2">
+                                        <span>รวมค่าใช้จ่ายพื้นฐาน (หลังปรับเงินเฟ้อ):</span>
+                                        <strong class="text-primary"
+                                            th:text="${#numbers.formatDecimal(step4Dto.totalBasicExpensesFV ?: 0, 1, 'COMMA', 2, 'POINT')}">0.00</strong>
+                                    </div>
+                                </div>
                             </div>
-                            <div class="col-md-3">
-                                <label class="form-label">จำนวนเงิน (บาท)</label>
-                                <input type="number" step="10000" class="form-control" name="items[0].amountToday" placeholder="เช่น 1000000">
-                            </div>
-                            <div class="col-md-3">
-                                <label class="form-label">อัตราเงินเฟ้อ (%)</label>
-                                <input type="number" step="0.1" class="form-control" name="items[0].inflationRate" value="3.0">
+
+                            <!-- RIGHT COLUMN: Special Cost -->
+                            <div class="col-md-6">
+                                <h6 class="text-success mb-3">Special Cost (ค่าใช้จ่ายพิเศษหลังเกษียณ)</h6>
+                                <div id="special-items-container">
+                                    <!-- Predefined Special Items -->
+                                    <th:block th:if="${step4Dto.specialItems == null or step4Dto.specialItems.empty}">
+                                        <!-- 1. Post-Retirement Health Insurance -->
+                                        <div class="row g-2 align-items-center mb-2">
+                                            <div class="col-5">
+                                                <input type="text" class="form-control form-control-sm"
+                                                    name="specialItems[0].name" value="ประกันสุขภาพหลังเกษียณ" readonly>
+                                            </div>
+                                            <div class="col-4">
+                                                <input type="number" class="form-control form-control-sm"
+                                                    name="specialItems[0].amountToday" placeholder="บาท/ปี">
+                                            </div>
+                                            <div class="col-3">
+                                                <input type="number" step="0.1" class="form-control form-control-sm"
+                                                    name="specialItems[0].inflationRate" value="3.0">
+                                            </div>
+                                        </div>
+                                        <!-- 2. Health Reserve -->
+                                        <div class="row g-2 align-items-center mb-2">
+                                            <div class="col-5">
+                                                <input type="text" class="form-control form-control-sm"
+                                                    name="specialItems[1].name" value="ทุนสำรองสุขภาพ" readonly>
+                                            </div>
+                                            <div class="col-4">
+                                                <input type="number" class="form-control form-control-sm"
+                                                    name="specialItems[1].amountToday" placeholder="บาท (ก้อน)">
+                                            </div>
+                                            <div class="col-3">
+                                                <input type="number" step="0.1" class="form-control form-control-sm"
+                                                    name="specialItems[1].inflationRate" value="7.0">
+                                            </div>
+                                        </div>
+                                        <!-- 3. Charity -->
+                                        <div class="row g-2 align-items-center mb-2">
+                                            <div class="col-5">
+                                                <input type="text" class="form-control form-control-sm"
+                                                    name="specialItems[2].name" value="การกุศล/บริจาค" readonly>
+                                            </div>
+                                            <div class="col-4">
+                                                <input type="number" class="form-control form-control-sm"
+                                                    name="specialItems[2].amountToday" placeholder="บาท/ปี">
+                                            </div>
+                                            <div class="col-3">
+                                                <input type="number" step="0.1" class="form-control form-control-sm"
+                                                    name="specialItems[2].inflationRate" value="1.0">
+                                            </div>
+                                        </div>
+                                        <!-- 4. Housing -->
+                                        <div class="row g-2 align-items-center mb-2">
+                                            <div class="col-5">
+                                                <input type="text" class="form-control form-control-sm"
+                                                    name="specialItems[3].name" value="ที่อยู่อาศัย (ซ่อม/ซื้อ)"
+                                                    readonly>
+                                            </div>
+                                            <div class="col-4">
+                                                <input type="number" class="form-control form-control-sm"
+                                                    name="specialItems[3].amountToday" placeholder="บาท (ก้อน)">
+                                            </div>
+                                            <div class="col-3">
+                                                <input type="number" step="0.1" class="form-control form-control-sm"
+                                                    name="specialItems[3].inflationRate" value="5.0">
+                                            </div>
+                                        </div>
+                                        <!-- 5. Car -->
+                                        <div class="row g-2 align-items-center mb-2">
+                                            <div class="col-5">
+                                                <input type="text" class="form-control form-control-sm"
+                                                    name="specialItems[4].name" value="รถยนต์ (ซื้อ/ซ่อม)" readonly>
+                                            </div>
+                                            <div class="col-4">
+                                                <input type="number" class="form-control form-control-sm"
+                                                    name="specialItems[4].amountToday" placeholder="บาท (ก้อน)">
+                                            </div>
+                                            <div class="col-3">
+                                                <input type="number" step="0.1" class="form-control form-control-sm"
+                                                    name="specialItems[4].inflationRate" value="1.0">
+                                            </div>
+                                        </div>
+                                    </th:block>
+
+                                    <th:block th:each="item, stat : ${step4Dto.specialItems}">
+                                        <div class="row g-2 align-items-center mb-2">
+                                            <div class="col-5">
+                                                <input type="text" class="form-control form-control-sm"
+                                                    th:field="*{specialItems[__${stat.index}__].name}"
+                                                    placeholder="ชื่อรายการ">
+                                            </div>
+                                            <div class="col-4">
+                                                <input type="number" class="form-control form-control-sm"
+                                                    th:field="*{specialItems[__${stat.index}__].amountToday}"
+                                                    placeholder="จำนวนเงิน">
+                                            </div>
+                                            <div class="col-3">
+                                                <input type="number" step="0.1" class="form-control form-control-sm"
+                                                    th:field="*{specialItems[__${stat.index}__].inflationRate}">
+                                            </div>
+                                        </div>
+                                    </th:block>
+                                </div>
+                                <button type="button" id="add-special-btn"
+                                    class="btn btn-sm btn-outline-secondary mt-2">
+                                    <i class="bi bi-plus-lg"></i> Add Special Item
+                                </button>
+
+                                <!-- Special Cost Output -->
+                                <div class="mt-4 p-3 bg-light rounded">
+                                    <div class="d-flex justify-content-between">
+                                        <span>รวมค่าใช้จ่ายพิเศษ (ปัจจุบัน):</span>
+                                        <strong class="text-success"
+                                            th:text="${#numbers.formatDecimal(step4Dto.totalSpecialExpensesToday ?: 0, 1, 'COMMA', 2, 'POINT')}">0.00</strong>
+                                    </div>
+                                    <div class="d-flex justify-content-between mt-2">
+                                        <span>รวมค่าใช้จ่ายพิเศษ (หลังปรับเงินเฟ้อ):</span>
+                                        <strong class="text-success"
+                                            th:text="${#numbers.formatDecimal(step4Dto.totalSpecialExpensesFV ?: 0, 1, 'COMMA', 2, 'POINT')}">0.00</strong>
+                                    </div>
+                                </div>
                             </div>
                         </div>
-                    </div>
 
-                    <button type="button" id="add-expense-btn" class="btn btn-outline-secondary mt-2">
-                        <i class="bi bi-plus-lg"></i> Add More
-                    </button>
-                    
-                    <div class="col-12 d-flex justify-content-between mt-4">
-                        <a th:href="@{/retirement/advanced/step3}" class="btn btn-secondary"><i class="bi bi-arrow-left"></i> ย้อนกลับ</a>
-                        <button type="submit" class="btn btn-primary">ต่อไป <i class="bi bi-arrow-right"></i></button>
-                    </div>
-                </form>
+                        <!-- Summary Section -->
+                        <div class="row mt-4">
+                            <div class="col-12">
+                                <div class="card bg-light border-primary">
+                                    <div class="card-body">
+                                        <h5 class="card-title text-center text-primary">Summary (สรุปค่าใช้จ่ายเกษียณ)
+                                        </h5>
+                                        <div class="row text-center mt-3">
+                                            <div class="col-md-6">
+                                                <p class="mb-1">รวมค่าใช้จ่ายเกษียณ (ปัจจุบัน)</p>
+                                                <h4 class="text-dark"
+                                                    th:text="${#numbers.formatDecimal(step4Dto.totalRetirementExpensesToday ?: 0, 1, 'COMMA', 2, 'POINT')}">
+                                                    0.00</h4>
+                                                <small class="text-muted">(Basic + Special)</small>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <p class="mb-1">รวมค่าใช้จ่ายเกษียณ (หลังปรับเงินเฟ้อ)</p>
+                                                <h4 class="text-danger"
+                                                    th:text="${#numbers.formatDecimal(step4Dto.totalRetirementExpensesFV ?: 0, 1, 'COMMA', 2, 'POINT')}">
+                                                    0.00</h4>
+                                                <small class="text-muted">(Basic FV + Special FV)</small>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-12 d-flex justify-content-between mt-5">
+                            <a th:href="@{/retirement/advanced/step3}" class="btn btn-secondary"><i
+                                    class="bi bi-arrow-left"></i> ย้อนกลับ</a>
+                            <div>
+                                <button type="submit" name="action" value="calculate"
+                                    class="btn btn-info text-white me-2"><i class="bi bi-calculator"></i> คำนวณ
+                                    (Calculate)</button>
+                                <button type="submit" name="action" value="next" class="btn btn-primary">ต่อไป <i
+                                        class="bi bi-arrow-right"></i></button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
             </div>
         </div>
-    </div>
-</main>
+    </main>
 
-<th:block th:fragment="scripts">
-    <script>
-        document.getElementById('add-expense-btn').addEventListener('click', function() {
-            const container = document.getElementById('expense-items-container');
-            const index = container.children.length;
-            const newRow = `
-                <div class="row g-3 align-items-end mb-3">
-                    <div class="col-md-4">
-                        <input type="text" class="form-control" name="items[${index}].name" placeholder="ชื่อรายการ">
+    <th:block th:fragment="scripts">
+        <script>
+            // Add Basic Item
+            document.getElementById('add-basic-btn').addEventListener('click', function () {
+                const container = document.getElementById('basic-items-container');
+                const index = container.querySelectorAll('.row').length;
+                const newRow = `
+                <div class="row g-2 align-items-center mb-2">
+                    <div class="col-5">
+                        <input type="text" class="form-control form-control-sm" name="basicItems[${index}].name" placeholder="ชื่อรายการ">
                     </div>
-                    <div class="col-md-3">
-                        <input type="number" step="10000" class="form-control" name="items[${index}].amountToday" placeholder="จำนวนเงิน">
+                    <div class="col-4">
+                        <input type="number" class="form-control form-control-sm" name="basicItems[${index}].amountToday" placeholder="จำนวนเงิน">
                     </div>
-                    <div class="col-md-3">
-                        <input type="number" step="0.1" class="form-control" name="items[${index}].inflationRate" value="3.0">
+                    <div class="col-3">
+                        <input type="number" step="0.1" class="form-control form-control-sm" name="basicItems[${index}].inflationRate" value="3.0">
                     </div>
                 </div>`;
-            container.insertAdjacentHTML('beforeend', newRow);
-        });
-    </script>
-</th:block>
+                container.insertAdjacentHTML('beforeend', newRow);
+            });
+
+            // Add Special Item
+            document.getElementById('add-special-btn').addEventListener('click', function () {
+                const container = document.getElementById('special-items-container');
+                const index = container.querySelectorAll('.row').length;
+                const newRow = `
+                <div class="row g-2 align-items-center mb-2">
+                    <div class="col-5">
+                        <input type="text" class="form-control form-control-sm" name="specialItems[${index}].name" placeholder="ชื่อรายการ">
+                    </div>
+                    <div class="col-4">
+                        <input type="number" class="form-control form-control-sm" name="specialItems[${index}].amountToday" placeholder="จำนวนเงิน">
+                    </div>
+                    <div class="col-3">
+                        <input type="number" step="0.1" class="form-control form-control-sm" name="specialItems[${index}].inflationRate" value="3.0">
+                    </div>
+                </div>`;
+                container.insertAdjacentHTML('beforeend', newRow);
+            });
+        </script>
+    </th:block>
 
 </body>
+
 </html>

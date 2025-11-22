@@ -1,47 +1,59 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org"
-      th:replace="~{layout :: layout(~{::title}, ~{::main}, ~{})}">
+<html lang="en" xmlns:th="http://www.thymeleaf.org" th:replace="~{layout :: layout(~{::title}, ~{::main}, ~{})}">
+
 <head>
     <title>Advanced Retirement - Step 1: You</title>
 </head>
+
 <body>
-<main role="main">
-    <div class="container-fluid">
-        <h1 class="h3 mb-4">Advanced Retirement Planner</h1>
-        <div class="progress mb-4" style="height: 20px;">
-            <div class="progress-bar" role="progressbar" style="width: 14%;" aria-valuenow="14" aria-valuemin="0" aria-valuemax="100">Step 1 of 7</div>
-        </div>
-        <div class="card shadow-sm border-0">
-            <div class="card-body p-4">
-                <h5 class="card-title mb-4"><i class="bi bi-person-check me-2"></i>ขั้นตอนที่ 1: เกี่ยวกับคุณ</h5>
-                <form th:action="@{/retirement/advanced/step1}" th:object="${step1Dto}" method="post" class="row g-3">
-                    <div class="col-md-6">
-                        <label for="dateOfBirth" class="form-label">วันเดือนปีเกิด</label>
-                        <input type="date" class="form-control" id="dateOfBirth" th:field="*{dateOfBirth}" required>
-                    </div>
-                    <div class="col-md-6">
-                        <label for="gender" class="form-label">เพศ</label>
-                        <select class="form-select" id="gender" th:field="*{gender}">
-                            <option value="">-- เลือกเพศ --</option>
-                            <option value="MALE">ชาย</option>
-                            <option value="FEMALE">หญิง</option>
-                        </select>
-                    </div>
-                    <div class="col-md-6">
-                        <label for="retireYear" class="form-label">ปีที่ต้องการเกษียณ (พ.ศ.)</label>
-                        <input type="number" class="form-control" id="retireYear" th:field="*{retireYear}" required placeholder="เช่น 2590">
-                    </div>
-                    <div class="col-md-6">
-                        <label for="retireMonth" class="form-label">เดือนที่ต้องการเกษียณ</label>
-                        <input type="number" class="form-control" id="retireMonth" th:field="*{retireMonth}" required placeholder="เช่น 12">
-                    </div>
-                    <div class="col-12 text-end mt-4">
-                        <button type="submit" class="btn btn-primary">ต่อไป <i class="bi bi-arrow-right"></i></button>
-                    </div>
-                </form>
+    <main role="main">
+        <div class="container-fluid">
+            <h1 class="h3 mb-4">Advanced Retirement Planner</h1>
+            <div class="progress mb-4" style="height: 20px;">
+                <div class="progress-bar" role="progressbar" style="width: 14%;" aria-valuenow="14" aria-valuemin="0"
+                    aria-valuemax="100">Step 1 of 7</div>
+            </div>
+            <div class="card shadow-sm border-0">
+                <div class="card-body p-4">
+                    <h5 class="card-title mb-4"><i class="bi bi-person-check me-2"></i>ขั้นตอนที่ 1: เกี่ยวกับคุณ</h5>
+                    <form th:action="@{/retirement/advanced/step1}" th:object="${step1Dto}" method="post"
+                        class="row g-3">
+                        <div class="col-md-6">
+                            <label for="currentAge" class="form-label">อายุปัจจุบัน (ปี)</label>
+                            <input type="number" class="form-control" id="currentAge" th:field="*{currentAge}" required
+                                placeholder="เช่น 30">
+                        </div>
+                        <div class="col-md-6">
+                            <label for="gender" class="form-label">เพศ</label>
+                            <select class="form-select" id="gender" th:field="*{gender}">
+                                <option value="">-- เลือกเพศ --</option>
+                                <option value="MALE">ชาย</option>
+                                <option value="FEMALE">หญิง</option>
+                            </select>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="retirementAge" class="form-label">อายุที่ต้องการเกษียณ (ปี)</label>
+                            <input type="number" class="form-control" id="retirementAge" th:field="*{retirementAge}"
+                                required placeholder="เช่น 60">
+                        </div>
+
+                        <!-- Display calculated years to retirement if available -->
+                        <div class="col-12" th:if="${step1Dto.yearsToRetirement != null}">
+                            <div class="alert alert-info">
+                                <i class="bi bi-info-circle me-2"></i>
+                                คุณมีเวลาอีก <strong th:text="${step1Dto.yearsToRetirement}">0</strong> ปี ก่อนเกษียณ
+                            </div>
+                        </div>
+
+                        <div class="col-12 text-end mt-4">
+                            <button type="submit" class="btn btn-primary">ต่อไป <i
+                                    class="bi bi-arrow-right"></i></button>
+                        </div>
+                    </form>
+                </div>
             </div>
         </div>
-    </div>
-</main>
+    </main>
 </body>
+
 </html>

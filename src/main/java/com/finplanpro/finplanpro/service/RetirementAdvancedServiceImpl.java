@@ -8,8 +8,6 @@ import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
-import java.time.LocalDate;
-import java.time.Period;
 import java.util.List;
 
 @Service
@@ -21,16 +19,11 @@ public class RetirementAdvancedServiceImpl implements RetirementAdvancedService 
 
     @Override
     public Step1YouDTO calculateStep1(Step1YouDTO input) {
-        LocalDate today = LocalDate.now();
-        LocalDate retirementDate = LocalDate.of(input.getRetireYear(), input.getRetireMonth(), 1);
-
-        int currentAge = Period.between(input.getDateOfBirth(), today).getYears();
-        int retirementAge = Period.between(input.getDateOfBirth(), retirementDate).getYears();
-        int yearsToRetirement = retirementAge - currentAge;
-
-        input.setCurrentAge(currentAge);
-        input.setRetirementAge(retirementAge);
-        input.setYearsToRetirement(yearsToRetirement);
+        // Simple calculation: years to retirement = retirement age - current age
+        if (input.getCurrentAge() != null && input.getRetirementAge() != null) {
+            int yearsToRetirement = input.getRetirementAge() - input.getCurrentAge();
+            input.setYearsToRetirement(yearsToRetirement);
+        }
         return input;
     }
 
@@ -57,18 +50,80 @@ public class RetirementAdvancedServiceImpl implements RetirementAdvancedService 
 
     @Override
     public Step4ExpenseDTO calculateSpecialExpensesFV(Step4ExpenseDTO input, int yearsToRetirement) {
-        input.getItems().forEach(item -> {
-            BigDecimal fv = financialCalculator.calculateFV(
-                item.getAmountToday(),
-                item.getInflationRate(),
-                yearsToRetirement
-            );
-            item.setFutureValue(fv.setScale(2, RoundingMode.HALF_UP));
-        });
-        BigDecimal totalFv = input.getItems().stream()
-                .map(Step4ExpenseDTO.SpecialExpenseItem::getFutureValue)
-                .reduce(BigDecimal.ZERO, BigDecimal::add);
-        input.setTotalSpecialExpensesFV(totalFv);
+        // 1. Calculate Basic Expenses
+        if (input.getBasicItems() != null && !input.getBasicItems().isEmpty()) {
+            input.getBasicItems().forEach(item -> {
+                if (item.getAmountToday() != null && item.getInflationRate() != null) {
+                    // Convert percentage to decimal (e.g., 3.0 -> 0.03)
+                    BigDecimal inflationDecimal = item.getInflationRate().divide(new BigDecimal("100"), 10,
+                            RoundingMode.HALF_UP);
+                    BigDecimal fv = financialCalculator.calculateFV(
+                            item.getAmountToday(),
+                            inflationDecimal,
+                            yearsToRetirement);
+                    item.setFutureValue(fv.setScale(2, RoundingMode.HALF_UP));
+                } else {
+                    item.setFutureValue(item.getAmountToday() != null ? item.getAmountToday() : BigDecimal.ZERO);
+                }
+            });
+
+            BigDecimal totalBasicToday = input.getBasicItems().stream()
+                    .map(item -> item.getAmountToday() != null ? item.getAmountToday() : BigDecimal.ZERO)
+                    .reduce(BigDecimal.ZERO, BigDecimal::add);
+            input.setTotalBasicExpensesToday(totalBasicToday);
+
+            BigDecimal totalBasicFV = input.getBasicItems().stream()
+                    .map(item -> item.getFutureValue() != null ? item.getFutureValue() : BigDecimal.ZERO)
+                    .reduce(BigDecimal.ZERO, BigDecimal::add);
+            input.setTotalBasicExpensesFV(totalBasicFV);
+        } else {
+            input.setTotalBasicExpensesToday(BigDecimal.ZERO);
+            input.setTotalBasicExpensesFV(BigDecimal.ZERO);
+        }
+
+        // 2. Calculate Special Expenses
+        if (input.getSpecialItems() != null && !input.getSpecialItems().isEmpty()) {
+            input.getSpecialItems().forEach(item -> {
+                if (item.getAmountToday() != null && item.getInflationRate() != null) {
+                    // Convert percentage to decimal (e.g., 3.0 -> 0.03)
+                    BigDecimal inflationDecimal = item.getInflationRate().divide(new BigDecimal("100"), 10,
+                            RoundingMode.HALF_UP);
+                    BigDecimal fv = financialCalculator.calculateFV(
+                            item.getAmountToday(),
+                            inflationDecimal,
+                            yearsToRetirement);
+                    item.setFutureValue(fv.setScale(2, RoundingMode.HALF_UP));
+                } else {
+                    item.setFutureValue(item.getAmountToday() != null ? item.getAmountToday() : BigDecimal.ZERO);
+                }
+            });
+
+            BigDecimal totalSpecialToday = input.getSpecialItems().stream()
+                    .map(item -> item.getAmountToday() != null ? item.getAmountToday() : BigDecimal.ZERO)
+                    .reduce(BigDecimal.ZERO, BigDecimal::add);
+            input.setTotalSpecialExpensesToday(totalSpecialToday);
+
+            BigDecimal totalSpecialFV = input.getSpecialItems().stream()
+                    .map(item -> item.getFutureValue() != null ? item.getFutureValue() : BigDecimal.ZERO)
+                    .reduce(BigDecimal.ZERO, BigDecimal::add);
+            input.setTotalSpecialExpensesFV(totalSpecialFV);
+        } else {
+            input.setTotalSpecialExpensesToday(BigDecimal.ZERO);
+            input.setTotalSpecialExpensesFV(BigDecimal.ZERO);
+        }
+
+        // 3. Summary
+        BigDecimal totalToday = (input.getTotalBasicExpensesToday() != null ? input.getTotalBasicExpensesToday()
+                : BigDecimal.ZERO)
+                .add(input.getTotalSpecialExpensesToday() != null ? input.getTotalSpecialExpensesToday()
+                        : BigDecimal.ZERO);
+        input.setTotalRetirementExpensesToday(totalToday);
+
+        BigDecimal totalFV = (input.getTotalBasicExpensesFV() != null ? input.getTotalBasicExpensesFV()
+                : BigDecimal.ZERO)
+                .add(input.getTotalSpecialExpensesFV() != null ? input.getTotalSpecialExpensesFV() : BigDecimal.ZERO);
+        input.setTotalRetirementExpensesFV(totalFV);
+
         return input;
     }
 
@@ -76,10 +131,9 @@ public class RetirementAdvancedServiceImpl implements RetirementAdvancedService 
     public Step5HavesDTO calculateAssetsFV(Step5HavesDTO input, int yearsToRetirement) {
         input.getAssets().forEach(asset -> {
             BigDecimal fv = financialCalculator.calculateFV(
-                asset.getValueToday(),
-                asset.getReturnRate(),
-                yearsToRetirement
-            );
+                    asset.getValueToday(),
+                    asset.getReturnRate(),
+                    yearsToRetirement);
             asset.setFutureValue(fv.setScale(2, RoundingMode.HALF_UP));
         });
         BigDecimal totalFv = input.getAssets().stream()
@@ -90,12 +144,16 @@ public class RetirementAdvancedServiceImpl implements RetirementAdvancedService 
     }
 
     @Override
-    public DesignResultDTO calculateDesignGap(BigDecimal monthlyCostToday, BigDecimal inflation, int yearsToRetirement, int yearsAfterRetirement, BigDecimal returnBeforeRetirement, BigDecimal returnAfterRetirement, BigDecimal totalAssetsFV, BigDecimal totalSpecialExpensesFV) {
-        
-        BigDecimal monthlyCostAtRetirement = financialCalculator.calculateFV(monthlyCostToday, inflation, yearsToRetirement);
+    public DesignResultDTO calculateDesignGap(BigDecimal monthlyCostToday, BigDecimal inflation, int yearsToRetirement,
+            int yearsAfterRetirement, BigDecimal returnBeforeRetirement, BigDecimal returnAfterRetirement,
+            BigDecimal totalAssetsFV, BigDecimal totalSpecialExpensesFV) {
+
+        BigDecimal monthlyCostAtRetirement = financialCalculator.calculateFV(monthlyCostToday, inflation,
+                yearsToRetirement);
 
         BigDecimal r = returnAfterRetirement;
-        BigDecimal targetFund = financialCalculator.calculatePV(monthlyCostAtRetirement.multiply(BigDecimal.valueOf(12)), r, yearsAfterRetirement);
+        BigDecimal targetFund = financialCalculator
+                .calculatePV(monthlyCostAtRetirement.multiply(BigDecimal.valueOf(12)), r, yearsAfterRetirement);
 
         BigDecimal targetAll = targetFund.add(totalSpecialExpensesFV);
 
