@@ -19,6 +19,7 @@ public class Step4ExpenseDTO {
     private BigDecimal totalSpecialExpensesFV;
     private BigDecimal totalRetirementExpensesToday;
     private BigDecimal totalRetirementExpensesFV;
+    private BigDecimal totalBasicExpensesUntilEndOfLife;
 
     @Data
     public static class ExpenseItem {

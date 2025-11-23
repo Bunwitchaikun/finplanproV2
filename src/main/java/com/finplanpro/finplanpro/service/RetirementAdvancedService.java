@@ -9,7 +9,7 @@ import java.util.List;
 public interface RetirementAdvancedService {
     Step1YouDTO calculateStep1(Step1YouDTO input);
     Step2LifeDTO calculateStep2(Step2LifeDTO input, int retirementAge, String gender);
-    Step4ExpenseDTO calculateSpecialExpensesFV(Step4ExpenseDTO input, int yearsToRetirement);
+    Step4ExpenseDTO calculateSpecialExpensesFV(Step4ExpenseDTO input, int yearsToRetirement, int yearsAfterRetirement);
     
     List<Step5HavesDTO.CurrentAssetItem> mapSnapshotToCurrentAssets(NetWorthSnapshot snapshot);
     Step5HavesDTO calculateHavesFV(Step5HavesDTO input, int yearsToRetirement);

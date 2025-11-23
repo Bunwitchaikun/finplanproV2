@@ -103,7 +103,8 @@ public class RetirementAdvancedController {
                                @RequestParam("action") String action,
                                Model model) {
         Integer yearsToRetirement = planData.getStep1().getYearsToRetirement();
-        planData.setStep4(retirementService.calculateSpecialExpensesFV(step4Dto, yearsToRetirement != null ? yearsToRetirement : 0));
+        Integer yearsAfterRetirement = planData.getStep2().getYearsAfterRetirement();
+        planData.setStep4(retirementService.calculateSpecialExpensesFV(step4Dto, yearsToRetirement != null ? yearsToRetirement : 0, yearsAfterRetirement != null ? yearsAfterRetirement : 0));
 
         if ("calculate".equals(action)) {
             addActiveMenu(model);

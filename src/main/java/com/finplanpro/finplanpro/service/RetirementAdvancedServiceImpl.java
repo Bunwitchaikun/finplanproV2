@@ -51,19 +51,33 @@ public class RetirementAdvancedServiceImpl implements RetirementAdvancedService 
     }
 
     @Override
-    public Step4ExpenseDTO calculateSpecialExpensesFV(Step4ExpenseDTO input, int yearsToRetirement) {
+    public Step4ExpenseDTO calculateSpecialExpensesFV(Step4ExpenseDTO input, int yearsToRetirement, int yearsAfterRetirement) {
         // --- Basic Items Calculation ---
         BigDecimal totalBasicToday = BigDecimal.ZERO;
         BigDecimal totalBasicFV = BigDecimal.ZERO;
+        BigDecimal totalAnnualizedBasicFV = BigDecimal.ZERO;
+
         if (input.getBasicItems() != null) {
             for (Step4ExpenseDTO.ExpenseItem item : input.getBasicItems()) {
                 calculateItemFV(item, yearsToRetirement);
                 totalBasicToday = totalBasicToday.add(Optional.ofNullable(item.getAmountToday()).orElse(BigDecimal.ZERO));
                 totalBasicFV = totalBasicFV.add(item.getFutureValue());
+
+                // Calculate annualized FV for end-of-life calculation
+                BigDecimal annualizedFV = item.getFutureValue();
+                if (item.getName() != null && item.getName().contains("เดือน")) {
+                    annualizedFV = annualizedFV.multiply(BigDecimal.valueOf(12));
+                }
+                totalAnnualizedBasicFV = totalAnnualizedBasicFV.add(annualizedFV);
             }
         }
         input.setTotalBasicExpensesToday(totalBasicToday);
         input.setTotalBasicExpensesFV(totalBasicFV);
+        
+        // Calculate and set the new field
+        BigDecimal totalUntilEndOfLife = totalAnnualizedBasicFV.multiply(BigDecimal.valueOf(yearsAfterRetirement));
+        input.setTotalBasicExpensesUntilEndOfLife(totalUntilEndOfLife.setScale(2, RoundingMode.HALF_UP));
+
 
         // --- Special Items Calculation ---
         BigDecimal totalSpecialToday = BigDecimal.ZERO;
