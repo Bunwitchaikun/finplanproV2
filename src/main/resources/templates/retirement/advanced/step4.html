@@ -24,7 +24,7 @@
                         <div class="row">
                             <!-- LEFT COLUMN: Basic Cost -->
                             <div class="col-md-6 border-end">
-                                <h6 class="text-primary mb-3">Basic Cost (ค่าใช้จ่ายพื้นฐาน)</h6>
+                                <h6 class="text-primary mb-3">Basic Cost (ค่าใช้จ่ายพื้นฐาน) - แบบรายเดือน </h6>
                                 <div id="basic-items-container">
                                     <!-- Predefined Basic Items -->
                                     <th:block th:if="${step4Dto.basicItems == null or step4Dto.basicItems.empty}">
@@ -32,11 +32,11 @@
                                         <div class="row g-2 align-items-center mb-2">
                                             <div class="col-5">
                                                 <input type="text" class="form-control form-control-sm"
-                                                    name="basicItems[0].name" value="ค่าอาหาร (บาท/เดือน)" readonly>
+                                                    name="basicItems[0].name" value="ค่าอาหาร" readonly>
                                             </div>
                                             <div class="col-4">
                                                 <input type="number" class="form-control form-control-sm"
-                                                    name="basicItems[0].amountToday" placeholder="จำนวนเงิน">
+                                                    name="basicItems[0].amountToday" placeholder="บาท/เดือน">
                                             </div>
                                             <div class="col-3">
                                                 <input type="number" step="0.1" class="form-control form-control-sm"
@@ -47,11 +47,11 @@
                                         <div class="row g-2 align-items-center mb-2">
                                             <div class="col-5">
                                                 <input type="text" class="form-control form-control-sm"
-                                                    name="basicItems[1].name" value="ค่าเดินทาง/น้ำมัน (บาท/เดือน)" readonly>
+                                                    name="basicItems[1].name" value="ค่าเดินทาง/น้ำมัน" readonly>
                                             </div>
                                             <div class="col-4">
                                                 <input type="number" class="form-control form-control-sm"
-                                                    name="basicItems[1].amountToday" placeholder="จำนวนเงิน">
+                                                    name="basicItems[1].amountToday" placeholder="บาท/เดือน">
                                             </div>
                                             <div class="col-3">
                                                 <input type="number" step="0.1" class="form-control form-control-sm"
@@ -62,11 +62,11 @@
                                         <div class="row g-2 align-items-center mb-2">
                                             <div class="col-5">
                                                 <input type="text" class="form-control form-control-sm"
-                                                    name="basicItems[2].name" value="ค่ารักษาพยาบาล (บาท/ปี)" readonly>
+                                                    name="basicItems[2].name" value="ค่ารักษาพยาบาล" readonly>
                                             </div>
                                             <div class="col-4">
                                                 <input type="number" class="form-control form-control-sm"
-                                                    name="basicItems[2].amountToday" placeholder="จำนวนเงิน">
+                                                    name="basicItems[2].amountToday" placeholder="บาท/เดือน">
                                             </div>
                                             <div class="col-3">
                                                 <input type="number" step="0.1" class="form-control form-control-sm"
@@ -77,11 +77,11 @@
                                         <div class="row g-2 align-items-center mb-2">
                                             <div class="col-5">
                                                 <input type="text" class="form-control form-control-sm"
-                                                    name="basicItems[3].name" value="ค่าน้ำ/ไฟ/โทรศัพท์ (บาท/เดือน)" readonly>
+                                                    name="basicItems[3].name" value="ค่าน้ำ/ไฟ/โทรศัพท์" readonly>
                                             </div>
                                             <div class="col-4">
                                                 <input type="number" class="form-control form-control-sm"
-                                                    name="basicItems[3].amountToday" placeholder="จำนวนเงิน">
+                                                    name="basicItems[3].amountToday" placeholder="บาท/เดือน">
                                             </div>
                                             <div class="col-3">
                                                 <input type="number" step="0.1" class="form-control form-control-sm"
@@ -92,11 +92,11 @@
                                         <div class="row g-2 align-items-center mb-2">
                                             <div class="col-5">
                                                 <input type="text" class="form-control form-control-sm"
-                                                    name="basicItems[4].name" value="ประกัน/บำรุงรักษารถ (บาท/ปี)" readonly>
+                                                    name="basicItems[4].name" value="ประกัน/บำรุงรักษารถ" readonly>
                                             </div>
                                             <div class="col-4">
                                                 <input type="number" class="form-control form-control-sm"
-                                                    name="basicItems[4].amountToday" placeholder="จำนวนเงิน">
+                                                    name="basicItems[4].amountToday" placeholder="บาท/เดือน">
                                             </div>
                                             <div class="col-3">
                                                 <input type="number" step="0.1" class="form-control form-control-sm"
@@ -107,11 +107,11 @@
                                         <div class="row g-2 align-items-center mb-2">
                                             <div class="col-5">
                                                 <input type="text" class="form-control form-control-sm"
-                                                    name="basicItems[5].name" value="ค่าซอง/ออกงาน (บาท/ปี)" readonly>
+                                                    name="basicItems[5].name" value="ค่าซอง/ออกงาน" readonly>
                                             </div>
                                             <div class="col-4">
                                                 <input type="number" class="form-control form-control-sm"
-                                                    name="basicItems[5].amountToday" placeholder="จำนวนเงิน">
+                                                    name="basicItems[5].amountToday" placeholder="บาท/เดือน">
                                             </div>
                                             <div class="col-3">
                                                 <input type="number" step="0.1" class="form-control form-control-sm"
@@ -122,11 +122,11 @@
                                         <div class="row g-2 align-items-center mb-2">
                                             <div class="col-5">
                                                 <input type="text" class="form-control form-control-sm"
-                                                    name="basicItems[6].name" value="สันทนาการ/ท่องเที่ยว (บาท/ปี)" readonly>
+                                                    name="basicItems[6].name" value="สันทนาการ/ท่องเที่ยว" readonly>
                                             </div>
                                             <div class="col-4">
                                                 <input type="number" class="form-control form-control-sm"
-                                                    name="basicItems[6].amountToday" placeholder="จำนวนเงิน">
+                                                    name="basicItems[6].amountToday" placeholder="บาท/เดือน">
                                             </div>
                                             <div class="col-3">
                                                 <input type="number" step="0.1" class="form-control form-control-sm"
@@ -140,7 +140,7 @@
                                             <div class="col-5">
                                                 <input type="text" class="form-control form-control-sm"
                                                     th:field="*{basicItems[__${stat.index}__].name}"
-                                                    placeholder="ชื่อรายการ">
+                                                    placeholder="ชื่อรายการ" readonly>
                                             </div>
                                             <div class="col-4">
                                                 <input type="number" class="form-control form-control-sm"
@@ -180,7 +180,7 @@
 
                             <!-- RIGHT COLUMN: Special Cost -->
                             <div class="col-md-6">
-                                <h6 class="text-success mb-3">Special Cost (ค่าใช้จ่ายพิเศษหลังเกษียณ)</h6>
+                                <h6 class="text-success mb-3">Special Cost (ค่าใช้จ่ายพิเศษหลังเกษียณ) - มูลค่าปัจจุบัน </h6>
                                 <div id="special-items-container">
                                     <!-- Predefined Special Items -->
                                     <th:block th:if="${step4Dto.specialItems == null or step4Dto.specialItems.empty}">
@@ -192,7 +192,7 @@
                                             </div>
                                             <div class="col-4">
                                                 <input type="number" class="form-control form-control-sm"
-                                                    name="specialItems[0].amountToday" placeholder="บาท/ปี">
+                                                    name="specialItems[0].amountToday" placeholder="บาท(ก้อน)">
                                             </div>
                                             <div class="col-3">
                                                 <input type="number" step="0.1" class="form-control form-control-sm"
@@ -222,7 +222,7 @@
                                             </div>
                                             <div class="col-4">
                                                 <input type="number" class="form-control form-control-sm"
-                                                    name="specialItems[2].amountToday" placeholder="บาท/ปี">
+                                                    name="specialItems[2].amountToday" placeholder="บาท(ก้อน)">
                                             </div>
                                             <div class="col-3">
                                                 <input type="number" step="0.1" class="form-control form-control-sm"
@@ -267,7 +267,7 @@
                                             <div class="col-5">
                                                 <input type="text" class="form-control form-control-sm"
                                                     th:field="*{specialItems[__${stat.index}__].name}"
-                                                    placeholder="ชื่อรายการ">
+                                                    placeholder="ชื่อรายการ" readonly>
                                             </div>
                                             <div class="col-4">
                                                 <input type="number" class="form-control form-control-sm"
