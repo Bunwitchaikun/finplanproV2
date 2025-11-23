@@ -55,26 +55,30 @@ public class RetirementAdvancedServiceImpl implements RetirementAdvancedService 
         // --- Basic Items Calculation ---
         BigDecimal totalBasicToday = BigDecimal.ZERO;
         BigDecimal totalBasicFV = BigDecimal.ZERO;
+        BigDecimal totalAnnualizedBasicToday = BigDecimal.ZERO;
         BigDecimal totalAnnualizedBasicFV = BigDecimal.ZERO;
 
         if (input.getBasicItems() != null) {
             for (Step4ExpenseDTO.ExpenseItem item : input.getBasicItems()) {
                 calculateItemFV(item, yearsToRetirement);
-                totalBasicToday = totalBasicToday.add(Optional.ofNullable(item.getAmountToday()).orElse(BigDecimal.ZERO));
+                BigDecimal amountToday = Optional.ofNullable(item.getAmountToday()).orElse(BigDecimal.ZERO);
+                totalBasicToday = totalBasicToday.add(amountToday);
                 totalBasicFV = totalBasicFV.add(item.getFutureValue());
 
-                // Calculate annualized FV for end-of-life calculation
+                // Calculate annualized amounts for summary
+                BigDecimal annualizedToday = amountToday;
                 BigDecimal annualizedFV = item.getFutureValue();
                 if (item.getName() != null && item.getName().contains("เดือน")) {
+                    annualizedToday = annualizedToday.multiply(BigDecimal.valueOf(12));
                     annualizedFV = annualizedFV.multiply(BigDecimal.valueOf(12));
                 }
+                totalAnnualizedBasicToday = totalAnnualizedBasicToday.add(annualizedToday);
                 totalAnnualizedBasicFV = totalAnnualizedBasicFV.add(annualizedFV);
             }
         }
         input.setTotalBasicExpensesToday(totalBasicToday);
         input.setTotalBasicExpensesFV(totalBasicFV);
         
-        // Calculate and set the new field
         BigDecimal totalUntilEndOfLife = totalAnnualizedBasicFV.multiply(BigDecimal.valueOf(yearsAfterRetirement));
         input.setTotalBasicExpensesUntilEndOfLife(totalUntilEndOfLife.setScale(2, RoundingMode.HALF_UP));
 
@@ -92,9 +96,12 @@ public class RetirementAdvancedServiceImpl implements RetirementAdvancedService 
         input.setTotalSpecialExpensesToday(totalSpecialToday);
         input.setTotalSpecialExpensesFV(totalSpecialFV);
 
-        // --- Grand Totals ---
-        input.setTotalRetirementExpensesToday(totalBasicToday.add(totalSpecialToday));
-        input.setTotalRetirementExpensesFV(totalBasicFV.add(totalSpecialFV));
+        // --- Grand Totals (New Formulas) ---
+        BigDecimal todayTotal = (totalAnnualizedBasicToday.multiply(BigDecimal.valueOf(yearsAfterRetirement))).add(totalSpecialToday);
+        input.setTotalRetirementExpensesToday(todayTotal.setScale(2, RoundingMode.HALF_UP));
+
+        BigDecimal fvTotal = totalUntilEndOfLife.add(totalSpecialFV);
+        input.setTotalRetirementExpensesFV(fvTotal.setScale(2, RoundingMode.HALF_UP));
         
         return input;
     }
