@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org"
-      th:replace="~{layout :: layout(~{::title}, ~{::main}, ~{})}">
+      th:replace="~{layout :: layout(~{::title}, ~{::main}, ~{::scripts})}">
 <head>
     <title>Advanced Retirement - Step 3: Wants</title>
 </head>
@@ -13,31 +13,35 @@
         </div>
         <div class="card shadow-sm border-0">
             <div class="card-body p-4">
-                <h5 class="card-title mb-4"><i class="bi bi-emoji-sunglasses me-2"></i>ขั้นตอนที่ 3: ไลฟ์สไตล์ที่ต้องการ</h5>
+                <h5 class="card-title mb-4"><i class="bi bi-emoji-sunglasses me-2"></i>ขั้นตอนที่ 3: รายได้เสริมหลังเกษียณ</h5>
                 <form th:action="@{/retirement/advanced/step3}" th:object="${step3Dto}" method="post" class="row g-3">
+                    
+                    <!-- Lifestyle Choice -->
                     <div class="col-md-12">
-                        <label for="lifestyleLevel" class="form-label">คุณต้องการใช้ชีวิตหลังเกษียณแบบไหน?</label>
-                        <select class="form-select" id="lifestyleLevel" th:field="*{lifestyleLevel}">
-                            <option value="minimum">พอเพียง (Minimum)</option>
-                            <option value="moderate">สุขสบาย (Moderate)</option>
-                            <option value="comfortable">หรูหรา (Comfortable)</option>
+                        <label for="lifestyleChoice" class="form-label">คุณต้องการใช้ชีวิตหลังเกษียณแบบไหน?</label>
+                        <select class="form-select" id="lifestyleChoice" th:field="*{lifestyleChoice}">
+                            <option value="no_work">ชิวๆสบายๆ ไม่ทำงานแล้ว</option>
+                            <option value="light_work">ยังคงทำงาน แต่ไม่หนักมาก</option>
+                            <option value="heavy_work">ยังคงทำงานหนักเหมือนเดิม</option>
                         </select>
                     </div>
-                    <div class="col-md-6">
-                        <label for="afterTaxIncome" class="form-label">รายได้ที่ต้องการต่อเดือน (หลังหักภาษี)</label>
-                        <input type="number" step="1000" class="form-control" id="afterTaxIncome" th:field="*{afterTaxIncome}" placeholder="เช่น 50000">
+
+                    <!-- Conditional Income Section -->
+                    <div id="income-section" class="row g-3 mt-2" style="display: none;">
+                        <div class="col-md-4">
+                            <label for="extraIncomePerMonth" class="form-label">รายได้เสริมที่ต้องการต่อเดือน (หลังหักภาษี)</label>
+                            <input type="number" step="1000" class="form-control" id="extraIncomePerMonth" th:field="*{extraIncomePerMonth}" placeholder="เช่น 15000">
+                        </div>
+                        <div class="col-md-4">
+                            <label for="extraIncomeYears" class="form-label">จำนวนปีที่จะมีรายได้เสริม (หลังเกษียณ)</label>
+                            <input type="number" class="form-control" id="extraIncomeYears" th:field="*{extraIncomeYears}" readonly>
+                        </div>
+                        <div class="col-md-4">
+                            <label for="totalExtraIncome" class="form-label">รายได้ที่คาดว่าจะได้รับจนสิ้นอายุขัย</label>
+                            <input type="text" class="form-control" id="totalExtraIncome" readonly>
+                        </div>
                     </div>
-                    <div class="col-12 mt-4">
-                        <h6>รายได้เสริม (ถ้ามี)</h6>
-                    </div>
-                    <div class="col-md-6">
-                        <label for="extraIncome" class="form-label">รายได้เสริมพิเศษต่อเดือน</label>
-                        <input type="number" step="1000" class="form-control" id="extraIncome" th:field="*{extraIncome}" placeholder="เช่น 10000">
-                    </div>
-                    <div class="col-md-6">
-                        <label for="extraIncomeYears" class="form-label">จำนวนปีที่จะมีรายได้เสริม (หลังเกษียณ)</label>
-                        <input type="number" class="form-control" id="extraIncomeYears" th:field="*{extraIncomeYears}" placeholder="เช่น 5">
-                    </div>
+
                     <div class="col-12 d-flex justify-content-between mt-4">
                         <a th:href="@{/retirement/advanced/step2}" class="btn btn-secondary"><i class="bi bi-arrow-left"></i> ย้อนกลับ</a>
                         <button type="submit" class="btn btn-primary">ต่อไป <i class="bi bi-arrow-right"></i></button>
@@ -47,5 +51,43 @@
         </div>
     </div>
 </main>
+
+<th:block th:fragment="scripts">
+    <script>
+        const lifestyleSelect = document.getElementById('lifestyleChoice');
+        const incomeSection = document.getElementById('income-section');
+        const incomeInput = document.getElementById('extraIncomePerMonth');
+        const yearsInput = document.getElementById('extraIncomeYears');
+        const totalOutput = document.getElementById('totalExtraIncome');
+
+        function toggleIncomeSection() {
+            const selectedValue = lifestyleSelect.value;
+            if (selectedValue === 'no_work') {
+                incomeSection.style.display = 'none';
+                incomeInput.value = '0'; // Reset value when hidden
+            } else {
+                incomeSection.style.display = 'flex'; // Use flex for row layout
+            }
+            calculateTotal();
+        }
+
+        function calculateTotal() {
+            const income = parseFloat(incomeInput.value) || 0;
+            const years = parseInt(yearsInput.value) || 0;
+            const total = income * 12 * years;
+            totalOutput.value = '฿ ' + total.toLocaleString('en-US');
+        }
+
+        // Event Listeners
+        lifestyleSelect.addEventListener('change', toggleIncomeSection);
+        incomeInput.addEventListener('input', calculateTotal);
+
+        // Initial state on page load
+        document.addEventListener('DOMContentLoaded', (event) => {
+            toggleIncomeSection();
+        });
+    </script>
+</th:block>
+
 </body>
 </html>
