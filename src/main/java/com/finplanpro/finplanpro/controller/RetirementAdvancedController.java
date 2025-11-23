@@ -108,17 +108,25 @@ public class RetirementAdvancedController {
 
     @GetMapping("/step5")
     public String showStep5(Model model, @ModelAttribute("planData") RetirementPlanData planData) {
-        model.addAttribute("step5Dto", planData.getStep5());
+        model.addAttribute("assetLiabilityDto", planData.getStep5AssetsLiabilities());
         addActiveMenu(model);
         return "retirement/advanced/step5";
     }
 
     @PostMapping("/step5")
-    public String processStep5(@ModelAttribute("step5Dto") Step5HavesDTO step5Dto,
-            @ModelAttribute("planData") RetirementPlanData planData) {
-        Step5HavesDTO result = retirementService.calculateAssetsFV(step5Dto,
-                planData.getStep1().getYearsToRetirement());
-        planData.setStep5(result);
+    public String processStep5(@RequestParam(required = false) String action,
+            @ModelAttribute("assetLiabilityDto") AssetLiabilityDTO assetLiabilityDto,
+            @ModelAttribute("planData") RetirementPlanData planData,
+            Model model) {
+        AssetLiabilityDTO result = retirementService.calculateAssetsLiabilities(assetLiabilityDto);
+        planData.setStep5AssetsLiabilities(result);
+
+        if ("calculate".equals(action)) {
+            model.addAttribute("assetLiabilityDto", result);
+            addActiveMenu(model);
+            return "retirement/advanced/step5";
+        }
+
         return "redirect:/retirement/advanced/step6";
     }
 

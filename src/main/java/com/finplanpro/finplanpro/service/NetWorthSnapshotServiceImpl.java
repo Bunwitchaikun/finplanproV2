@@ -24,11 +24,57 @@ public class NetWorthSnapshotServiceImpl implements NetWorthSnapshotService {
     }
 
     @Override
+    @Transactional
     public NetWorthSnapshot save(NetWorthSnapshot snapshot) {
         User user = getCurrentUser();
         snapshot.setUser(user);
+
+        // Ensure all items have proper snapshot reference
+        if (snapshot.getItems() != null) {
+            snapshot.getItems().forEach(item -> {
+                if (item.getSnapshot() == null) {
+                    item.setSnapshot(snapshot);
+                }
+            });
+        }
+
         // The @PrePersist/@PreUpdate in the entity will handle calculations
         return snapshotRepository.save(snapshot);
+    }
+
+    @Override
+    public void seedDefaultItems(NetWorthSnapshot snapshot) {
+        // Assets
+        snapshot.addItem(new com.finplanpro.finplanpro.entity.NetWorthItem("เงินสด",
+                com.finplanpro.finplanpro.entity.NetWorthItem.ItemType.ASSET));
+        snapshot.addItem(new com.finplanpro.finplanpro.entity.NetWorthItem("ตราสารหนี้/พันธบัตร/หุ้นกู้",
+                com.finplanpro.finplanpro.entity.NetWorthItem.ItemType.ASSET));
+        snapshot.addItem(new com.finplanpro.finplanpro.entity.NetWorthItem("กองทุนสำรองเลี้ยงชีพ RMF/LTF",
+                com.finplanpro.finplanpro.entity.NetWorthItem.ItemType.ASSET));
+        snapshot.addItem(new com.finplanpro.finplanpro.entity.NetWorthItem("กองทุนหุ้น",
+                com.finplanpro.finplanpro.entity.NetWorthItem.ItemType.ASSET));
+        snapshot.addItem(new com.finplanpro.finplanpro.entity.NetWorthItem("หุ้นรายตัว",
+                com.finplanpro.finplanpro.entity.NetWorthItem.ItemType.ASSET));
+        snapshot.addItem(new com.finplanpro.finplanpro.entity.NetWorthItem("ทองคำ",
+                com.finplanpro.finplanpro.entity.NetWorthItem.ItemType.ASSET));
+        snapshot.addItem(new com.finplanpro.finplanpro.entity.NetWorthItem("บิตคอย",
+                com.finplanpro.finplanpro.entity.NetWorthItem.ItemType.ASSET));
+
+        // Liabilities
+        snapshot.addItem(new com.finplanpro.finplanpro.entity.NetWorthItem("บัตรเครดิต",
+                com.finplanpro.finplanpro.entity.NetWorthItem.ItemType.LIABILITY));
+        snapshot.addItem(new com.finplanpro.finplanpro.entity.NetWorthItem("บัตรกดเงินสด",
+                com.finplanpro.finplanpro.entity.NetWorthItem.ItemType.LIABILITY));
+        snapshot.addItem(new com.finplanpro.finplanpro.entity.NetWorthItem("สินเชื่อส่วนบุคคล",
+                com.finplanpro.finplanpro.entity.NetWorthItem.ItemType.LIABILITY));
+        snapshot.addItem(new com.finplanpro.finplanpro.entity.NetWorthItem("ผ่อนสินค้า",
+                com.finplanpro.finplanpro.entity.NetWorthItem.ItemType.LIABILITY));
+        snapshot.addItem(new com.finplanpro.finplanpro.entity.NetWorthItem("หนี้นอกระบบ",
+                com.finplanpro.finplanpro.entity.NetWorthItem.ItemType.LIABILITY));
+        snapshot.addItem(new com.finplanpro.finplanpro.entity.NetWorthItem("กู้ซื้อบ้าน",
+                com.finplanpro.finplanpro.entity.NetWorthItem.ItemType.LIABILITY));
+        snapshot.addItem(new com.finplanpro.finplanpro.entity.NetWorthItem("กู้ซื้อรถ",
+                com.finplanpro.finplanpro.entity.NetWorthItem.ItemType.LIABILITY));
     }
 
     @Override

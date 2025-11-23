@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.List;
+import java.util.Objects;
 
 @Service
 @RequiredArgsConstructor
@@ -140,6 +141,37 @@ public class RetirementAdvancedServiceImpl implements RetirementAdvancedService 
                 .map(Step5HavesDTO.AssetItem::getFutureValue)
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
         input.setTotalAssetsFV(totalFv);
+        return input;
+    }
+
+    @Override
+    public AssetLiabilityDTO calculateAssetsLiabilities(AssetLiabilityDTO input) {
+        // Sum assets
+        if (input.getAssetItems() != null) {
+            BigDecimal totalAssets = input.getAssetItems().stream()
+                    .map(AssetLiabilityDTO.Item::getAmount)
+                    .filter(Objects::nonNull)
+                    .reduce(BigDecimal.ZERO, BigDecimal::add);
+            input.setTotalAssets(totalAssets);
+        } else {
+            input.setTotalAssets(BigDecimal.ZERO);
+        }
+
+        // Sum liabilities
+        if (input.getLiabilityItems() != null) {
+            BigDecimal totalLiabilities = input.getLiabilityItems().stream()
+                    .map(AssetLiabilityDTO.Item::getAmount)
+                    .filter(Objects::nonNull)
+                    .reduce(BigDecimal.ZERO, BigDecimal::add);
+            input.setTotalLiabilities(totalLiabilities);
+        } else {
+            input.setTotalLiabilities(BigDecimal.ZERO);
+        }
+
+        // Net worth
+        BigDecimal netWorth = input.getTotalAssets().subtract(input.getTotalLiabilities());
+        input.setNetWorth(netWorth);
+
         return input;
     }
 
