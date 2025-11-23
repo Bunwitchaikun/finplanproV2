@@ -10,8 +10,6 @@ import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
-import java.time.LocalDate;
-import java.time.Period;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
@@ -25,31 +23,24 @@ public class RetirementAdvancedServiceImpl implements RetirementAdvancedService 
 
     @Override
     public Step1YouDTO calculateStep1(Step1YouDTO input) {
-        if (input.getDateOfBirth() == null || input.getRetireYear() == 0) return input;
-        LocalDate today = LocalDate.now();
-        LocalDate retirementDate = LocalDate.of(input.getRetireYear(), input.getRetireMonth(), 1);
-        int currentAge = Period.between(input.getDateOfBirth(), today).getYears();
-        int retirementAge = Period.between(input.getDateOfBirth(), retirementDate).getYears();
-        input.setCurrentAge(currentAge);
-        input.setRetirementAge(retirementAge);
-        input.setYearsToRetirement(retirementAge - currentAge);
+        if (input.getCurrentAge() != null && input.getRetirementAge() != null) {
+            int years = input.getRetirementAge() - input.getCurrentAge();
+            input.setYearsToRetirement(Math.max(0, years));
+        }
         return input;
     }
 
     @Override
     public Step2LifeDTO calculateStep2(Step2LifeDTO input, int retirementAge) {
-        // If user provided a specific life expectancy, use it.
-        // Otherwise, calculate based on health level.
         if (input.getLifeExpectancy() <= 0) {
             int calculatedLifeExpectancy = switch (input.getHealthLevel()) {
                 case "perfect" -> 85;
                 case "minor" -> 80;
                 case "major" -> 70;
-                default -> 75; // moderate or unknown
+                default -> 75;
             };
             input.setLifeExpectancy(calculatedLifeExpectancy);
         }
-        
         input.setYearsAfterRetirement(input.getLifeExpectancy() - retirementAge);
         return input;
     }
@@ -62,14 +53,12 @@ public class RetirementAdvancedServiceImpl implements RetirementAdvancedService 
                 .map(Step4ExpenseDTO.ExpenseItem::getFutureValue).filter(Objects::nonNull).reduce(BigDecimal.ZERO, BigDecimal::add);
             input.setTotalBasicExpensesFV(totalBasicFV);
         }
-
         if (input.getSpecialItems() != null) {
             input.getSpecialItems().forEach(item -> calculateItemFV(item, yearsToRetirement));
             BigDecimal totalSpecialFV = input.getSpecialItems().stream()
                 .map(Step4ExpenseDTO.ExpenseItem::getFutureValue).filter(Objects::nonNull).reduce(BigDecimal.ZERO, BigDecimal::add);
             input.setTotalSpecialExpensesFV(totalSpecialFV);
         }
-        
         return input;
     }
 
@@ -104,7 +93,7 @@ public class RetirementAdvancedServiceImpl implements RetirementAdvancedService 
         if (lowerCaseName.contains("ตราสารหนี้") || lowerCaseName.contains("bond")) return new BigDecimal("3.0");
         if (lowerCaseName.contains("ทอง") || lowerCaseName.contains("gold")) return new BigDecimal("4.0");
         if (lowerCaseName.contains("crypto") || lowerCaseName.contains("bitcoin")) return new BigDecimal("15.0");
-        return new BigDecimal("1.0"); // Default for cash or others
+        return new BigDecimal("1.0");
     }
 
     @Override
@@ -147,7 +136,6 @@ public class RetirementAdvancedServiceImpl implements RetirementAdvancedService 
 
     @Override
     public DesignResultDTO calculateDesignGap(RetirementPlanData planData) {
-        // Placeholder for Step 6 logic
         return DesignResultDTO.builder().build();
     }
 

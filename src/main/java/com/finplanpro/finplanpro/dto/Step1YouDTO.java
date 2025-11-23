@@ -1,21 +1,17 @@
 package com.finplanpro.finplanpro.dto;
 
 import lombok.Data;
-import java.time.LocalDate;
 
 /**
- * DTO สำหรับ Step 1: ข้อมูลเกี่ยวกับตัวคุณ
+ * DTO สำหรับ Step 1: ข้อมูลเกี่ยวกับตัวคุณ (Aligned with Form)
  */
 @Data
 public class Step1YouDTO {
     // --- INPUT ---
-    private LocalDate dateOfBirth; // วันเดือนปีเกิด
-    private String gender;         // เพศ
-    private int retireMonth = 1;   // เดือนที่ต้องการเกษียณ (default to 1 to avoid errors)
-    private int retireYear;        // ปีที่ต้องการเกษียณ
+    private Integer currentAge;
+    private String gender;
+    private Integer retirementAge = 60; // Default value
 
     // --- OUTPUT ---
-    private int currentAge;        // อายุปัจจุบัน
-    private int retirementAge;     // อายุ ณ วันเกษียณ
-    private int yearsToRetirement; // จำนวนปีที่เหลือก่อนเกษียณ
+    private Integer yearsToRetirement;
 }
