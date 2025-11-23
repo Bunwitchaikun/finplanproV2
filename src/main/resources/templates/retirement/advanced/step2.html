@@ -39,33 +39,32 @@
 </main>
 
 <th:block th:fragment="scripts">
-    <script>
+    <script th:inline="javascript">
+        const gender = /*[[${planData.step1.gender}]]*/ 'MALE';
         const healthLevelSelect = document.getElementById('healthLevel');
         const lifeExpectancyInput = document.getElementById('lifeExpectancy');
 
         function updateLifeExpectancy() {
-            const selectedValue = healthLevelSelect.value;
-            let calculatedAge = 75; // Default for moderate
-            switch (selectedValue) {
-                case 'perfect':
-                    calculatedAge = 85;
-                    break;
-                case 'minor':
-                    calculatedAge = 80;
-                    break;
-                case 'major':
-                    calculatedAge = 70;
-                    break;
+            const selectedHealth = healthLevelSelect.value;
+            
+            // 1. Set base expectancy by gender (CORRECTED: use === for comparison)
+            const baseExpectancy = (gender === 'FEMALE') ? 80 : 75;
+
+            // 2. Adjust based on health
+            let healthAdjustment = 0;
+            switch (selectedHealth) {
+                case 'perfect': healthAdjustment = 3; break;
+                case 'minor': healthAdjustment = 1; break;
+                case 'moderate': healthAdjustment = -1; break;
+                case 'major': healthAdjustment = -3; break;
             }
-            lifeExpectancyInput.value = calculatedAge;
+            
+            lifeExpectancyInput.value = baseExpectancy + healthAdjustment;
         }
 
-        // Add event listener to the dropdown
         healthLevelSelect.addEventListener('change', updateLifeExpectancy);
 
-        // Initial calculation on page load
         document.addEventListener('DOMContentLoaded', (event) => {
-            // Only set the value if the input is empty, to not override user's previous entry
             if (!lifeExpectancyInput.value || lifeExpectancyInput.value === '0') {
                 updateLifeExpectancy();
             }

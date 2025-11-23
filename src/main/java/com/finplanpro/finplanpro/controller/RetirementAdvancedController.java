@@ -40,7 +40,6 @@ public class RetirementAdvancedController {
         return "redirect:/retirement/advanced/step1";
     }
 
-    // --- Steps 1 & 2 (Existing code) ---
     @GetMapping("/step1")
     public String showStep1(Model model, @ModelAttribute("planData") RetirementPlanData planData) {
         model.addAttribute("step1Dto", planData.getStep1());
@@ -63,19 +62,17 @@ public class RetirementAdvancedController {
 
     @PostMapping("/step2")
     public String processStep2(@ModelAttribute("step2Dto") Step2LifeDTO step2Dto, @ModelAttribute("planData") RetirementPlanData planData) {
-        planData.setStep2(retirementService.calculateStep2(step2Dto, planData.getStep1().getRetirementAge()));
+        String gender = planData.getStep1().getGender();
+        Integer retirementAge = planData.getStep1().getRetirementAge();
+        planData.setStep2(retirementService.calculateStep2(step2Dto, retirementAge != null ? retirementAge : 0, gender));
         return "redirect:/retirement/advanced/step3";
     }
 
-    // --- Step 3: WANTS (NEW LOGIC) ---
     @GetMapping("/step3")
     public String showStep3(Model model, @ModelAttribute("planData") RetirementPlanData planData) {
         Step3WantsDTO step3Dto = planData.getStep3();
-        
-        // Pre-calculate years for display
-        int years = planData.getStep2().getLifeExpectancy() - planData.getStep1().getRetirementAge();
+        int years = planData.getStep2().getLifeExpectancy() - (planData.getStep1().getRetirementAge() != null ? planData.getStep1().getRetirementAge() : 0);
         step3Dto.setExtraIncomeYears(Math.max(0, years));
-
         model.addAttribute("step3Dto", step3Dto);
         addActiveMenu(model);
         return "retirement/advanced/step3";
@@ -83,11 +80,8 @@ public class RetirementAdvancedController {
 
     @PostMapping("/step3")
     public String processStep3(@ModelAttribute("step3Dto") Step3WantsDTO step3Dto, @ModelAttribute("planData") RetirementPlanData planData) {
-        // Recalculate total income before saving to session
         if (!"no_work".equals(step3Dto.getLifestyleChoice())) {
-            BigDecimal total = step3Dto.getExtraIncomePerMonth()
-                                    .multiply(BigDecimal.valueOf(12))
-                                    .multiply(BigDecimal.valueOf(step3Dto.getExtraIncomeYears()));
+            BigDecimal total = step3Dto.getExtraIncomePerMonth().multiply(BigDecimal.valueOf(12)).multiply(BigDecimal.valueOf(step3Dto.getExtraIncomeYears()));
             step3Dto.setTotalExtraIncome(total);
         } else {
             step3Dto.setExtraIncomePerMonth(BigDecimal.ZERO);
@@ -97,7 +91,6 @@ public class RetirementAdvancedController {
         return "redirect:/retirement/advanced/step4";
     }
 
-    // --- Steps 4 to 7 (Existing code) ---
     @GetMapping("/step4")
     public String showStep4(Model model, @ModelAttribute("planData") RetirementPlanData planData) {
         model.addAttribute("step4Dto", planData.getStep4());

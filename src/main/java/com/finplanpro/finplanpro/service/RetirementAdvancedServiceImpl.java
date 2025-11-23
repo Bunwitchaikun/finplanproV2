@@ -10,6 +10,8 @@ import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.time.LocalDate;
+import java.time.Period;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
@@ -31,16 +33,26 @@ public class RetirementAdvancedServiceImpl implements RetirementAdvancedService 
     }
 
     @Override
-    public Step2LifeDTO calculateStep2(Step2LifeDTO input, int retirementAge) {
+    public Step2LifeDTO calculateStep2(Step2LifeDTO input, int retirementAge, String gender) {
+        // If user provided a specific life expectancy, use it.
+        // Otherwise, calculate based on gender and health level.
         if (input.getLifeExpectancy() <= 0) {
-            int calculatedLifeExpectancy = switch (input.getHealthLevel()) {
-                case "perfect" -> 85;
-                case "minor" -> 80;
-                case "major" -> 70;
-                default -> 75;
+            // 1. Set base expectancy by gender
+            int baseExpectancy = "FEMALE".equalsIgnoreCase(gender) ? 80 : 75;
+
+            // 2. Adjust based on health
+            int healthAdjustment = switch (input.getHealthLevel()) {
+                case "perfect" -> 3;
+                case "minor" -> 1;
+                case "moderate" -> -1;
+                case "major" -> -3;
+                default -> 0; // unknown or other cases
             };
-            input.setLifeExpectancy(calculatedLifeExpectancy);
+            
+            input.setLifeExpectancy(baseExpectancy + healthAdjustment);
         }
+        
+        // 3. Calculate years after retirement
         input.setYearsAfterRetirement(input.getLifeExpectancy() - retirementAge);
         return input;
     }
@@ -53,12 +65,14 @@ public class RetirementAdvancedServiceImpl implements RetirementAdvancedService 
                 .map(Step4ExpenseDTO.ExpenseItem::getFutureValue).filter(Objects::nonNull).reduce(BigDecimal.ZERO, BigDecimal::add);
             input.setTotalBasicExpensesFV(totalBasicFV);
         }
+
         if (input.getSpecialItems() != null) {
             input.getSpecialItems().forEach(item -> calculateItemFV(item, yearsToRetirement));
             BigDecimal totalSpecialFV = input.getSpecialItems().stream()
                 .map(Step4ExpenseDTO.ExpenseItem::getFutureValue).filter(Objects::nonNull).reduce(BigDecimal.ZERO, BigDecimal::add);
             input.setTotalSpecialExpensesFV(totalSpecialFV);
         }
+        
         return input;
     }
 

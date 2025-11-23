@@ -8,14 +8,12 @@ import java.util.List;
 
 public interface RetirementAdvancedService {
     Step1YouDTO calculateStep1(Step1YouDTO input);
-    Step2LifeDTO calculateStep2(Step2LifeDTO input, int retirementAge);
+    Step2LifeDTO calculateStep2(Step2LifeDTO input, int retirementAge, String gender);
     Step4ExpenseDTO calculateSpecialExpensesFV(Step4ExpenseDTO input, int yearsToRetirement);
     
-    // New methods for Step 5
     List<Step5HavesDTO.CurrentAssetItem> mapSnapshotToCurrentAssets(NetWorthSnapshot snapshot);
     Step5HavesDTO calculateHavesFV(Step5HavesDTO input, int yearsToRetirement);
 
-    // Methods for Step 6 & 7
     DesignResultDTO calculateDesignGap(RetirementPlanData planData);
     List<ScenarioResultDTO> runScenarios(DesignResultDTO baseDesign);
 }
