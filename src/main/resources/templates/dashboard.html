@@ -19,61 +19,34 @@
         <div class="row g-4 mb-4">
             <div class="col-md-6 col-lg-3">
                 <div class="card h-100 shadow-sm border-0">
-                    <div class="card-body d-flex align-items-center">
-                        <div class="flex-shrink-0 me-3">
-                            <div class="bg-primary text-white rounded-circle d-flex align-items-center justify-content-center" style="width: 50px; height: 50px;">
-                                <i class="bi bi-graph-up-arrow" style="font-size: 1.5rem;"></i>
-                            </div>
-                        </div>
-                        <div class="flex-grow-1">
-                            <h6 class="card-subtitle mb-2 text-muted">Net Worth</h6>
-                            <h4 class="card-title" th:text="${#numbers.formatDecimal(latestNetWorth, 1, 'COMMA', 2, 'POINT')} + ' THB'"></h4>
-                        </div>
+                    <div class="card-body">
+                        <h6 class="card-subtitle mb-2 text-muted"><i class="bi bi-graph-up-arrow me-2"></i>Net Worth</h6>
+                        <h4 class="card-title" th:text="${#numbers.formatDecimal(latestNetWorth, 1, 'COMMA', 2, 'POINT')} + ' THB'"></h4>
                     </div>
                 </div>
             </div>
             <div class="col-md-6 col-lg-3">
                 <div class="card h-100 shadow-sm border-0">
-                    <div class="card-body d-flex align-items-center">
-                        <div class="flex-shrink-0 me-3">
-                            <div class="bg-success text-white rounded-circle d-flex align-items-center justify-content-center" style="width: 50px; height: 50px;">
-                                <i class="bi bi-bullseye" style="font-size: 1.5rem;"></i>
-                            </div>
-                        </div>
-                        <div class="flex-grow-1">
-                            <h6 class="card-subtitle mb-2 text-muted">Retirement Goal</h6>
-                            <h4 class="card-title" th:text="${#numbers.formatDecimal(retirementFundsNeeded, 1, 'COMMA', 2, 'POINT')} + ' THB'"></h4>
-                        </div>
+                    <div class="card-body">
+                        <h6 class="card-subtitle mb-2 text-muted"><i class="bi bi-bullseye me-2"></i>Retirement Goal</h6>
+                        <h4 class="card-title" th:text="${#numbers.formatDecimal(retirementFundsNeeded, 1, 'COMMA', 2, 'POINT')} + ' THB'"></h4>
                     </div>
                 </div>
             </div>
             <div class="col-md-6 col-lg-3">
                 <div class="card h-100 shadow-sm border-0">
-                    <div class="card-body d-flex align-items-center">
-                        <div class="flex-shrink-0 me-3">
-                            <div class="bg-warning text-white rounded-circle d-flex align-items-center justify-content-center" style="width: 50px; height: 50px;">
-                                <i class="bi bi-shield-shaded" style="font-size: 1.5rem;"></i>
-                            </div>
-                        </div>
-                        <div class="flex-grow-1">
-                            <h6 class="card-subtitle mb-2 text-muted">Life Coverage</h6>
-                            <h4 class="card-title" th:text="${#numbers.formatDecimal(totalLifeCoverage, 1, 'COMMA', 2, 'POINT')} + ' THB'"></h4>
-                        </div>
+                    <div class="card-body">
+                        <h6 class="card-subtitle mb-2 text-muted"><i class="bi bi-shield-shaded me-2"></i>Insurance Overview</h6>
+                        <h4 class="card-title" th:text="${#numbers.formatDecimal(insuranceSummary.totalLifeCoverage, 1, 'COMMA', 0, 'POINT')} + ' THB'"></h4>
+                        <small class="text-muted" th:text="'Annual Premium: ' + ${#numbers.formatDecimal(insuranceSummary.totalPremium, 1, 'COMMA', 0, 'POINT')} + ' THB'"></small>
                     </div>
                 </div>
             </div>
             <div class="col-md-6 col-lg-3">
                 <div class="card h-100 shadow-sm border-0">
-                    <div class="card-body d-flex align-items-center">
-                        <div class="flex-shrink-0 me-3">
-                            <div class="bg-danger text-white rounded-circle d-flex align-items-center justify-content-center" style="width: 50px; height: 50px;">
-                                <i class="bi bi-receipt" style="font-size: 1.5rem;"></i>
-                            </div>
-                        </div>
-                        <div class="flex-grow-1">
-                            <h6 class="card-subtitle mb-2 text-muted">Latest Tax</h6>
-                            <h4 class="card-title" th:text="${#numbers.formatDecimal(latestTaxPayable, 1, 'COMMA', 2, 'POINT')} + ' THB'"></h4>
-                        </div>
+                    <div class="card-body">
+                        <h6 class="card-subtitle mb-2 text-muted"><i class="bi bi-receipt me-2"></i>Latest Tax</h6>
+                        <h4 class="card-title" th:text="${#numbers.formatDecimal(latestTaxPayable, 1, 'COMMA', 2, 'POINT')} + ' THB'"></h4>
                     </div>
                 </div>
             </div>
@@ -81,14 +54,16 @@
 
         <!-- Charts -->
         <div class="row g-4">
-            <div class="col-lg-12">
+            <div class="col-lg-8">
                 <div class="card shadow-sm border-0 h-100">
-                    <div class="card-header bg-transparent">
-                        <h5 class="card-title mb-0">Net Worth Trend</h5>
-                    </div>
-                    <div class="card-body">
-                        <canvas id="netWorthChart"></canvas>
-                    </div>
+                    <div class="card-header bg-transparent"><h5 class="card-title mb-0">Net Worth Trend</h5></div>
+                    <div class="card-body"><canvas id="netWorthChart"></canvas></div>
+                </div>
+            </div>
+            <div class="col-lg-4">
+                <div class="card shadow-sm border-0 h-100">
+                    <div class="card-header bg-transparent"><h5 class="card-title mb-0">Insurance Coverage</h5></div>
+                    <div class="card-body"><canvas id="insuranceChart"></canvas></div>
                 </div>
             </div>
         </div>
@@ -98,27 +73,40 @@
 <th:block th:fragment="scripts">
     <script th:inline="javascript">
         /*<![CDATA[*/
+        // Net Worth Chart
         const netWorthLabels = /*[[${netWorthLabels}]]*/ [];
         const netWorthData = /*[[${netWorthData}]]*/ [];
+        if (document.getElementById('netWorthChart')) {
+            new Chart(document.getElementById('netWorthChart'), {
+                type: 'line',
+                data: { labels: netWorthLabels, datasets: [{ label: 'Net Worth (THB)', data: netWorthData, fill: false, borderColor: 'rgb(75, 192, 192)', tension: 0.1 }] },
+                options: { responsive: true, maintainAspectRatio: false }
+            });
+        }
 
-        const netWorthCtx = document.getElementById('netWorthChart').getContext('2d');
-        new Chart(netWorthCtx, {
-            type: 'line',
-            data: {
-                labels: netWorthLabels,
-                datasets: [{
-                    label: 'Net Worth (THB)',
-                    data: netWorthData,
-                    fill: false,
-                    borderColor: 'rgb(75, 192, 192)',
-                    tension: 0.1
-                }]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false
-            }
-        });
+        // Insurance Chart
+        const insuranceLabels = /*[[${insuranceLabels}]]*/ [];
+        const insuranceData = /*[[${insuranceData}]]*/ [];
+        if (document.getElementById('insuranceChart')) {
+            new Chart(document.getElementById('insuranceChart'), {
+                type: 'bar',
+                data: {
+                    labels: insuranceLabels,
+                    datasets: [{
+                        label: 'Total Coverage (THB)',
+                        data: insuranceData,
+                        backgroundColor: [
+                            'rgba(255, 99, 132, 0.5)',
+                            'rgba(54, 162, 235, 0.5)',
+                            'rgba(255, 206, 86, 0.5)',
+                            'rgba(75, 192, 192, 0.5)',
+                            'rgba(153, 102, 255, 0.5)'
+                        ]
+                    }]
+                },
+                options: { indexAxis: 'y', responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } } }
+            });
+        }
         /*]]>*/
     </script>
 </th:block>

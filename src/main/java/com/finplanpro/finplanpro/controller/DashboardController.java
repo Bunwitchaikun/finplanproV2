@@ -40,27 +40,25 @@ public class DashboardController {
     public String showDashboard(Model model) {
         model.addAttribute("activeMenu", "dashboard");
 
-        // Card 1: Net Worth
+        // --- Summary Cards Data ---
         List<NetWorthSnapshot> snapshots = netWorthSnapshotService.findSnapshotsByUser();
         BigDecimal latestNetWorth = snapshots.isEmpty() ? BigDecimal.ZERO : snapshots.get(0).getNetWorth();
         model.addAttribute("latestNetWorth", latestNetWorth);
 
-        // Card 2: Retirement
         List<RetirementBasic> retirementPlans = retirementBasicService.findPlansByUser();
         BigDecimal retirementFundsNeeded = retirementPlans.isEmpty() ? BigDecimal.ZERO : retirementPlans.get(0).getTotalFundsNeeded();
         model.addAttribute("retirementFundsNeeded", retirementFundsNeeded);
 
-        // Card 3: Insurance
         InsuranceSummaryDto insuranceSummary = insurancePolicyService.getSummaryForCurrentUser();
-        model.addAttribute("totalLifeCoverage", insuranceSummary.getTotalLifeCoverage());
+        model.addAttribute("insuranceSummary", insuranceSummary);
 
-        // Card 4: Tax
         List<TaxRecord> taxRecords = taxRecordService.findRecordsByUser();
         BigDecimal latestTaxPayable = taxRecords.isEmpty() ? BigDecimal.ZERO : taxRecords.get(0).getTaxPayable();
         model.addAttribute("latestTaxPayable", latestTaxPayable);
 
-        // Chart 1: Net Worth Trend
-        // Reverse the list to have dates in chronological order for the chart
+        // --- Charts Data ---
+
+        // Net Worth Trend Chart
         Collections.reverse(snapshots); 
         List<String> netWorthLabels = snapshots.stream()
                 .map(s -> s.getSnapshotDate().format(DateTimeFormatter.ofPattern("MMM yyyy")))
@@ -70,6 +68,18 @@ public class DashboardController {
                 .collect(Collectors.toList());
         model.addAttribute("netWorthLabels", netWorthLabels);
         model.addAttribute("netWorthData", netWorthData);
+
+        // Insurance Coverage Chart
+        if (insuranceSummary != null) {
+            model.addAttribute("insuranceLabels", List.of("Life", "Disability", "Critical Illness", "Health", "Accident"));
+            model.addAttribute("insuranceData", List.of(
+                insuranceSummary.getTotalLifeCoverage(),
+                insuranceSummary.getTotalDisabilityCoverage(),
+                insuranceSummary.getTotalCriticalIllnessCoverage(),
+                insuranceSummary.getTotalHealthCareRoom().add(insuranceSummary.getTotalHealthCarePerVisit()), // Combine health
+                insuranceSummary.getAccidentCoverage()
+            ));
+        }
 
         return "dashboard";
     }
