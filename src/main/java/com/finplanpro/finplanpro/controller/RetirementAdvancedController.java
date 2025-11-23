@@ -9,7 +9,6 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.support.SessionStatus;
 
-import java.math.BigDecimal;
 import java.util.List;
 
 @Controller
@@ -49,6 +48,7 @@ public class RetirementAdvancedController {
 
     @PostMapping("/step1")
     public String processStep1(@ModelAttribute("step1Dto") Step1YouDTO step1Dto, @ModelAttribute("planData") RetirementPlanData planData) {
+        // Calculate and save to session
         planData.setStep1(retirementService.calculateStep1(step1Dto));
         return "redirect:/retirement/advanced/step2";
     }
@@ -71,7 +71,8 @@ public class RetirementAdvancedController {
     @GetMapping("/step3")
     public String showStep3(Model model, @ModelAttribute("planData") RetirementPlanData planData) {
         Step3WantsDTO step3Dto = planData.getStep3();
-        int years = planData.getStep2().getLifeExpectancy() - (planData.getStep1().getRetirementAge() != null ? planData.getStep1().getRetirementAge() : 0);
+        Integer retirementAge = planData.getStep1().getRetirementAge();
+        int years = planData.getStep2().getLifeExpectancy() - (retirementAge != null ? retirementAge : 0);
         step3Dto.setExtraIncomeYears(Math.max(0, years));
         model.addAttribute("step3Dto", step3Dto);
         addActiveMenu(model);
@@ -80,13 +81,6 @@ public class RetirementAdvancedController {
 
     @PostMapping("/step3")
     public String processStep3(@ModelAttribute("step3Dto") Step3WantsDTO step3Dto, @ModelAttribute("planData") RetirementPlanData planData) {
-        if (!"no_work".equals(step3Dto.getLifestyleChoice())) {
-            BigDecimal total = step3Dto.getExtraIncomePerMonth().multiply(BigDecimal.valueOf(12)).multiply(BigDecimal.valueOf(step3Dto.getExtraIncomeYears()));
-            step3Dto.setTotalExtraIncome(total);
-        } else {
-            step3Dto.setExtraIncomePerMonth(BigDecimal.ZERO);
-            step3Dto.setTotalExtraIncome(BigDecimal.ZERO);
-        }
         planData.setStep3(step3Dto);
         return "redirect:/retirement/advanced/step4";
     }
@@ -94,13 +88,26 @@ public class RetirementAdvancedController {
     @GetMapping("/step4")
     public String showStep4(Model model, @ModelAttribute("planData") RetirementPlanData planData) {
         model.addAttribute("step4Dto", planData.getStep4());
+        model.addAttribute("yearsAfterRetirement", planData.getStep2().getYearsAfterRetirement());
         addActiveMenu(model);
         return "retirement/advanced/step4";
     }
 
     @PostMapping("/step4")
-    public String processStep4(@ModelAttribute("step4Dto") Step4ExpenseDTO step4Dto, @ModelAttribute("planData") RetirementPlanData planData) {
-        planData.setStep4(retirementService.calculateSpecialExpensesFV(step4Dto, planData.getStep1().getYearsToRetirement()));
+    public String processStep4(@ModelAttribute("step4Dto") Step4ExpenseDTO step4Dto, 
+                               @ModelAttribute("planData") RetirementPlanData planData,
+                               @RequestParam("action") String action,
+                               Model model) {
+        Integer yearsToRetirement = planData.getStep1().getYearsToRetirement();
+        planData.setStep4(retirementService.calculateSpecialExpensesFV(step4Dto, yearsToRetirement != null ? yearsToRetirement : 0));
+
+        if ("calculate".equals(action)) {
+            addActiveMenu(model);
+            model.addAttribute("step4Dto", planData.getStep4());
+            model.addAttribute("yearsAfterRetirement", planData.getStep2().getYearsAfterRetirement());
+            return "retirement/advanced/step4";
+        }
+        
         return "redirect:/retirement/advanced/step5";
     }
 
@@ -120,7 +127,8 @@ public class RetirementAdvancedController {
 
     @PostMapping("/step5")
     public String processStep5(@ModelAttribute("step5Dto") Step5HavesDTO step5Dto, @ModelAttribute("planData") RetirementPlanData planData) {
-        planData.setStep5(retirementService.calculateHavesFV(step5Dto, planData.getStep1().getYearsToRetirement()));
+        Integer yearsToRetirement = planData.getStep1().getYearsToRetirement();
+        planData.setStep5(retirementService.calculateHavesFV(step5Dto, yearsToRetirement != null ? yearsToRetirement : 0));
         return "redirect:/retirement/advanced/step6";
     }
 

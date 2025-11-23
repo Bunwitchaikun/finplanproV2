@@ -81,9 +81,6 @@
                                 <hr>
                                 <dt class="h5">รวมทุนเกษียณทั้งหมด</dt>
                                 <dd class="h5" id="summary-total-fv">฿ 0</dd>
-                                <hr>
-                                <dt class="h5 text-danger">ทุนเกษียณที่คุณต้องหาเพิ่ม</dt>
-                                <dd class="h5 text-danger" id="summary-gap">฿ 0</dd>
                             </dl>
                         </div>
                     </div>
@@ -101,15 +98,6 @@
 <th:block th:fragment="scripts">
     <script th:inline="javascript">
         const yearsToRetirement = /*[[${planData.step1.yearsToRetirement}]]*/ 0;
-        const totalExpensesFV = /*[[${totalExpensesFV}]]*/ 0;
-
-        function formatCurrency(value) {
-            return '฿ ' + (value || 0).toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 0 });
-        }
-
-        function parseCurrency(value) {
-            return parseFloat(String(value).replace(/[^0-9.-]+/g, "")) || 0;
-        }
 
         function calculateAllFV() {
             let totalCurrentFV = 0;
@@ -125,7 +113,7 @@
                 fvOutput.value = fv.toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 0 });
                 totalCurrentFV += fv;
             });
-            document.getElementById('summary-current-fv').textContent = formatCurrency(totalCurrentFV);
+            document.getElementById('summary-current-fv').textContent = '฿ ' + totalCurrentFV.toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 0 });
             updateTotalFV();
         }
 
@@ -135,21 +123,15 @@
                 totalFuture += parseFloat(input.value) || 0;
             });
             // Add logic for dynamically added future assets later
-            document.getElementById('summary-future-fv').textContent = formatCurrency(totalFuture);
+            document.getElementById('summary-future-fv').textContent = '฿ ' + totalFuture.toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 0 });
             updateTotalFV();
         }
 
         function updateTotalFV() {
-            const currentFV = parseCurrency(document.getElementById('summary-current-fv').textContent);
-            const futureFV = parseCurrency(document.getElementById('summary-future-fv').textContent);
+            const currentFV = parseFloat(document.getElementById('summary-current-fv').textContent.replace(/[^0-9.-]+/g,"")) || 0;
+            const futureFV = parseFloat(document.getElementById('summary-future-fv').textContent.replace(/[^0-9.-]+/g,"")) || 0;
             const total = currentFV + futureFV;
-            document.getElementById('summary-total-fv').textContent = formatCurrency(total);
-            calculateGap(total);
-        }
-
-        function calculateGap(totalHaves) {
-            const gap = totalExpensesFV - totalHaves;
-            document.getElementById('summary-gap').textContent = formatCurrency(gap);
+            document.getElementById('summary-total-fv').textContent = '฿ ' + total.toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 0 });
         }
 
         document.querySelectorAll('.return-rate').forEach(input => input.addEventListener('input', calculateAllFV));
@@ -167,6 +149,7 @@
             container.insertAdjacentHTML('beforeend', newRow);
         });
 
+        // Initial calculation on page load
         document.addEventListener('DOMContentLoaded', (event) => {
             calculateAllFV();
             calculateFutureTotal();

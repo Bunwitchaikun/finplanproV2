@@ -6,15 +6,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * DTO สำหรับ Step 4: ค่าใช้จ่ายพิเศษ (Reverted to original structure)
+ * DTO for Step 4: Expenses (Reverted to original structure)
  */
 @Data
 public class Step4ExpenseDTO {
-    // --- INPUT ---
     private List<ExpenseItem> basicItems = new ArrayList<>();
     private List<ExpenseItem> specialItems = new ArrayList<>();
 
-    // --- OUTPUT ---
     private BigDecimal totalBasicExpensesToday;
     private BigDecimal totalBasicExpensesFV;
     private BigDecimal totalSpecialExpensesToday;

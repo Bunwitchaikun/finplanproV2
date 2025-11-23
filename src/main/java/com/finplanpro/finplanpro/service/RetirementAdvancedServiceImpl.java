@@ -14,6 +14,7 @@ import java.time.LocalDate;
 import java.time.Period;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -34,53 +35,62 @@ public class RetirementAdvancedServiceImpl implements RetirementAdvancedService 
 
     @Override
     public Step2LifeDTO calculateStep2(Step2LifeDTO input, int retirementAge, String gender) {
-        // If user provided a specific life expectancy, use it.
-        // Otherwise, calculate based on gender and health level.
         if (input.getLifeExpectancy() <= 0) {
-            // 1. Set base expectancy by gender
             int baseExpectancy = "FEMALE".equalsIgnoreCase(gender) ? 80 : 75;
-
-            // 2. Adjust based on health
             int healthAdjustment = switch (input.getHealthLevel()) {
                 case "perfect" -> 3;
                 case "minor" -> 1;
                 case "moderate" -> -1;
                 case "major" -> -3;
-                default -> 0; // unknown or other cases
+                default -> 0;
             };
-            
             input.setLifeExpectancy(baseExpectancy + healthAdjustment);
         }
-        
-        // 3. Calculate years after retirement
         input.setYearsAfterRetirement(input.getLifeExpectancy() - retirementAge);
         return input;
     }
 
     @Override
     public Step4ExpenseDTO calculateSpecialExpensesFV(Step4ExpenseDTO input, int yearsToRetirement) {
+        // --- Basic Items Calculation ---
+        BigDecimal totalBasicToday = BigDecimal.ZERO;
+        BigDecimal totalBasicFV = BigDecimal.ZERO;
         if (input.getBasicItems() != null) {
-            input.getBasicItems().forEach(item -> calculateItemFV(item, yearsToRetirement));
-            BigDecimal totalBasicFV = input.getBasicItems().stream()
-                .map(Step4ExpenseDTO.ExpenseItem::getFutureValue).filter(Objects::nonNull).reduce(BigDecimal.ZERO, BigDecimal::add);
-            input.setTotalBasicExpensesFV(totalBasicFV);
+            for (Step4ExpenseDTO.ExpenseItem item : input.getBasicItems()) {
+                calculateItemFV(item, yearsToRetirement);
+                totalBasicToday = totalBasicToday.add(Optional.ofNullable(item.getAmountToday()).orElse(BigDecimal.ZERO));
+                totalBasicFV = totalBasicFV.add(item.getFutureValue());
+            }
         }
+        input.setTotalBasicExpensesToday(totalBasicToday);
+        input.setTotalBasicExpensesFV(totalBasicFV);
 
+        // --- Special Items Calculation ---
+        BigDecimal totalSpecialToday = BigDecimal.ZERO;
+        BigDecimal totalSpecialFV = BigDecimal.ZERO;
         if (input.getSpecialItems() != null) {
-            input.getSpecialItems().forEach(item -> calculateItemFV(item, yearsToRetirement));
-            BigDecimal totalSpecialFV = input.getSpecialItems().stream()
-                .map(Step4ExpenseDTO.ExpenseItem::getFutureValue).filter(Objects::nonNull).reduce(BigDecimal.ZERO, BigDecimal::add);
-            input.setTotalSpecialExpensesFV(totalSpecialFV);
+            for (Step4ExpenseDTO.ExpenseItem item : input.getSpecialItems()) {
+                calculateItemFV(item, yearsToRetirement);
+                totalSpecialToday = totalSpecialToday.add(Optional.ofNullable(item.getAmountToday()).orElse(BigDecimal.ZERO));
+                totalSpecialFV = totalSpecialFV.add(item.getFutureValue());
+            }
         }
+        input.setTotalSpecialExpensesToday(totalSpecialToday);
+        input.setTotalSpecialExpensesFV(totalSpecialFV);
+
+        // --- Grand Totals ---
+        input.setTotalRetirementExpensesToday(totalBasicToday.add(totalSpecialToday));
+        input.setTotalRetirementExpensesFV(totalBasicFV.add(totalSpecialFV));
         
         return input;
     }
 
     private void calculateItemFV(Step4ExpenseDTO.ExpenseItem item, int yearsToRetirement) {
-        if (item.getAmountToday() != null && item.getInflationRate() != null) {
-            BigDecimal fv = financialCalculator.calculateFV(item.getAmountToday(), item.getInflationRate().divide(BigDecimal.valueOf(100)), yearsToRetirement);
-            item.setFutureValue(fv.setScale(2, RoundingMode.HALF_UP));
-        }
+        BigDecimal amount = Optional.ofNullable(item.getAmountToday()).orElse(BigDecimal.ZERO);
+        BigDecimal rate = Optional.ofNullable(item.getInflationRate()).orElse(BigDecimal.ZERO);
+        
+        BigDecimal fv = financialCalculator.calculateFV(amount, rate.divide(BigDecimal.valueOf(100)), yearsToRetirement);
+        item.setFutureValue(fv.setScale(2, RoundingMode.HALF_UP));
     }
 
     @Override
