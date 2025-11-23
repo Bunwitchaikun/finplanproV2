@@ -16,4 +16,6 @@ public interface RetirementAdvancedService {
 
     DesignResultDTO calculateDesignGap(RetirementPlanData planData);
     List<ScenarioResultDTO> runScenarios(DesignResultDTO baseDesign);
+
+    Step6DesignDTO calculateDesign(RetirementPlanData planData);
 }

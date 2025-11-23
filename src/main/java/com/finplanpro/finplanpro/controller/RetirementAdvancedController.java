@@ -137,7 +137,14 @@ public class RetirementAdvancedController {
         return "redirect:/retirement/advanced/step6";
     }
 
-    @GetMapping("/step6") public String showStep6(Model model) { addActiveMenu(model); return "retirement/advanced/step6"; }
+    @GetMapping("/step6")
+    public String showStep6(Model model, @ModelAttribute("planData") RetirementPlanData planData) {
+        Step6DesignDTO step6Dto = retirementService.calculateDesign(planData);
+        model.addAttribute("step6Dto", step6Dto);
+        addActiveMenu(model);
+        return "retirement/advanced/step6";
+    }
+
     @PostMapping("/step6") public String processStep6() { return "redirect:/retirement/advanced/step7"; }
     @GetMapping("/step7") public String showStep7(Model model) { addActiveMenu(model); return "retirement/advanced/step7"; }
     @PostMapping("/save") public String savePlan() { return "redirect:/dashboard"; }

@@ -26,8 +26,8 @@
                                     <div class="input-group">
                                         <span class="input-group-text">฿</span>
                                         <input type="text" class="form-control" th:value="${#numbers.formatDecimal(asset.presentValue, 0, 'COMMA', 0, 'POINT')}" readonly>
-                                        <input type="hidden" th:field="*{currentAssets[__${iterStat.index}__].name}" />
-                                        <input type="hidden" th:field="*{currentAssets[__${iterStat.index}__].presentValue}" />
+                                        <input type="hidden" class="current-asset-pv" th:field="*{currentAssets[__${iterStat.index}__].name}" />
+                                        <input type="hidden" class="current-asset-pv" th:field="*{currentAssets[__${iterStat.index}__].presentValue}" />
                                     </div>
                                 </div>
                                 <div class="col-md-3">
@@ -119,10 +119,22 @@
 
         function calculateFutureTotal() {
             let totalFuture = 0;
+            // Fixed future income
             document.querySelectorAll('.future-income-input').forEach(input => {
                 totalFuture += parseFloat(input.value) || 0;
             });
-            // Add logic for dynamically added future assets later
+            
+            // Dynamically added future assets
+            document.querySelectorAll('#future-assets-container .row').forEach(row => {
+                const amountInput = row.querySelector('input[name*="amount"]');
+                const rateInput = row.querySelector('input[name*="expectedReturnRate"]');
+                const amount = parseFloat(amountInput.value) || 0;
+                const rate = parseFloat(rateInput.value) / 100 || 0;
+                
+                const fv = amount * Math.pow(1 + rate, yearsToRetirement);
+                totalFuture += fv;
+            });
+
             document.getElementById('summary-future-fv').textContent = '฿ ' + totalFuture.toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 0 });
             updateTotalFV();
         }
@@ -134,22 +146,30 @@
             document.getElementById('summary-total-fv').textContent = '฿ ' + total.toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 0 });
         }
 
-        document.querySelectorAll('.return-rate').forEach(input => input.addEventListener('input', calculateAllFV));
-        document.querySelectorAll('.future-income-input').forEach(input => input.addEventListener('input', calculateFutureTotal));
+        function addEventListenersToRow(row) {
+            row.querySelectorAll('input').forEach(input => {
+                input.addEventListener('input', calculateFutureTotal);
+            });
+        }
 
         document.getElementById('add-future-asset-btn').addEventListener('click', function() {
             const container = document.getElementById('future-assets-container');
             const index = container.querySelectorAll('.row').length;
-            const newRow = `
+            const newRowHTML = `
                 <div class="row g-3 align-items-end mb-3">
                     <div class="col-md-4"><input type="text" class="form-control" name="futureAssets[${index}].name" placeholder="ชื่อรายการ"></div>
                     <div class="col-md-4"><input type="number" class="form-control" name="futureAssets[${index}].amount" placeholder="จำนวนเงิน"></div>
                     <div class="col-md-4"><div class="input-group"><input type="number" class="form-control" name="futureAssets[${index}].expectedReturnRate" value="0.0"><span class="input-group-text">%</span></div></div>
                 </div>`;
-            container.insertAdjacentHTML('beforeend', newRow);
+            container.insertAdjacentHTML('beforeend', newRowHTML);
+            const newRowElement = container.lastElementChild;
+            addEventListenersToRow(newRowElement);
         });
 
-        // Initial calculation on page load
+        // Initial setup
+        document.querySelectorAll('.return-rate').forEach(input => input.addEventListener('input', calculateAllFV));
+        document.querySelectorAll('.future-income-input').forEach(input => input.addEventListener('input', calculateFutureTotal));
+        
         document.addEventListener('DOMContentLoaded', (event) => {
             calculateAllFV();
             calculateFutureTotal();

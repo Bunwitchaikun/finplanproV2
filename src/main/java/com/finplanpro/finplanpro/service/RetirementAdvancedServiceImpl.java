@@ -12,6 +12,7 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.time.LocalDate;
 import java.time.Period;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -62,23 +63,22 @@ public class RetirementAdvancedServiceImpl implements RetirementAdvancedService 
             for (Step4ExpenseDTO.ExpenseItem item : input.getBasicItems()) {
                 calculateItemFV(item, yearsToRetirement);
                 BigDecimal amountToday = Optional.ofNullable(item.getAmountToday()).orElse(BigDecimal.ZERO);
-                totalBasicToday = totalBasicToday.add(amountToday);
-                totalBasicFV = totalBasicFV.add(item.getFutureValue());
+                totalBasicToday = totalBasicToday.add(amountToday); // Sum of monthly amounts today
+                totalBasicFV = totalBasicFV.add(item.getFutureValue()); // Sum of monthly FV at retirement
 
-                // Calculate annualized amounts for summary
-                BigDecimal annualizedToday = amountToday;
-                BigDecimal annualizedFV = item.getFutureValue();
-                if (item.getName() != null && item.getName().contains("เดือน")) {
-                    annualizedToday = annualizedToday.multiply(BigDecimal.valueOf(12));
-                    annualizedFV = annualizedFV.multiply(BigDecimal.valueOf(12));
-                }
+                // All basic items are now considered monthly, so annualize them
+                BigDecimal annualizedToday = amountToday.multiply(BigDecimal.valueOf(12));
+                BigDecimal annualizedFV = item.getFutureValue().multiply(BigDecimal.valueOf(12));
+                
                 totalAnnualizedBasicToday = totalAnnualizedBasicToday.add(annualizedToday);
                 totalAnnualizedBasicFV = totalAnnualizedBasicFV.add(annualizedFV);
             }
         }
         input.setTotalBasicExpensesToday(totalBasicToday);
-        input.setTotalBasicExpensesFV(totalBasicFV);
-        
+        input.setTotalBasicExpensesFV(totalBasicFV); // This is still sum of monthly FV
+
+        // Corrected calculation for totalBasicExpensesUntilEndOfLife
+        // It should be totalAnnualizedBasicFV (sum of annual FV at retirement) * yearsAfterRetirement
         BigDecimal totalUntilEndOfLife = totalAnnualizedBasicFV.multiply(BigDecimal.valueOf(yearsAfterRetirement));
         input.setTotalBasicExpensesUntilEndOfLife(totalUntilEndOfLife.setScale(2, RoundingMode.HALF_UP));
 
@@ -97,9 +97,11 @@ public class RetirementAdvancedServiceImpl implements RetirementAdvancedService 
         input.setTotalSpecialExpensesFV(totalSpecialFV);
 
         // --- Grand Totals (New Formulas) ---
+        // totalAnnualizedBasicToday is sum of (monthly_today * 12)
         BigDecimal todayTotal = (totalAnnualizedBasicToday.multiply(BigDecimal.valueOf(yearsAfterRetirement))).add(totalSpecialToday);
         input.setTotalRetirementExpensesToday(todayTotal.setScale(2, RoundingMode.HALF_UP));
 
+        // totalUntilEndOfLife is sum of (monthly_fv * 12 * yearsAfterRetirement)
         BigDecimal fvTotal = totalUntilEndOfLife.add(totalSpecialFV);
         input.setTotalRetirementExpensesFV(fvTotal.setScale(2, RoundingMode.HALF_UP));
         
@@ -187,5 +189,89 @@ public class RetirementAdvancedServiceImpl implements RetirementAdvancedService 
     @Override
     public List<ScenarioResultDTO> runScenarios(DesignResultDTO baseDesign) {
         return scenarioSimulator.runScenarios(baseDesign);
+    }
+
+    @Override
+    public Step6DesignDTO calculateDesign(RetirementPlanData planData) {
+        BigDecimal totalExpensesFv = planData.getStep4().getTotalRetirementExpensesFV();
+        BigDecimal totalHavesFv = planData.getStep5().getTotalHavesFV();
+        BigDecimal totalExtraIncome = Optional.ofNullable(planData.getStep3().getTotalExtraIncome()).orElse(BigDecimal.ZERO);
+        BigDecimal presentValue = Optional.ofNullable(planData.getStep5().getTotalCurrentAssetsFV()).orElse(BigDecimal.ZERO);
+        int yearsToRetirement = Optional.ofNullable(planData.getStep1().getYearsToRetirement()).orElse(0);
+
+        // 1. Calculate Funding Gap
+        BigDecimal fundingGap = totalExpensesFv
+                .subtract(totalHavesFv)
+                .subtract(totalExtraIncome)
+                .setScale(2, RoundingMode.HALF_UP);
+
+        // Ensure fundingGap is not negative
+        if (fundingGap.compareTo(BigDecimal.ZERO) < 0) {
+            fundingGap = BigDecimal.ZERO;
+        }
+
+        // 2. Calculate PMT for 3 scenarios
+        BigDecimal pmtWorstCase = financialCalculator.calculatePMTWithPV(
+                fundingGap, presentValue, new BigDecimal("0.04"), yearsToRetirement, 12
+        ).setScale(2, RoundingMode.HALF_UP);
+
+        BigDecimal pmtBaseCase = financialCalculator.calculatePMTWithPV(
+                fundingGap, presentValue, new BigDecimal("0.08"), yearsToRetirement, 12
+        ).setScale(2, RoundingMode.HALF_UP);
+
+        BigDecimal pmtBestCase = financialCalculator.calculatePMTWithPV(
+                fundingGap, presentValue, new BigDecimal("0.15"), yearsToRetirement, 12
+        ).setScale(2, RoundingMode.HALF_UP);
+
+        // 3. Generate Chart Data
+        List<String> chartLabels = new ArrayList<>();
+        List<Step6DesignDTO.ChartDataPoint> worstCaseGrowth = new ArrayList<>();
+        List<Step6DesignDTO.ChartDataPoint> baseCaseGrowth = new ArrayList<>();
+        List<Step6DesignDTO.ChartDataPoint> bestCaseGrowth = new ArrayList<>();
+
+        // Initial values for year 0
+        worstCaseGrowth.add(Step6DesignDTO.ChartDataPoint.builder().year(0).amount(presentValue.setScale(2, RoundingMode.HALF_UP)).build());
+        baseCaseGrowth.add(Step6DesignDTO.ChartDataPoint.builder().year(0).amount(presentValue.setScale(2, RoundingMode.HALF_UP)).build());
+        bestCaseGrowth.add(Step6DesignDTO.ChartDataPoint.builder().year(0).amount(presentValue.setScale(2, RoundingMode.HALF_UP)).build());
+        chartLabels.add("Year 0");
+
+        BigDecimal currentWorst = presentValue;
+        BigDecimal currentBase = presentValue;
+        BigDecimal currentBest = presentValue;
+
+        BigDecimal monthlyRateWorst = new BigDecimal("0.04").divide(BigDecimal.valueOf(12), 16, RoundingMode.HALF_UP);
+        BigDecimal monthlyRateBase = new BigDecimal("0.08").divide(BigDecimal.valueOf(12), 16, RoundingMode.HALF_UP);
+        BigDecimal monthlyRateBest = new BigDecimal("0.15").divide(BigDecimal.valueOf(12), 16, RoundingMode.HALF_UP);
+
+        for (int year = 1; year <= yearsToRetirement; year++) {
+            chartLabels.add("Year " + year);
+
+            // Calculate monthly growth for each scenario
+            for (int month = 0; month < 12; month++) {
+                currentWorst = currentWorst.multiply(BigDecimal.ONE.add(monthlyRateWorst)).add(pmtWorstCase);
+                currentBase = currentBase.multiply(BigDecimal.ONE.add(monthlyRateBase)).add(pmtBaseCase);
+                currentBest = currentBest.multiply(BigDecimal.ONE.add(monthlyRateBest)).add(pmtBestCase);
+            }
+            worstCaseGrowth.add(Step6DesignDTO.ChartDataPoint.builder().year(year).amount(currentWorst.setScale(2, RoundingMode.HALF_UP)).build());
+            baseCaseGrowth.add(Step6DesignDTO.ChartDataPoint.builder().year(year).amount(currentBase.setScale(2, RoundingMode.HALF_UP)).build());
+            bestCaseGrowth.add(Step6DesignDTO.ChartDataPoint.builder().year(year).amount(currentBest.setScale(2, RoundingMode.HALF_UP)).build());
+        }
+
+
+        return Step6DesignDTO.builder()
+                .totalExpensesFv(totalExpensesFv)
+                .totalHavesFv(totalHavesFv)
+                .totalExtraIncome(totalExtraIncome)
+                .presentValue(presentValue)
+                .yearsToRetirement(yearsToRetirement)
+                .fundingGap(fundingGap)
+                .pmtWorstCase(pmtWorstCase)
+                .pmtBaseCase(pmtBaseCase)
+                .pmtBestCase(pmtBestCase)
+                .chartLabels(chartLabels)
+                .worstCaseGrowth(worstCaseGrowth)
+                .baseCaseGrowth(baseCaseGrowth)
+                .bestCaseGrowth(bestCaseGrowth)
+                .build();
     }
 }
