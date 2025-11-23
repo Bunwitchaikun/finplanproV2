@@ -8,9 +8,9 @@ import lombok.Data;
 @Data
 public class Step2LifeDTO {
     // --- INPUT ---
-    private String healthLevel; // ระดับสุขภาพ (perfect, minor, moderate, major, unknown)
+    private String healthLevel = "moderate"; // Default value
+    private int lifeExpectancy; // อายุขัยคาดการณ์ (ผู้ใช้สามารถแก้ไขได้)
 
     // --- OUTPUT ---
-    private int lifeExpectancy;       // อายุขัยคาดการณ์
     private int yearsAfterRetirement; // จำนวนปีหลังเกษียณ
 }

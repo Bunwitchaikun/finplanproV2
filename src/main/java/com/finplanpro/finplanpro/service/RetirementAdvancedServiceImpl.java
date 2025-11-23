@@ -38,22 +38,24 @@ public class RetirementAdvancedServiceImpl implements RetirementAdvancedService 
 
     @Override
     public Step2LifeDTO calculateStep2(Step2LifeDTO input, int retirementAge) {
-        int adjustment = switch (input.getHealthLevel()) {
-            case "perfect" -> 3;
-            case "minor" -> 1;
-            case "moderate" -> -1;
-            case "major" -> -3;
-            default -> 0;
-        };
-        int lifeExpectancy = 90 + adjustment;
-        input.setLifeExpectancy(lifeExpectancy);
-        input.setYearsAfterRetirement(lifeExpectancy - retirementAge);
+        // If user provided a specific life expectancy, use it.
+        // Otherwise, calculate based on health level.
+        if (input.getLifeExpectancy() <= 0) {
+            int calculatedLifeExpectancy = switch (input.getHealthLevel()) {
+                case "perfect" -> 85;
+                case "minor" -> 80;
+                case "major" -> 70;
+                default -> 75; // moderate or unknown
+            };
+            input.setLifeExpectancy(calculatedLifeExpectancy);
+        }
+        
+        input.setYearsAfterRetirement(input.getLifeExpectancy() - retirementAge);
         return input;
     }
 
     @Override
     public Step4ExpenseDTO calculateSpecialExpensesFV(Step4ExpenseDTO input, int yearsToRetirement) {
-        // Process basicItems
         if (input.getBasicItems() != null) {
             input.getBasicItems().forEach(item -> calculateItemFV(item, yearsToRetirement));
             BigDecimal totalBasicFV = input.getBasicItems().stream()
@@ -61,7 +63,6 @@ public class RetirementAdvancedServiceImpl implements RetirementAdvancedService 
             input.setTotalBasicExpensesFV(totalBasicFV);
         }
 
-        // Process specialItems
         if (input.getSpecialItems() != null) {
             input.getSpecialItems().forEach(item -> calculateItemFV(item, yearsToRetirement));
             BigDecimal totalSpecialFV = input.getSpecialItems().stream()

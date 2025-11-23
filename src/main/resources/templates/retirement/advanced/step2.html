@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org"
-      th:replace="~{layout :: layout(~{::title}, ~{::main}, ~{})}">
+      th:replace="~{layout :: layout(~{::title}, ~{::main}, ~{::scripts})}">
 <head>
     <title>Advanced Retirement - Step 2: Life</title>
 </head>
@@ -15,15 +15,18 @@
             <div class="card-body p-4">
                 <h5 class="card-title mb-4"><i class="bi bi-heart-pulse me-2"></i>ขั้นตอนที่ 2: การประเมินอายุขัย</h5>
                 <form th:action="@{/retirement/advanced/step2}" th:object="${step2Dto}" method="post" class="row g-3">
-                    <div class="col-md-12">
+                    <div class="col-md-6">
                         <label for="healthLevel" class="form-label">โดยรวมแล้ว สุขภาพของคุณเป็นอย่างไร?</label>
                         <select class="form-select" id="healthLevel" th:field="*{healthLevel}" required>
-                            <option value="unknown">-- โปรดเลือก --</option>
                             <option value="perfect">ยอดเยี่ยม (Perfect)</option>
                             <option value="minor">ดี (Minor issues)</option>
-                            <option value="moderate">ปานกลาง (Moderate issues)</option>
+                            <option value="moderate" selected>ปานกลาง (Moderate issues)</option>
                             <option value="major">ควรปรับปรุง (Major issues)</option>
                         </select>
+                    </div>
+                    <div class="col-md-6">
+                        <label for="lifeExpectancy" class="form-label">อายุขัยคาดการณ์ (ปี)</label>
+                        <input type="number" class="form-control" id="lifeExpectancy" th:field="*{lifeExpectancy}" required>
                     </div>
                     <div class="col-12 d-flex justify-content-between mt-4">
                         <a th:href="@{/retirement/advanced/step1}" class="btn btn-secondary"><i class="bi bi-arrow-left"></i> ย้อนกลับ</a>
@@ -34,5 +37,41 @@
         </div>
     </div>
 </main>
+
+<th:block th:fragment="scripts">
+    <script>
+        const healthLevelSelect = document.getElementById('healthLevel');
+        const lifeExpectancyInput = document.getElementById('lifeExpectancy');
+
+        function updateLifeExpectancy() {
+            const selectedValue = healthLevelSelect.value;
+            let calculatedAge = 75; // Default for moderate
+            switch (selectedValue) {
+                case 'perfect':
+                    calculatedAge = 85;
+                    break;
+                case 'minor':
+                    calculatedAge = 80;
+                    break;
+                case 'major':
+                    calculatedAge = 70;
+                    break;
+            }
+            lifeExpectancyInput.value = calculatedAge;
+        }
+
+        // Add event listener to the dropdown
+        healthLevelSelect.addEventListener('change', updateLifeExpectancy);
+
+        // Initial calculation on page load
+        document.addEventListener('DOMContentLoaded', (event) => {
+            // Only set the value if the input is empty, to not override user's previous entry
+            if (!lifeExpectancyInput.value || lifeExpectancyInput.value === '0') {
+                updateLifeExpectancy();
+            }
+        });
+    </script>
+</th:block>
+
 </body>
 </html>

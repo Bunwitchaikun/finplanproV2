@@ -18,7 +18,7 @@ import java.util.List;
 public class RetirementAdvancedController {
 
     private final RetirementAdvancedService retirementService;
-    private final NetWorthSnapshotService netWorthSnapshotService; // Inject NetWorth service
+    private final NetWorthSnapshotService netWorthSnapshotService;
 
     public RetirementAdvancedController(RetirementAdvancedService retirementService, NetWorthSnapshotService netWorthSnapshotService) {
         this.retirementService = retirementService;
@@ -93,19 +93,19 @@ public class RetirementAdvancedController {
         return "redirect:/retirement/advanced/step5";
     }
 
-    // --- Step 5: HAVES (NEW LOGIC) ---
+    // --- Step 5: HAVES (UPDATED) ---
     @GetMapping("/step5")
     public String showStep5(Model model, @ModelAttribute("planData") RetirementPlanData planData) {
-        // Fetch the latest Net Worth Snapshot only if the list is empty
         if (planData.getStep5().getCurrentAssets().isEmpty()) {
             List<NetWorthSnapshot> snapshots = netWorthSnapshotService.findSnapshotsByUser();
             if (!snapshots.isEmpty()) {
-                NetWorthSnapshot latestSnapshot = snapshots.get(0);
-                planData.getStep5().setCurrentAssets(retirementService.mapSnapshotToCurrentAssets(latestSnapshot));
+                planData.getStep5().setCurrentAssets(retirementService.mapSnapshotToCurrentAssets(snapshots.get(0)));
             }
         }
         
         model.addAttribute("step5Dto", planData.getStep5());
+        // Pass total expenses from Step 4 to the view
+        model.addAttribute("totalExpensesFV", planData.getStep4().getTotalRetirementExpensesFV());
         addActiveMenu(model);
         return "retirement/advanced/step5";
     }
@@ -117,11 +117,7 @@ public class RetirementAdvancedController {
     }
 
     // --- Steps 6 & 7 (Placeholders) ---
-    @GetMapping("/step6") public String showStep6(Model model, @ModelAttribute("planData") RetirementPlanData planData) {
-        // This will be updated later
-        addActiveMenu(model);
-        return "retirement/advanced/step6";
-    }
+    @GetMapping("/step6") public String showStep6(Model model, @ModelAttribute("planData") RetirementPlanData planData) { addActiveMenu(model); return "retirement/advanced/step6"; }
     @PostMapping("/step6") public String processStep6() { return "redirect:/retirement/advanced/step7"; }
     @GetMapping("/step7") public String showStep7(Model model) { addActiveMenu(model); return "retirement/advanced/step7"; }
     @PostMapping("/save") public String savePlan() { return "redirect:/dashboard"; }
