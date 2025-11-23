@@ -66,7 +66,11 @@ public class InsuranceController {
     }
 
     @PostMapping("/delete-selected")
-    public String deleteSelected(@RequestParam("selectedIds") List<Long> selectedIds, RedirectAttributes redirectAttributes) {
+    public String deleteSelected(@RequestParam(value = "selectedIds", required = false) List<Long> selectedIds, RedirectAttributes redirectAttributes) {
+        if (selectedIds == null || selectedIds.isEmpty()) {
+            redirectAttributes.addFlashAttribute("errorMessage", "Please select at least one policy to delete.");
+            return "redirect:/insurance/list";
+        }
         try {
             policyService.deleteByIds(selectedIds);
             redirectAttributes.addFlashAttribute("successMessage", "Selected policies deleted successfully.");

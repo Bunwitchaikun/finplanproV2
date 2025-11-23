@@ -1,67 +1,96 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org"
-      th:replace="~{layout :: layout(~{::title}, ~{::main}, ~{})}">
+<html lang="en" xmlns:th="http://www.thymeleaf.org" th:replace="~{layout :: layout(~{::title}, ~{::main}, ~{})}">
+
 <head>
     <title>All Insurance Policies</title>
 </head>
+
 <body>
-<main role="main">
-    <div class="container-fluid">
-        <div class="d-flex justify-content-between align-items-center mb-4">
-            <h1 class="h3">My Insurance Policies</h1>
-            <a th:href="@{/insurance}" class="btn btn-primary">
-                <i class="bi bi-plus-lg me-2"></i>Add New Policy
-            </a>
-        </div>
+    <main role="main">
+        <div class="container-fluid">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h1 class="h3">🏥 รายการกรมธรรม์ประกันชีวิต</h1>
+                <a th:href="@{/insurance}" class="btn btn-primary">
+                    <i class="bi bi-plus-lg me-2"></i>เพิ่มกรมธรรม์ใหม่
+                </a>
+            </div>
 
-        <div th:if="${successMessage}" class="alert alert-success" th:text="${successMessage}"></div>
-        <div th:if="${errorMessage}" class="alert alert-danger" th:text="${errorMessage}"></div>
+            <div th:if="${successMessage}" class="alert alert-success" th:text="${successMessage}"></div>
+            <div th:if="${errorMessage}" class="alert alert-danger" th:text="${errorMessage}"></div>
 
-        <div class="card shadow-sm border-0">
-            <div class="card-body">
-                <form id="listForm" th:action="@{/insurance/delete-selected}" method="post">
-                    <div class="d-flex justify-content-between mb-3" th:if="${not #lists.isEmpty(policies)}">
-                        <div>
-                            <button type="submit" class="btn btn-sm btn-outline-danger" onclick="return confirm('Delete selected policies?');">
-                                <i class="bi bi-trash me-2"></i>Delete Selected
+            <div class="card shadow-sm border-0">
+                <div class="card-body">
+                    <form id="listForm" th:action="@{/insurance/delete-selected}" method="post">
+                        <div class="d-flex justify-content-between mb-3" th:if="${not #lists.isEmpty(policies)}">
+                            <button type="submit" class="btn btn-sm btn-outline-danger">
+                                <i class="bi bi-trash me-2"></i>ลบรายการที่เลือก
                             </button>
+                            <form th:action="@{/insurance/delete/all}" method="post" class="d-inline">
+                                <button type="submit" class="btn btn-sm btn-danger">
+                                    <i class="bi bi-trash3-fill me-2"></i>ลบทั้งหมด
+                                </button>
+                            </form>
                         </div>
-                        <form th:action="@{/insurance/delete/all}" method="post" onsubmit="return confirm('Are you sure you want to delete ALL policies?');" class="d-inline">
-                            <button type="submit" class="btn btn-sm btn-danger">
-                                <i class="bi bi-trash3-fill me-2"></i>Delete All
-                            </button>
-                        </form>
-                    </div>
-                    <table class="table table-hover">
-                        <thead class="table-light">
-                            <tr>
-                                <th><input type="checkbox" onclick="$('input[name=selectedIds]').prop('checked', $(this).is(':checked'));"></th>
-                                <th>Policy Number</th>
-                                <th>Life Coverage</th>
-                                <th>Total Premium</th>
-                                <th>Actions</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr th:each="p : ${policies}">
-                                <td><input type="checkbox" name="selectedIds" th:value="${p.id}"></td>
-                                <td th:text="${p.policyNumber}"></td>
-                                <td th:text="${#numbers.formatCurrency(p.lifeCoverage)}"></td>
-                                <td th:text="${#numbers.formatCurrency(p.totalPremium)}"></td>
-                                <td>
-                                    <a th:href="@{/insurance/edit/{id}(id=${p.id})}" class="btn btn-sm btn-outline-primary">Edit</a>
-                                </td>
-                            </tr>
-                            <tr th:if="${#lists.isEmpty(policies)}">
-                                <td colspan="5" class="text-center text-muted py-4">No policies found. Add your first one!</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </form>
+                        <div class="table-responsive">
+                            <table class="table table-hover">
+                                <thead class="table-light">
+                                    <tr>
+                                        <th><input type="checkbox" id="selectAllCheckbox"></th>
+                                        <th>ชื่อกรมธรรม์</th>
+                                        <th>เลขกรมธรรม์</th>
+                                        <th class="text-end">เบี้ยประกันรวม/ปี</th>
+                                        <th class="text-end">ทุนคุ้มครองชีวิต</th>
+                                        <th class="text-end">คุ้มครองทุพพลภาพ</th>
+                                        <th class="text-end">โรคร้ายแรงต้น-กลาง</th>
+                                        <th class="text-end">โรคร้ายแรงระยะรุนแรง</th>
+                                        <th class="text-end">ชดเชยอุบัติเหตุบางส่วน/สัปดาห์</th>
+                                        <th class="text-end">คุ้มครองจากอุบัติเหตุรวม(PA)</th>
+                                        <th class="text-end">ค่าห้องรวม</th>
+                                        <th class="text-end">ค่ารักษา/ครั้ง</th>
+                                        <th class="text-center">การจัดการ</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr th:each="p : ${policies}">
+                                        <td><input type="checkbox" name="selectedIds" th:value="${p.id}" form="listForm"></td>
+                                        <td th:text="${p.policyName != null and !p.policyName.isEmpty() ? p.policyName : '-'}"></td>
+                                        <td><strong th:text="${p.policyNumber}"></strong></td>
+                                        <td class="text-end"><strong class="text-primary" th:text="${'฿' + #numbers.formatDecimal(p.totalPremium, 0, 'COMMA', 2, 'POINT')}"></strong></td>
+                                        <td class="text-end" th:text="${'฿' + #numbers.formatDecimal(p.lifeCoverage, 0, 'COMMA', 2, 'POINT')}"></td>
+                                        <td class="text-end" th:text="${'฿' + #numbers.formatDecimal(p.disabilityCoverage, 0, 'COMMA', 2, 'POINT')}"></td>
+                                        <td class="text-end" th:text="${'฿' + #numbers.formatDecimal(p.earlyMidCriticalIllness, 0, 'COMMA', 2, 'POINT')}"></td>
+                                        <td class="text-end" th:text="${'฿' + #numbers.formatDecimal(p.severeCriticalIllness, 0, 'COMMA', 2, 'POINT')}"></td>
+                                        <td class="text-end" th:text="${'฿' + #numbers.formatDecimal(p.partialAccidentCompensation, 0, 'COMMA', 2, 'POINT')}"></td>
+                                        <td class="text-end" th:text="${'฿' + #numbers.formatDecimal(p.accidentCoverage, 0, 'COMMA', 2, 'POINT')}"></td>
+                                        <td class="text-end" th:text="${'฿' + #numbers.formatDecimal(p.healthCareRoom, 0, 'COMMA', 2, 'POINT')}"></td>
+                                        <td class="text-end" th:text="${'฿' + #numbers.formatDecimal(p.healthCarePerVisit, 0, 'COMMA', 2, 'POINT')}"></td>
+                                        <td class="text-center">
+                                            <a th:href="@{/insurance/edit/{id}(id=${p.id})}" class="btn btn-sm btn-outline-primary">
+                                                <i class="bi bi-pencil me-1"></i>แก้ไข
+                                            </a>
+                                        </td>
+                                    </tr>
+                                    <tr th:if="${#lists.isEmpty(policies)}">
+                                        <td colspan="13" class="text-center text-muted py-4">ยังไม่มีกรมธรรม์ เพิ่มกรมธรรม์แรกของคุณเลย!</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </form>
+                </div>
             </div>
         </div>
-    </div>
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-</main>
+        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+        <script>
+            $('#selectAllCheckbox').click(function(event) {
+                if(this.checked) {
+                    $(':checkbox[name=selectedIds]').prop('checked', true);
+                } else {
+                    $(':checkbox[name=selectedIds]').prop('checked', false);
+                }
+            });
+        </script>
+    </main>
 </body>
+
 </html>
