@@ -49,7 +49,11 @@ public class RetirementAdvancedController {
     @PostMapping("/step1")
     public String processStep1(@ModelAttribute("step1Dto") Step1YouDTO step1Dto, @ModelAttribute("planData") RetirementPlanData planData) {
         // Calculate and save to session
-        planData.setStep1(retirementService.calculateStep1(step1Dto));
+        Step1YouDTO calculatedStep1 = retirementService.calculateStep1(step1Dto);
+        planData.getStep1().setCurrentAge(calculatedStep1.getCurrentAge());
+        planData.getStep1().setGender(calculatedStep1.getGender());
+        planData.getStep1().setRetirementAge(calculatedStep1.getRetirementAge());
+        planData.getStep1().setYearsToRetirement(calculatedStep1.getYearsToRetirement());
         return "redirect:/retirement/advanced/step2";
     }
 
