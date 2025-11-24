@@ -1,0 +1,50 @@
+# กำหนด Stages ของ Pipeline
+stages:
+  - build
+  - test
+  - dockerize
+
+# --- Stage 1: Build ---
+# สร้างไฟล์ .jar และเก็บไว้เป็น artifact
+build-job:
+  stage: build
+  image: maven:3.8.5-openjdk-17 # ใช้ Docker Image ที่มี Maven และ Java 17
+  script:
+    - echo "Compiling the code and creating .jar..."
+    - mvn clean package -DskipTests # สร้าง .jar แต่ข้ามการเทส (เราจะเทสใน stage แยก)
+  artifacts:
+    paths:
+      - target/*.jar # เก็บไฟล์ .jar ที่สร้างเสร็จแล้วไว้ใช้ใน stage ต่อไป
+
+# --- Stage 2: Test ---
+# รันเทสทั้งหมดที่เราสร้างมา
+test-job:
+  stage: test
+  image: maven:3.8.5-openjdk-17
+  script:
+    - echo "Running unit and integration tests..."
+    - mvn test # รันคำสั่งเทสของ Maven
+
+# --- Stage 3: Dockerize ---
+# สร้าง Docker Image และ Push ไปยัง GitLab Container Registry
+dockerize-job:
+  stage: dockerize
+  image: docker:20.10.16 # ใช้ Docker Image ที่มี Docker command
+  services:
+    - docker:20.10.16-dind # "Docker-in-Docker" เพื่อให้เราสามารถรันคำสั่ง Docker ได้
+  before_script:
+    # ล็อกอินเข้า GitLab Container Registry โดยใช้ CI/CD variables ที่มีให้โดยอัตโนมัติ
+    - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" $CI_REGISTRY
+  script:
+    - echo "Building Docker image..."
+    # สร้าง Tag สำหรับ Image โดยใช้ Commit SHA เพื่อให้มีเวอร์ชันที่ไม่ซ้ำกัน
+    - docker build -t "$CI_REGISTRY_IMAGE:$CI_COMMIT_SHORT_SHA" .
+    - echo "Pushing Docker image to GitLab Registry..."
+    # Push Image ไปยัง Registry
+    - docker push "$CI_REGISTRY_IMAGE:$CI_COMMIT_SHORT_SHA"
+    # (Optional) สร้าง Tag 'latest' ด้วย เพื่อให้ดึงไปใช้ง่าย
+    - docker tag "$CI_REGISTRY_IMAGE:$CI_COMMIT_SHORT_SHA" "$CI_REGISTRY_IMAGE:latest"
+    - docker push "$CI_REGISTRY_IMAGE:latest"
+  rules:
+    # รัน job นี้เฉพาะเมื่อมีการ push ไปที่ main branch เท่านั้น
+    - if: '$CI_COMMIT_BRANCH == "main"'

@@ -1,0 +1,17 @@
+# Git version control
+.git
+.gitignore
+
+# Maven build output
+target/
+
+# IDE settings
+.idea/
+.vscode/
+*.iml
+
+# Log files
+*.log
+
+# Local Maven wrapper data
+.mvn/
