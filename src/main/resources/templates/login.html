@@ -1,73 +1,45 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org" th:replace="~{public-layout :: layout(~{::title}, ~{::main})}">
-
+<html xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{public-layout :: layout(~{::title}, ~{::main})}">
 <head>
-    <title>Login to FinPlanPro</title>
+    <title>FinPlanPro - Login</title>
 </head>
-
 <body>
-    <main role="main">
-        <div class="auth-card-modern">
-            <!-- Left Side: Image -->
-            <div class="auth-image-side">
-                <div class="auth-image-overlay"></div>
-                <div class="auth-image-content">
-                    <div>
-                        <h3 class="fw-bold"><i class="bi bi-bank me-2"></i> FinPlanPro</h3>
-                    </div>
-                    <div>
-                        <h2 class="mb-3">Plan Your Future,<br>Secure Your Freedom</h2>
-                        <div class="d-flex gap-2 mt-3">
-                            <div style="width: 24px; height: 4px; background: white; border-radius: 2px;"></div>
-                            <div
-                                style="width: 8px; height: 4px; background: rgba(255,255,255,0.3); border-radius: 2px;">
-                            </div>
-                            <div
-                                style="width: 8px; height: 4px; background: rgba(255,255,255,0.3); border-radius: 2px;">
-                            </div>
+<main role="main">
+    <div class="container mt-5">
+        <div class="row justify-content-center">
+            <div class="col-md-6 col-lg-5">
+                <div class="card shadow-lg border-0 rounded-lg mt-5">
+                    <div class="card-header"><h3 class="text-center font-weight-light my-4">Login to FinPlanPro</h3></div>
+                    <div class="card-body">
+                        <div th:if="${param.error}" class="alert alert-danger" role="alert">
+                            Invalid username or password.
                         </div>
+                        <div th:if="${param.logout}" class="alert alert-success" role="alert">
+                            You have been logged out.
+                        </div>
+                        <form th:action="@{/login}" method="post">
+                            <div class="form-floating mb-3">
+                                <input class="form-control" id="username" name="username" type="text" placeholder="username" required autofocus/>
+                                <label for="username">Username or Email</label>
+                            </div>
+                            <div class="form-floating mb-3">
+                                <input class="form-control" id="password" name="password" type="password" placeholder="Password" required/>
+                                <label for="password">Password</label>
+                            </div>
+                            <div class="d-flex align-items-center justify-content-between mt-4 mb-0">
+                                <a class="small" th:href="@{/forgot-password}">Forgot Password?</a>
+                                <button class="btn btn-primary" type="submit">Login</button>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="card-footer text-center py-3">
+                        <div class="small"><a th:href="@{/register}">Need an account? Sign up!</a></div>
                     </div>
                 </div>
-            </div>
-
-            <!-- Right Side: Form -->
-            <div class="auth-form-side">
-                <h2 class="auth-title">Welcome back</h2>
-                <p class="auth-subtitle">Don't have an account? <a th:href="@{/register}" class="auth-link">Register</a>
-                </p>
-
-                <div th:if="${param.error}" class="alert alert-danger alert-dismissible fade show" role="alert">
-                    <i class="bi bi-exclamation-triangle-fill me-2"></i> Invalid username or password.
-                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                </div>
-                <div th:if="${param.logout}" class="alert alert-success alert-dismissible fade show" role="alert">
-                    <i class="bi bi-check-circle-fill me-2"></i> You have been logged out.
-                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                </div>
-
-                <form th:action="@{/login}" method="post">
-                    <div class="mb-3">
-                        <input type="text" class="auth-input" id="username" name="username" required autofocus
-                            placeholder="Username or Email">
-                    </div>
-                    <div class="mb-3">
-                        <input type="password" class="auth-input" id="password" name="password" required
-                            placeholder="Password">
-                    </div>
-
-                    <div class="form-check mb-4">
-                        <input class="form-check-input form-check-input-custom" type="checkbox" id="rememberMe"
-                            name="remember-me">
-                        <label class="form-check-label text-secondary" for="rememberMe">
-                            Remember me
-                        </label>
-                    </div>
-
-                    <button type="submit" class="auth-btn">Login</button>
-                </form>
             </div>
         </div>
-    </main>
+    </div>
+</main>
 </body>
-
 </html>

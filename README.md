@@ -355,15 +355,15 @@ D9.9 Commit: Final update UX/UI
 
 🧪 D10 — Testing, CI/CD, Final Review
 Branch: feature/D10-testing
-D10.1 Unit Tests ≥ 70%
+D10.1 Unit Tests D2,D3,D5,D7 ≥ 70%
 D10.2 Integration Tests ≥ 20%
 D10.3 Security Tests (authentication)
 D10.4 API Tests (Postman Collection)
 D10.5 UI Tests (Selenium optional)
 D10.6 Performance checks (p95 < 300ms)
 D10.7 Project Cleanup
-D10.8 Final README
-D10.9 Final Merge to main
+D10.8 Final Readme and Merge to main
+D10.9 Deployed to gitlab CI/CD 
 
 
 🎉 ผลลัพธ์ที่ได้เมื่อทำครบ D1–D10

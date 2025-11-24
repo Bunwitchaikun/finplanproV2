@@ -40,9 +40,10 @@ public class RetirementBasicController {
                                        BindingResult result,
                                        RedirectAttributes redirectAttributes) {
         if (result.hasErrors()) {
+            // ส่งข้อมูลที่ผู้ใช้กรอกผิด และผลลัพธ์ของ validation กลับไป
             redirectAttributes.addFlashAttribute("org.springframework.validation.BindingResult.newPlan", result);
             redirectAttributes.addFlashAttribute("newPlan", newPlan);
-            return "redirect:/retirement/basic";
+            return "redirect:/retirement/basic"; // หยุดทำงานและ Redirect ทันที
         }
 
         try {
