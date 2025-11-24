@@ -214,7 +214,7 @@ public class RetirementAdvancedServiceImpl implements RetirementAdvancedService 
         BigDecimal totalExpensesFv = planData.getStep4().getTotalRetirementExpensesFV();
         BigDecimal totalHavesFv = planData.getStep5().getTotalHavesFV();
         BigDecimal totalExtraIncome = Optional.ofNullable(planData.getStep3().getTotalExtraIncome()).orElse(BigDecimal.ZERO);
-        BigDecimal presentValue = Optional.ofNullable(planData.getStep5().getTotalCurrentAssetsFV()).orElse(BigDecimal.ZERO);
+        BigDecimal presentValueForChart = Optional.ofNullable(planData.getStep5().getTotalCurrentAssetsFV()).orElse(BigDecimal.ZERO);
         int yearsToRetirement = Optional.ofNullable(planData.getStep1().getYearsToRetirement()).orElse(0);
 
         // 1. Calculate Funding Gap
@@ -228,18 +228,25 @@ public class RetirementAdvancedServiceImpl implements RetirementAdvancedService 
             fundingGap = BigDecimal.ZERO;
         }
 
-        // 2. Calculate PMT for 3 scenarios
-        BigDecimal pmtWorstCase = financialCalculator.calculatePMTWithPV(
-                fundingGap, presentValue, new BigDecimal("0.04"), yearsToRetirement, 12
-        ).setScale(2, RoundingMode.HALF_UP);
+        // Define monthly rates and total periods
+        int totalPeriods = yearsToRetirement * 12;
+        BigDecimal monthlyRateWorst = new BigDecimal("0.04").divide(BigDecimal.valueOf(12), FinancialCalculator.SCALE, RoundingMode.HALF_UP);
+        BigDecimal monthlyRateBase = new BigDecimal("0.08").divide(BigDecimal.valueOf(12), FinancialCalculator.SCALE, RoundingMode.HALF_UP);
+        BigDecimal monthlyRateBest = new BigDecimal("0.15").divide(BigDecimal.valueOf(12), FinancialCalculator.SCALE, RoundingMode.HALF_UP);
 
-        BigDecimal pmtBaseCase = financialCalculator.calculatePMTWithPV(
-                fundingGap, presentValue, new BigDecimal("0.08"), yearsToRetirement, 12
-        ).setScale(2, RoundingMode.HALF_UP);
+        // 2. Calculate PMT for 3 scenarios using calculatePMT (no initial PV)
+        // We negate fundingGap to get a positive PMT result, as some financial functions return negative for outflows.
+        BigDecimal pmtWorstCase = financialCalculator.calculatePMT(
+                fundingGap.negate(), monthlyRateWorst, totalPeriods
+        ).abs().setScale(2, RoundingMode.HALF_UP);
 
-        BigDecimal pmtBestCase = financialCalculator.calculatePMTWithPV(
-                fundingGap, presentValue, new BigDecimal("0.15"), yearsToRetirement, 12
-        ).setScale(2, RoundingMode.HALF_UP);
+        BigDecimal pmtBaseCase = financialCalculator.calculatePMT(
+                fundingGap.negate(), monthlyRateBase, totalPeriods
+        ).abs().setScale(2, RoundingMode.HALF_UP);
+
+        BigDecimal pmtBestCase = financialCalculator.calculatePMT(
+                fundingGap.negate(), monthlyRateBest, totalPeriods
+        ).abs().setScale(2, RoundingMode.HALF_UP);
 
         // 3. Generate Chart Data
         List<String> chartLabels = new ArrayList<>();
@@ -247,19 +254,18 @@ public class RetirementAdvancedServiceImpl implements RetirementAdvancedService 
         List<Step6DesignDTO.ChartDataPoint> baseCaseGrowth = new ArrayList<>();
         List<Step6DesignDTO.ChartDataPoint> bestCaseGrowth = new ArrayList<>();
 
-        // Initial values for year 0
-        worstCaseGrowth.add(Step6DesignDTO.ChartDataPoint.builder().year(0).amount(presentValue.setScale(2, RoundingMode.HALF_UP)).build());
-        baseCaseGrowth.add(Step6DesignDTO.ChartDataPoint.builder().year(0).amount(presentValue.setScale(2, RoundingMode.HALF_UP)).build());
-        bestCaseGrowth.add(Step6DesignDTO.ChartDataPoint.builder().year(0).amount(presentValue.setScale(2, RoundingMode.HALF_UP)).build());
+        // The chart should show the growth of the *new contributions* towards the *fundingGap*.
+        // So, it starts from zero.
+        BigDecimal initialChartValue = BigDecimal.ZERO; 
+        
+        worstCaseGrowth.add(Step6DesignDTO.ChartDataPoint.builder().year(0).amount(initialChartValue).build());
+        baseCaseGrowth.add(Step6DesignDTO.ChartDataPoint.builder().year(0).amount(initialChartValue).build());
+        bestCaseGrowth.add(Step6DesignDTO.ChartDataPoint.builder().year(0).amount(initialChartValue).build());
         chartLabels.add("Year " + 0);
 
-        BigDecimal currentWorst = presentValue;
-        BigDecimal currentBase = presentValue;
-        BigDecimal currentBest = presentValue;
-
-        BigDecimal monthlyRateWorst = new BigDecimal("0.04").divide(BigDecimal.valueOf(12), 16, RoundingMode.HALF_UP);
-        BigDecimal monthlyRateBase = new BigDecimal("0.08").divide(BigDecimal.valueOf(12), 16, RoundingMode.HALF_UP);
-        BigDecimal monthlyRateBest = new BigDecimal("0.15").divide(BigDecimal.valueOf(12), 16, RoundingMode.HALF_UP);
+        BigDecimal currentWorst = initialChartValue;
+        BigDecimal currentBase = initialChartValue;
+        BigDecimal currentBest = initialChartValue;
 
         for (int year = 1; year <= yearsToRetirement; year++) {
             chartLabels.add("Year " + year);
@@ -280,7 +286,7 @@ public class RetirementAdvancedServiceImpl implements RetirementAdvancedService 
                 .totalExpensesFv(totalExpensesFv)
                 .totalHavesFv(totalHavesFv)
                 .totalExtraIncome(totalExtraIncome)
-                .presentValue(presentValue)
+                .presentValue(presentValueForChart) // Keep this for display if needed, but not for PMT calc
                 .yearsToRetirement(yearsToRetirement)
                 .fundingGap(fundingGap)
                 .pmtWorstCase(pmtWorstCase)

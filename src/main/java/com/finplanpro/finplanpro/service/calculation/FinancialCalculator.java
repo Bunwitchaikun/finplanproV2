@@ -11,13 +11,14 @@ import java.math.RoundingMode;
 @Component
 public class FinancialCalculator {
 
-    private static final int SCALE = 16;
-    private static final RoundingMode ROUNDING_MODE = RoundingMode.HALF_UP;
-    private static final MathContext MC = new MathContext(SCALE, ROUNDING_MODE);
+    // เพิ่ม SCALE เพื่อความแม่นยำในการคำนวณ
+    public static final int SCALE = 32; // เพิ่มจาก 16 เป็น 32
+    public static final RoundingMode ROUNDING_MODE = RoundingMode.HALF_UP;
+    public static final MathContext MC = new MathContext(SCALE, ROUNDING_MODE);
 
     public BigDecimal calculateFV(BigDecimal presentValue, BigDecimal rate, int periods) {
         if (periods <= 0) return presentValue;
-        return presentValue.multiply(BigDecimal.ONE.add(rate).pow(periods));
+        return presentValue.multiply(BigDecimal.ONE.add(rate).pow(periods, MC)); // ใช้ MC ใน pow
     }
 
     public BigDecimal calculatePV(BigDecimal pmt, BigDecimal rate, int periods) {
@@ -42,7 +43,7 @@ public class FinancialCalculator {
         BigDecimal n = BigDecimal.valueOf(periods);
 
         BigDecimal onePlusR = BigDecimal.ONE.add(r);
-        BigDecimal denominator = onePlusR.pow(n.intValue()).subtract(BigDecimal.ONE);
+        BigDecimal denominator = onePlusR.pow(n.intValue(), MC).subtract(BigDecimal.ONE); // ใช้ MC ใน pow
         
         if (denominator.compareTo(BigDecimal.ZERO) == 0) return BigDecimal.ZERO;
 
@@ -70,29 +71,32 @@ public class FinancialCalculator {
         int totalPeriods = years * paymentsPerYear;
 
         if (totalPeriods <= 0) {
-            // If no periods, PMT is just the difference if FV > PV, otherwise 0
             return fv.compareTo(pv) > 0 ? fv.subtract(pv) : BigDecimal.ZERO;
         }
 
         if (monthlyRate.compareTo(BigDecimal.ZERO) == 0) {
-            // Simple interest case if rate is 0
             BigDecimal remainingAmount = fv.subtract(pv);
             return remainingAmount.divide(BigDecimal.valueOf(totalPeriods), SCALE, ROUNDING_MODE);
         }
 
-        // FV = PV * (1 + r)^n + PMT * [((1 + r)^n - 1) / r]
-        // Rearranging for PMT:
-        // PMT = (FV - PV * (1 + r)^n) * r / ((1 + r)^n - 1)
-
+        // Calculate the future value of the present value
         BigDecimal onePlusMonthlyRate = BigDecimal.ONE.add(monthlyRate);
-        BigDecimal onePlusMonthlyRatePowN = onePlusMonthlyRate.pow(totalPeriods, MC);
+        BigDecimal fvOfPv = pv.multiply(onePlusMonthlyRate.pow(totalPeriods, MC)); // ใช้ MC ใน pow
 
-        BigDecimal numerator = fv.subtract(pv.multiply(onePlusMonthlyRatePowN));
-        BigDecimal denominator = onePlusMonthlyRatePowN.subtract(BigDecimal.ONE).divide(monthlyRate, SCALE, ROUNDING_MODE);
+        // The remaining future value that needs to be covered by periodic payments
+        BigDecimal remainingFvToCover = fv.subtract(fvOfPv);
+
+        // If remainingFvToCover is negative, it means PV already exceeds FV, so no PMT needed (or even withdrawal possible)
+        if (remainingFvToCover.compareTo(BigDecimal.ZERO) <= 0) {
+            return BigDecimal.ZERO;
+        }
+
+        // Now calculate PMT for this remaining future value, starting from zero
+        // This is equivalent to calling calculatePMT(remainingFvToCover, monthlyRate, totalPeriods)
+        BigDecimal numerator = remainingFvToCover.multiply(monthlyRate);
+        BigDecimal denominator = onePlusMonthlyRate.pow(totalPeriods, MC).subtract(BigDecimal.ONE); // ใช้ MC ใน pow
 
         if (denominator.compareTo(BigDecimal.ZERO) == 0) {
-            // This case should ideally not happen with a non-zero rate and positive periods
-            // but as a safeguard, return 0 or throw an error.
             return BigDecimal.ZERO;
         }
 
