@@ -1,45 +1,73 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org"
-      th:replace="~{public-layout :: layout(~{::title}, ~{::main})}">
+<html lang="en" xmlns:th="http://www.thymeleaf.org" th:replace="~{public-layout :: layout(~{::title}, ~{::main})}">
+
 <head>
     <title>Login to FinPlanPro</title>
 </head>
+
 <body>
-<main role="main">
-    <div class="auth-card card shadow-lg p-4 p-md-5">
-        <div class="card-body">
-            <h2 class="text-center mb-4 fw-bold">Welcome Back!</h2>
-            <p class="text-center text-muted mb-4">Sign in to continue to FinPlanPro</p>
-
-            <div th:if="${param.error}" class="alert alert-danger alert-dismissible fade show" role="alert">
-                <i class="bi bi-exclamation-triangle-fill me-2"></i>
-                Invalid username or password.
-                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    <main role="main">
+        <div class="auth-card-modern">
+            <!-- Left Side: Image -->
+            <div class="auth-image-side">
+                <div class="auth-image-overlay"></div>
+                <div class="auth-image-content">
+                    <div>
+                        <h3 class="fw-bold"><i class="bi bi-bank me-2"></i>FinPlanPro</h3>
+                    </div>
+                    <div>
+                        <h2 class="mb-3">Plan Your Future,<br>Secure Your Freedom</h2>
+                        <div class="d-flex gap-2 mt-3">
+                            <div style="width: 24px; height: 4px; background: white; border-radius: 2px;"></div>
+                            <div
+                                style="width: 8px; height: 4px; background: rgba(255,255,255,0.3); border-radius: 2px;">
+                            </div>
+                            <div
+                                style="width: 8px; height: 4px; background: rgba(255,255,255,0.3); border-radius: 2px;">
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
-            <div th:if="${param.logout}" class="alert alert-success alert-dismissible fade show" role="alert">
-                <i class="bi bi-check-circle-fill me-2"></i>
-                You have been logged out.
-                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-            </div>
 
-            <form th:action="@{/login}" method="post">
-                <div class="mb-3">
-                    <label for="username" class="form-label">Username or Email</label>
-                    <input type="text" class="form-control form-control-lg" id="username" name="username" required autofocus placeholder="Enter your username or email">
+            <!-- Right Side: Form -->
+            <div class="auth-form-side">
+                <h2 class="auth-title">Welcome back</h2>
+                <p class="auth-subtitle">Don't have an account? <a th:href="@{/register}" class="auth-link">Register</a>
+                </p>
+
+                <div th:if="${param.error}" class="alert alert-danger alert-dismissible fade show" role="alert">
+                    <i class="bi bi-exclamation-triangle-fill me-2"></i> Invalid username or password.
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                 </div>
-                <div class="mb-4">
-                    <label for="password" class="form-label">Password</label>
-                    <input type="password" class="form-control form-control-lg" id="password" name="password" required placeholder="Enter your password">
+                <div th:if="${param.logout}" class="alert alert-success alert-dismissible fade show" role="alert">
+                    <i class="bi bi-check-circle-fill me-2"></i> You have been logged out.
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                 </div>
-                <div class="d-grid mb-3">
-                    <button type="submit" class="btn btn-primary btn-lg">Login</button>
-                </div>
-            </form>
-            <div class="text-center mt-3">
-                <span class="text-muted">Don't have an account? <a th:href="@{/register}" class="text-decoration-none fw-bold">Register here</a></span>
+
+                <form th:action="@{/login}" method="post">
+                    <div class="mb-3">
+                        <input type="text" class="auth-input" id="username" name="username" required autofocus
+                            placeholder="Username or Email">
+                    </div>
+                    <div class="mb-3">
+                        <input type="password" class="auth-input" id="password" name="password" required
+                            placeholder="Password">
+                    </div>
+
+                    <div class="form-check mb-4">
+                        <input class="form-check-input form-check-input-custom" type="checkbox" id="rememberMe"
+                            name="remember-me">
+                        <label class="form-check-label text-secondary" for="rememberMe">
+                            Remember me
+                        </label>
+                    </div>
+
+                    <button type="submit" class="auth-btn">Login</button>
+                </form>
             </div>
         </div>
-    </div>
-</main>
+    </main>
 </body>
+
 </html>

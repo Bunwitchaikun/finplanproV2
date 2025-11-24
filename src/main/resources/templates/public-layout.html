@@ -1,49 +1,38 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org" th:fragment="layout(title, main)">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title th:replace="${title}">FinPlanPro</title>
 
-    <!-- Google Fonts: Inter -->
+    <!-- Google Fonts: Outfit & Prompt -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=Prompt:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
 
     <!-- Bootstrap 5 -->
-    <link th:href="@{/css/bootstrap.min.css}" rel="stylesheet"/>
+    <link th:href="@{/css/bootstrap.min.css}" rel="stylesheet" />
     <!-- Bootstrap Icons -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
 
-    <style>
-        body {
-            font-family: 'Inter', sans-serif;
-            background-color: #f0f2f5; /* A slightly different background for public pages */
-        }
-        .auth-wrapper {
-            min-height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-        .auth-card {
-            width: 100%;
-            max-width: 420px;
-            border: none;
-            border-radius: 0.75rem;
-        }
-    </style>
+    <!-- Custom global styles -->
+    <link th:href="@{/css/style.css}" rel="stylesheet" />
 </head>
+
 <body>
 
-<div class="auth-wrapper">
-    <main role="main">
-        <div th:replace="${main}"></div>
-    </main>
-</div>
+    <div class="auth-wrapper">
+        <main role="main">
+            <div th:replace="${main}"></div>
+        </main>
+    </div>
 
-<!-- Bootstrap JS -->
-<script th:src="@{/js/bootstrap.bundle.min.js}"></script>
+    <!-- Bootstrap JS -->
+    <script th:src="@{/js/bootstrap.bundle.min.js}"></script>
 
 </body>
+
 </html>

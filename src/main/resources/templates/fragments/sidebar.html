@@ -1,70 +1,75 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
 <body>
 
-<div th:fragment="sidebar(activeMenu)" class="d-flex flex-column flex-shrink-0 p-3 text-white bg-dark" style="width: 280px;">
-    <a th:href="@{/dashboard}" class="d-flex align-items-center mb-3 mb-md-0 me-md-auto text-white text-decoration-none">
-        <i class="bi bi-bank me-2" style="font-size: 1.5rem;"></i>
-        <span class="fs-4">FinPlanPro</span>
-    </a>
-    <hr>
-    <ul class="nav nav-pills flex-column mb-auto">
-        <li class="nav-item">
-            <a th:href="@{/dashboard}" class="nav-link text-white" th:classappend="${activeMenu == 'dashboard' ? 'active' : ''}">
-                <i class="bi bi-house-door me-2"></i>
-                Dashboard
-            </a>
-        </li>
-        <li>
-            <a th:href="@{/assets}" class="nav-link text-white" th:classappend="${activeMenu == 'assets' ? 'active' : ''}">
-                <i class="bi bi-wallet2 me-2"></i>
-                Assets
-            </a>
-        </li>
-        <li>
-            <a th:href="@{/insurance}" class="nav-link text-white" th:classappend="${activeMenu == 'insurance' ? 'active' : ''}">
-                <i class="bi bi-shield-check me-2"></i>
-                Insurance
-            </a>
-        </li>
-        <li>
-            <a th:href="@{/retirement/basic}" class="nav-link text-white" th:classappend="${activeMenu == 'retirement' ? 'active' : ''}">
-                <i class="bi bi-sunrise me-2"></i>
-                Retirement (Basic)
-            </a>
-        </li>
-        <li>
-            <a th:href="@{/retirement/advanced/start}" class="nav-link text-white" th:classappend="${activeMenu == 'retirement_advanced' ? 'active' : ''}">
-                <i class="bi bi-gem me-2"></i>
-                Retirement (Advanced)
-            </a>
-        </li>
-        <li>
-            <a th:href="@{/tax}" class="nav-link text-white" th:classappend="${activeMenu == 'tax' ? 'active' : ''}">
-                <i class="bi bi-file-earmark-text me-2"></i>
-                Tax
-            </a>
-        </li>
-        <li>
-            <a th:href="@{/profile}" class="nav-link text-white" th:classappend="${activeMenu == 'profile' ? 'active' : ''}">
-                <i class="bi bi-person-circle me-2"></i>
-                Profile
-            </a>
-        </li>
-    </ul>
-    <hr>
-    <div class="dropdown">
-        <a href="#" class="d-flex align-items-center text-white text-decoration-none dropdown-toggle" id="dropdownUser1" data-bs-toggle="dropdown" aria-expanded="false">
-            <img src="https://github.com/mdo.png" alt="" width="32" height="32" class="rounded-circle me-2">
-            <strong sec:authentication="name">username</strong>
+    <div th:fragment="sidebar(activeMenu)" class="sidebar-container">
+        <a th:href="@{/dashboard}" class="sidebar-brand text-decoration-none">
+            <i class="bi bi-bank me-2" style="font-size: 1.5rem; color: var(--accent-blue);"></i>
+            <span>FinPlanPro</span>
         </a>
-        <ul class="dropdown-menu dropdown-menu-dark text-small shadow" aria-labelledby="dropdownUser1">
-            <li><a class="dropdown-item" th:href="@{/profile}">Profile</a></li>
-            <li><hr class="dropdown-divider"></li>
-            <li><a class="dropdown-item" th:href="@{/logout}">Sign out</a></li>
+
+        <ul class="nav nav-pills flex-column mb-auto">
+            <li class="nav-item">
+                <a th:href="@{/dashboard}" class="nav-link"
+                    th:classappend="${activeMenu == 'dashboard' ? 'active' : ''}">
+                    <i class="bi bi-house-door me-2"></i>
+                    Dashboard
+                </a>
+            </li>
+            <li class="nav-item">
+                <a th:href="@{/assets}" class="nav-link" th:classappend="${activeMenu == 'assets' ? 'active' : ''}">
+                    <i class="bi bi-wallet2 me-2"></i>
+                    Assets
+                </a>
+            </li>
+            <li class="nav-item">
+                <a th:href="@{/insurance}" class="nav-link"
+                    th:classappend="${activeMenu == 'insurance' ? 'active' : ''}">
+                    <i class="bi bi-shield-check me-2"></i>
+                    Insurance
+                </a>
+            </li>
+            <li class="nav-item">
+                <a th:href="@{/retirement/basic}" class="nav-link"
+                    th:classappend="${activeMenu == 'retirement' ? 'active' : ''}">
+                    <i class="bi bi-sunrise me-2"></i>
+                    Retirement (Basic)
+                </a>
+            </li>
+            <li class="nav-item">
+                <a th:href="@{/retirement/advanced/start}" class="nav-link"
+                    th:classappend="${activeMenu == 'retirement_advanced' ? 'active' : ''}">
+                    <i class="bi bi-gem me-2"></i>
+                    Retirement (Advanced)
+                </a>
+            </li>
+            <li class="nav-item">
+                <a th:href="@{/tax}" class="nav-link" th:classappend="${activeMenu == 'tax' ? 'active' : ''}">
+                    <i class="bi bi-file-earmark-text me-2"></i>
+                    Tax
+                </a>
+            </li>
+            <li class="nav-item">
+                <a th:href="@{/profile}" class="nav-link" th:classappend="${activeMenu == 'profile' ? 'active' : ''}">
+                    <i class="bi bi-person-circle me-2"></i>
+                    Profile
+                </a>
+            </li>
         </ul>
+
+        <div class="mt-auto">
+            <div class="d-flex align-items-center mb-2">
+                <img src="https://github.com/mdo.png" alt="" width="40" height="40" class="rounded-circle me-3">
+                <strong sec:authentication="name" class="text-white">username</strong>
+            </div>
+            <div class="ps-1">
+                <a th:href="@{/logout}" class="text-secondary text-decoration-none d-block hover-text-white">Sign
+                    out</a>
+            </div>
+        </div>
     </div>
-</div>
 
 </body>
+
 </html>

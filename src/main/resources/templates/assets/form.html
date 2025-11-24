@@ -36,16 +36,16 @@
 
                         <div class="row">
                             <!-- LEFT COLUMN: Assets -->
-                            <div class="col-md-6 border-end">
+                            <div class="col-6 border-end">
                                 <h6 class="text-success mb-3">ทรัพย์สิน (Assets)</h6>
                                 <div id="assets-container">
                                     <!-- Predefined Assets -->
                                     <th:block th:if="${snapshot.items == null or snapshot.items.empty}">
                                         <!-- 1. Cash -->
                                         <div class="row g-2 align-items-center mb-2">
-                                            <div class="col-5">
-                                                <input type="text" class="form-control form-control-sm"
-                                                    name="items[0].name" value="เงินสด" readonly>
+                                            <div class="col-5 d-flex align-items-center">
+                                                <span class="text-primary fw-medium">เงินสด</span>
+                                                <input type="hidden" name="items[0].name" value="เงินสด">
                                             </div>
                                             <div class="col-7">
                                                 <input type="number" class="form-control form-control-sm"
@@ -55,9 +55,10 @@
                                         </div>
                                         <!-- 2. Bonds -->
                                         <div class="row g-2 align-items-center mb-2">
-                                            <div class="col-5">
-                                                <input type="text" class="form-control form-control-sm"
-                                                    name="items[1].name" value="ตราสารหนี้/พันธบัตร/หุ้นกู้" readonly>
+                                            <div class="col-5 d-flex align-items-center">
+                                                <span class="text-primary fw-medium">ตราสารหนี้/พันธบัตร/หุ้นกู้</span>
+                                                <input type="hidden" name="items[1].name"
+                                                    value="ตราสารหนี้/พันธบัตร/หุ้นกู้">
                                             </div>
                                             <div class="col-7">
                                                 <input type="number" class="form-control form-control-sm"
@@ -67,9 +68,10 @@
                                         </div>
                                         <!-- 3. RMF/LTF -->
                                         <div class="row g-2 align-items-center mb-2">
-                                            <div class="col-5">
-                                                <input type="text" class="form-control form-control-sm"
-                                                    name="items[2].name" value="กองทุนสำรองเลี้ยงชีพ RMF/LTF" readonly>
+                                            <div class="col-5 d-flex align-items-center">
+                                                <span class="text-primary fw-medium">กองทุนสำรองเลี้ยงชีพ RMF/LTF</span>
+                                                <input type="hidden" name="items[2].name"
+                                                    value="กองทุนสำรองเลี้ยงชีพ RMF/LTF">
                                             </div>
                                             <div class="col-7">
                                                 <input type="number" class="form-control form-control-sm"
@@ -79,9 +81,9 @@
                                         </div>
                                         <!-- 4. Equity Fund -->
                                         <div class="row g-2 align-items-center mb-2">
-                                            <div class="col-5">
-                                                <input type="text" class="form-control form-control-sm"
-                                                    name="items[3].name" value="กองทุนหุ้น" readonly>
+                                            <div class="col-5 d-flex align-items-center">
+                                                <span class="text-primary fw-medium">กองทุนหุ้น</span>
+                                                <input type="hidden" name="items[3].name" value="กองทุนหุ้น">
                                             </div>
                                             <div class="col-7">
                                                 <input type="number" class="form-control form-control-sm"
@@ -91,9 +93,9 @@
                                         </div>
                                         <!-- 5. Individual Stocks -->
                                         <div class="row g-2 align-items-center mb-2">
-                                            <div class="col-5">
-                                                <input type="text" class="form-control form-control-sm"
-                                                    name="items[4].name" value="หุ้นรายตัว" readonly>
+                                            <div class="col-5 d-flex align-items-center">
+                                                <span class="text-primary fw-medium">หุ้นรายตัว</span>
+                                                <input type="hidden" name="items[4].name" value="หุ้นรายตัว">
                                             </div>
                                             <div class="col-7">
                                                 <input type="number" class="form-control form-control-sm"
@@ -103,9 +105,9 @@
                                         </div>
                                         <!-- 6. Gold -->
                                         <div class="row g-2 align-items-center mb-2">
-                                            <div class="col-5">
-                                                <input type="text" class="form-control form-control-sm"
-                                                    name="items[5].name" value="ทองคำ" readonly>
+                                            <div class="col-5 d-flex align-items-center">
+                                                <span class="text-primary fw-medium">ทองคำ</span>
+                                                <input type="hidden" name="items[5].name" value="ทองคำ">
                                             </div>
                                             <div class="col-7">
                                                 <input type="number" class="form-control form-control-sm"
@@ -115,9 +117,9 @@
                                         </div>
                                         <!-- 7. Bitcoin -->
                                         <div class="row g-2 align-items-center mb-2">
-                                            <div class="col-5">
-                                                <input type="text" class="form-control form-control-sm"
-                                                    name="items[6].name" value="บิตคอย" readonly>
+                                            <div class="col-5 d-flex align-items-center">
+                                                <span class="text-primary fw-medium">บิตคอย</span>
+                                                <input type="hidden" name="items[6].name" value="บิตคอย">
                                             </div>
                                             <div class="col-7">
                                                 <input type="number" class="form-control form-control-sm"
@@ -130,11 +132,20 @@
                                     <th:block th:each="item, stat : ${snapshot.items}">
                                         <div th:if="${item.type.name() == 'ASSET'}"
                                             class="row g-2 align-items-center mb-2">
-                                            <div class="col-5">
-                                                <input type="text" class="form-control form-control-sm"
-                                                    th:field="*{items[__${stat.index}__].name}"
-                                                    th:readonly="${item.name == 'เงินสด' or item.name == 'ตราสารหนี้/พันธบัตร/หุ้นกู้' or item.name == 'กองทุนสำรองเลี้ยงชีพ RMF/LTF' or item.name == 'กองทุนหุ้น' or item.name == 'หุ้นรายตัว' or item.name == 'ทองคำ' or item.name == 'บิตคอย'}"
-                                                    placeholder="ชื่อรายการ">
+                                            <div class="col-5 d-flex align-items-center">
+                                                <!-- Predefined Asset: Show Text -->
+                                                <th:block
+                                                    th:if="${item.name == 'เงินสด' or item.name == 'ตราสารหนี้/พันธบัตร/หุ้นกู้' or item.name == 'กองทุนสำรองเลี้ยงชีพ RMF/LTF' or item.name == 'กองทุนหุ้น' or item.name == 'หุ้นรายตัว' or item.name == 'ทองคำ' or item.name == 'บิตคอย'}">
+                                                    <span class="text-primary fw-medium" th:text="${item.name}"></span>
+                                                    <input type="hidden" th:field="*{items[__${stat.index}__].name}">
+                                                </th:block>
+                                                <!-- Custom Asset: Show Input -->
+                                                <th:block
+                                                    th:unless="${item.name == 'เงินสด' or item.name == 'ตราสารหนี้/พันธบัตร/หุ้นกู้' or item.name == 'กองทุนสำรองเลี้ยงชีพ RMF/LTF' or item.name == 'กองทุนหุ้น' or item.name == 'หุ้นรายตัว' or item.name == 'ทองคำ' or item.name == 'บิตคอย'}">
+                                                    <input type="text" class="form-control form-control-sm"
+                                                        th:field="*{items[__${stat.index}__].name}"
+                                                        placeholder="ชื่อรายการ">
+                                                </th:block>
                                             </div>
                                             <div class="col-7">
                                                 <input type="number" class="form-control form-control-sm"
@@ -158,17 +169,19 @@
                                 </div>
                             </div>
 
+
+
                             <!-- RIGHT COLUMN: Liabilities -->
-                            <div class="col-md-6">
+                            <div class="col-6">
                                 <h6 class="text-danger mb-3">หนี้สิน (Liabilities)</h6>
                                 <div id="liabilities-container">
                                     <!-- Predefined Liabilities -->
                                     <th:block th:if="${snapshot.items == null or snapshot.items.empty}">
                                         <!-- 1. Credit Card -->
                                         <div class="row g-2 align-items-center mb-2">
-                                            <div class="col-5">
-                                                <input type="text" class="form-control form-control-sm"
-                                                    name="items[7].name" value="บัตรเครดิต" readonly>
+                                            <div class="col-5 d-flex align-items-center">
+                                                <span class="text-danger fw-medium">บัตรเครดิต</span>
+                                                <input type="hidden" name="items[7].name" value="บัตรเครดิต">
                                             </div>
                                             <div class="col-7">
                                                 <input type="number" class="form-control form-control-sm"
@@ -178,9 +191,9 @@
                                         </div>
                                         <!-- 2. Cash Card -->
                                         <div class="row g-2 align-items-center mb-2">
-                                            <div class="col-5">
-                                                <input type="text" class="form-control form-control-sm"
-                                                    name="items[8].name" value="บัตรกดเงินสด" readonly>
+                                            <div class="col-5 d-flex align-items-center">
+                                                <span class="text-danger fw-medium">บัตรกดเงินสด</span>
+                                                <input type="hidden" name="items[8].name" value="บัตรกดเงินสด">
                                             </div>
                                             <div class="col-7">
                                                 <input type="number" class="form-control form-control-sm"
@@ -190,9 +203,9 @@
                                         </div>
                                         <!-- 3. Personal Loan -->
                                         <div class="row g-2 align-items-center mb-2">
-                                            <div class="col-5">
-                                                <input type="text" class="form-control form-control-sm"
-                                                    name="items[9].name" value="สินเชื่อส่วนบุคคล" readonly>
+                                            <div class="col-5 d-flex align-items-center">
+                                                <span class="text-danger fw-medium">สินเชื่อส่วนบุคคล</span>
+                                                <input type="hidden" name="items[9].name" value="สินเชื่อส่วนบุคคล">
                                             </div>
                                             <div class="col-7">
                                                 <input type="number" class="form-control form-control-sm"
@@ -202,9 +215,9 @@
                                         </div>
                                         <!-- 4. Installment -->
                                         <div class="row g-2 align-items-center mb-2">
-                                            <div class="col-5">
-                                                <input type="text" class="form-control form-control-sm"
-                                                    name="items[10].name" value="ผ่อนสินค้า" readonly>
+                                            <div class="col-5 d-flex align-items-center">
+                                                <span class="text-danger fw-medium">ผ่อนสินค้า</span>
+                                                <input type="hidden" name="items[10].name" value="ผ่อนสินค้า">
                                             </div>
                                             <div class="col-7">
                                                 <input type="number" class="form-control form-control-sm"
@@ -214,9 +227,9 @@
                                         </div>
                                         <!-- 5. Informal Debt -->
                                         <div class="row g-2 align-items-center mb-2">
-                                            <div class="col-5">
-                                                <input type="text" class="form-control form-control-sm"
-                                                    name="items[11].name" value="หนี้นอกระบบ" readonly>
+                                            <div class="col-5 d-flex align-items-center">
+                                                <span class="text-danger fw-medium">หนี้นอกระบบ</span>
+                                                <input type="hidden" name="items[11].name" value="หนี้นอกระบบ">
                                             </div>
                                             <div class="col-7">
                                                 <input type="number" class="form-control form-control-sm"
@@ -226,9 +239,9 @@
                                         </div>
                                         <!-- 6. Home Loan -->
                                         <div class="row g-2 align-items-center mb-2">
-                                            <div class="col-5">
-                                                <input type="text" class="form-control form-control-sm"
-                                                    name="items[12].name" value="กู้ซื้อบ้าน" readonly>
+                                            <div class="col-5 d-flex align-items-center">
+                                                <span class="text-danger fw-medium">กู้ซื้อบ้าน</span>
+                                                <input type="hidden" name="items[12].name" value="กู้ซื้อบ้าน">
                                             </div>
                                             <div class="col-7">
                                                 <input type="number" class="form-control form-control-sm"
@@ -238,9 +251,9 @@
                                         </div>
                                         <!-- 7. Car Loan -->
                                         <div class="row g-2 align-items-center mb-2">
-                                            <div class="col-5">
-                                                <input type="text" class="form-control form-control-sm"
-                                                    name="items[13].name" value="กู้ซื้อรถ" readonly>
+                                            <div class="col-5 d-flex align-items-center">
+                                                <span class="text-danger fw-medium">กู้ซื้อรถ</span>
+                                                <input type="hidden" name="items[13].name" value="กู้ซื้อรถ">
                                             </div>
                                             <div class="col-7">
                                                 <input type="number" class="form-control form-control-sm"
@@ -253,11 +266,20 @@
                                     <th:block th:each="item, stat : ${snapshot.items}">
                                         <div th:if="${item.type.name() == 'LIABILITY'}"
                                             class="row g-2 align-items-center mb-2">
-                                            <div class="col-5">
-                                                <input type="text" class="form-control form-control-sm"
-                                                    th:field="*{items[__${stat.index}__].name}"
-                                                    th:readonly="${item.name == 'บัตรเครดิต' or item.name == 'บัตรกดเงินสด' or item.name == 'สินเชื่อส่วนบุคคล' or item.name == 'ผ่อนสินค้า' or item.name == 'หนี้นอกระบบ' or item.name == 'กู้ซื้อบ้าน' or item.name == 'กู้ซื้อรถ'}"
-                                                    placeholder="ชื่อรายการ">
+                                            <div class="col-5 d-flex align-items-center">
+                                                <!-- Predefined Liability: Show Text -->
+                                                <th:block
+                                                    th:if="${item.name == 'บัตรเครดิต' or item.name == 'บัตรกดเงินสด' or item.name == 'สินเชื่อส่วนบุคคล' or item.name == 'ผ่อนสินค้า' or item.name == 'หนี้นอกระบบ' or item.name == 'กู้ซื้อบ้าน' or item.name == 'กู้ซื้อรถ'}">
+                                                    <span class="text-danger fw-medium" th:text="${item.name}"></span>
+                                                    <input type="hidden" th:field="*{items[__${stat.index}__].name}">
+                                                </th:block>
+                                                <!-- Custom Liability: Show Input -->
+                                                <th:block
+                                                    th:unless="${item.name == 'บัตรเครดิต' or item.name == 'บัตรกดเงินสด' or item.name == 'สินเชื่อส่วนบุคคล' or item.name == 'ผ่อนสินค้า' or item.name == 'หนี้นอกระบบ' or item.name == 'กู้ซื้อบ้าน' or item.name == 'กู้ซื้อรถ'}">
+                                                    <input type="text" class="form-control form-control-sm"
+                                                        th:field="*{items[__${stat.index}__].name}"
+                                                        placeholder="ชื่อรายการ">
+                                                </th:block>
                                             </div>
                                             <div class="col-7">
                                                 <input type="number" class="form-control form-control-sm"
