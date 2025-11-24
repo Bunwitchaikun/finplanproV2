@@ -362,7 +362,7 @@ D10.4 API Tests (Postman Collection)
 D10.5 UI Tests (Selenium optional)
 D10.6 Performance checks (p95 < 300ms)
 D10.7 Project Cleanup
-D10.8 Final Merge to main
+D10.8 Final Readme and Merge to main
 D10.9 Deployed to gitlab CI/CD 
 
 

@@ -1,32 +1,40 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"
-      th:replace="~{layout :: layout(~{::title}, ~{::main})}">
+      th:replace="~{public-layout :: layout(~{::title}, ~{::main})}">
 <head>
-    <title>Login</title>
-head>
+    <title>FinPlanPro - Login</title>
+</head>
 <body>
 <main role="main">
     <div class="container mt-5">
         <div class="row justify-content-center">
-            <div class="col-md-6">
-                <div class="card">
-                    <div class="card-header">
-                        <h3 class="text-center">Login</h3>
-                    </div>
+            <div class="col-md-6 col-lg-5">
+                <div class="card shadow-lg border-0 rounded-lg mt-5">
+                    <div class="card-header"><h3 class="text-center font-weight-light my-4">Login to FinPlanPro</h3></div>
                     <div class="card-body">
+                        <div th:if="${param.error}" class="alert alert-danger" role="alert">
+                            Invalid username or password.
+                        </div>
+                        <div th:if="${param.logout}" class="alert alert-success" role="alert">
+                            You have been logged out.
+                        </div>
                         <form th:action="@{/login}" method="post">
-                            <div class="mb-3">
-                                <label for="username" class="form-label">Username</label>
-                                <input type="text" class="form-control" id="username" name="username" required>
+                            <div class="form-floating mb-3">
+                                <input class="form-control" id="username" name="username" type="text" placeholder="username" required autofocus/>
+                                <label for="username">Username or Email</label>
                             </div>
-                            <div class="mb-3">
-                                <label for="password" class="form-label">Password</label>
-                                <input type="password" class="form-control" id="password" name="password" required>
+                            <div class="form-floating mb-3">
+                                <input class="form-control" id="password" name="password" type="password" placeholder="Password" required/>
+                                <label for="password">Password</label>
                             </div>
-                            <div class="d-grid">
-                                <button type="submit" class="btn btn-primary">Login</button>
+                            <div class="d-flex align-items-center justify-content-between mt-4 mb-0">
+                                <a class="small" th:href="@{/forgot-password}">Forgot Password?</a>
+                                <button class="btn btn-primary" type="submit">Login</button>
                             </div>
                         </form>
+                    </div>
+                    <div class="card-footer text-center py-3">
+                        <div class="small"><a th:href="@{/register}">Need an account? Sign up!</a></div>
                     </div>
                 </div>
             </div>
