@@ -94,6 +94,25 @@
                 <div class="card-header bg-success text-white"><h5 class="mb-0">ผลการคำนวณ</h5></div>
                 <div class="card-body p-4">
                     <form th:action="@{/tax/save}" th:object="${taxRequest}" method="post">
+                        <!-- Preserve calculated input values when saving -->
+                        <input type="hidden" th:field="*{taxYear}">
+                        <input type="hidden" th:field="*{monthlyIncome}">
+                        <input type="hidden" th:field="*{customExpense}">
+                        <input type="hidden" th:field="*{incomeType}">
+                        <input type="hidden" th:field="*{children}">
+                        <input type="hidden" th:field="*{childbirth}">
+                        <input type="hidden" th:field="*{parents}">
+                        <input type="hidden" th:field="*{spouse}">
+                        <input type="hidden" th:field="*{disability}">
+                        <input type="hidden" th:field="*{lifeInsurance}">
+                        <input type="hidden" th:field="*{healthInsuranceSelf}">
+                        <input type="hidden" th:field="*{healthInsuranceParents}">
+                        <input type="hidden" th:field="*{pension}">
+                        <input type="hidden" th:field="*{providentFund}">
+                        <input type="hidden" th:field="*{rmf}">
+                        <input type="hidden" th:field="*{ssf}">
+                        <input type="hidden" th:field="*{socialSecurity}">
+
                         <dl class="row">
                             <dt class="col-sm-4">รายได้ทั้งปี</dt>
                             <dd class="col-sm-8" th:text="${#numbers.formatDecimal(taxResult.annualIncome, 1, 'COMMA', 2, 'POINT')} + ' THB'"></dd>

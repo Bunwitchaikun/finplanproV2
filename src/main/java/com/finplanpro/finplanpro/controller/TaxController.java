@@ -61,4 +61,11 @@ public class TaxController {
         model.addAttribute("activeMenu", "tax");
         return "tax/list";
     }
+
+    @PostMapping("/delete-all")
+    public String deleteAllRecords(RedirectAttributes redirectAttributes) {
+        recordService.deleteAllForCurrentUser();
+        redirectAttributes.addFlashAttribute("successMessage", "All tax records have been deleted.");
+        return "redirect:/tax/list";
+    }
 }

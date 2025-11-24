@@ -26,11 +26,11 @@
                                 <input type="hidden" th:field="*{id}" />
                                 <h5 class="mb-3">ข้อมูลกรมธรรม์</h5>
                                 <div class="row g-3 mb-4">
-                                    <div class="col-md-6"><label for="policyName"
+                                    <div class="col-6"><label for="policyName"
                                             class="form-label">ชื่อกรมธรรม์</label><input type="text"
                                             class="form-control" id="policyName" th:field="*{policyName}"
                                             placeholder="เช่น AIA Unit Linked"></div>
-                                    <div class="col-md-6"><label for="policyNumber"
+                                    <div class="col-6"><label for="policyNumber"
                                             class="form-label">เลขกรมธรรม์</label><input type="text"
                                             class="form-control" id="policyNumber" th:field="*{policyNumber}" required>
                                         <div th:if="${#fields.hasErrors('policyNumber')}" th:errors="*{policyNumber}"
@@ -39,9 +39,9 @@
                                 </div>
                                 <h5 class="mb-3">เบี้ยประกันที่ต้องจ่ายต่อปี</h5>
                                 <div class="row g-3 mb-4">
-                                    <div class="col-md-6"><label>เบี้ยสัญญาหลัก/ปี</label><input type="number"
-                                            step="0.01" class="form-control" th:field="*{mainPremium}"></div>
-                                    <div class="col-md-6"><label>เบี้ยสัญญาเพิ่มเติม/ปี</label><input type="number"
+                                    <div class="col-6"><label>เบี้ยสัญญาหลัก/ปี</label><input type="number" step="0.01"
+                                            class="form-control" th:field="*{mainPremium}"></div>
+                                    <div class="col-6"><label>เบี้ยสัญญาเพิ่มเติม/ปี</label><input type="number"
                                             step="0.01" class="form-control" th:field="*{riderPremium}"></div>
                                 </div>
                                 <h5 class="mb-3">รายละเอียดกรมธรรม์</h5>

@@ -23,7 +23,7 @@
 
                         <div class="row">
                             <!-- LEFT COLUMN: Basic Cost -->
-                            <div class="col-md-6 border-end">
+                            <div class="col-6 border-end">
                                 <h6 class="text-primary mb-3">Basic Cost (ค่าใช้จ่ายพื้นฐาน) - แบบรายเดือน </h6>
                                 <div id="basic-items-container">
                                     <!-- Predefined Basic Items -->
@@ -179,8 +179,9 @@
                             </div>
 
                             <!-- RIGHT COLUMN: Special Cost -->
-                            <div class="col-md-6">
-                                <h6 class="text-success mb-3">Special Cost (ค่าใช้จ่ายพิเศษหลังเกษียณ) - มูลค่าปัจจุบัน </h6>
+                            <div class="col-6">
+                                <h6 class="text-success mb-3">Special Cost (ค่าใช้จ่ายพิเศษหลังเกษียณ) - มูลค่าปัจจุบัน
+                                </h6>
                                 <div id="special-items-container">
                                     <!-- Predefined Special Items -->
                                     <th:block th:if="${step4Dto.specialItems == null or step4Dto.specialItems.empty}">
@@ -310,14 +311,14 @@
                                         <h5 class="card-title text-center text-primary">Summary (สรุปค่าใช้จ่ายเกษียณ)
                                         </h5>
                                         <div class="row text-center mt-3">
-                                            <div class="col-md-6">
+                                            <div class="col-6">
                                                 <p class="mb-1">รวมค่าใช้จ่ายเกษียณ (ปัจจุบัน)</p>
                                                 <h4 class="text-dark"
                                                     th:text="${#numbers.formatDecimal(step4Dto.totalRetirementExpensesToday ?: 0, 1, 'COMMA', 2, 'POINT')}">
                                                     0.00</h4>
                                                 <small class="text-muted">(Basic + Special)</small>
                                             </div>
-                                            <div class="col-md-6">
+                                            <div class="col-6">
                                                 <p class="mb-1">รวมค่าใช้จ่ายเกษียณ (หลังปรับเงินเฟ้อ)</p>
                                                 <h4 class="text-danger"
                                                     th:text="${#numbers.formatDecimal(step4Dto.totalRetirementExpensesFV ?: 0, 1, 'COMMA', 2, 'POINT')}">

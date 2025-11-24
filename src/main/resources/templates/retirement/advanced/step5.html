@@ -1,181 +1,211 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org"
-      th:replace="~{layout :: layout(~{::title}, ~{::main}, ~{::scripts})}">
+    th:replace="~{layout :: layout(~{::title}, ~{::main}, ~{::scripts})}">
+
 <head>
     <title>Advanced Retirement - Step 5: Haves</title>
 </head>
+
 <body>
-<main role="main">
-    <div class="container-fluid">
-        <h1 class="h3 mb-4">Advanced Retirement Planner</h1>
-        <div class="progress mb-4" style="height: 20px;">
-            <div class="progress-bar" role="progressbar" style="width: 70%;" aria-valuenow="70" aria-valuemin="0" aria-valuemax="100">Step 5 of 6</div>
-        </div>
-        <form th:action="@{/retirement/advanced/step5}" th:object="${step5Dto}" method="post">
-            <div class="row g-4">
-                <!-- Left Column -->
-                <div class="col-lg-8">
-                    <!-- Card 1: Current Assets -->
-                    <div class="card shadow-sm border-0 mb-4">
-                        <div class="card-header bg-transparent"><h5 class="mb-0">ทุนเกษียณที่คุณมี (ปัจจุบัน)</h5></div>
-                        <div class="card-body p-4">
-                            <div th:if="*{currentAssets.empty}" class="alert alert-warning">ไม่พบข้อมูลสินทรัพย์ล่าสุดจาก D5 Net Worth</div>
-                            <div th:each="asset, iterStat : *{currentAssets}" class="row g-2 mb-3 align-items-center">
-                                <div class="col-md-3" th:text="${asset.name}">Asset Name</div>
-                                <div class="col-md-3">
-                                    <div class="input-group">
-                                        <span class="input-group-text">฿</span>
-                                        <input type="text" class="form-control" th:value="${#numbers.formatDecimal(asset.presentValue, 0, 'COMMA', 0, 'POINT')}" readonly>
-                                        <input type="hidden" class="current-asset-pv" th:field="*{currentAssets[__${iterStat.index}__].name}" />
-                                        <input type="hidden" class="current-asset-pv" th:field="*{currentAssets[__${iterStat.index}__].presentValue}" />
+    <main role="main">
+        <div class="container-fluid">
+            <h1 class="h3 mb-4">Advanced Retirement Planner</h1>
+            <div class="progress mb-4" style="height: 20px;">
+                <div class="progress-bar" role="progressbar" style="width: 70%;" aria-valuenow="70" aria-valuemin="0"
+                    aria-valuemax="100">Step 5 of 6</div>
+            </div>
+            <form th:action="@{/retirement/advanced/step5}" th:object="${step5Dto}" method="post">
+                <div class="row g-4">
+                    <!-- Left Column -->
+                    <div class="col-lg-8">
+                        <!-- Card 1: Current Assets -->
+                        <div class="card shadow-sm border-0 mb-4">
+                            <div class="card-header bg-transparent">
+                                <h5 class="mb-0">ทุนเกษียณที่คุณมี (ปัจจุบัน)</h5>
+                            </div>
+                            <div class="card-body p-4">
+                                <div th:if="*{currentAssets.empty}" class="alert alert-warning">
+                                    ไม่พบข้อมูลสินทรัพย์ล่าสุดจาก D5 Net Worth</div>
+                                <div th:each="asset, iterStat : *{currentAssets}"
+                                    class="row g-2 mb-3 align-items-center">
+                                    <div class="col-md-3" th:text="${asset.name}">Asset Name</div>
+                                    <div class="col-md-3">
+                                        <div class="input-group">
+                                            <span class="input-group-text">฿</span>
+                                            <input type="text" class="form-control"
+                                                th:value="${#numbers.formatDecimal(asset.presentValue, 0, 'COMMA', 0, 'POINT')}"
+                                                readonly>
+                                            <input type="hidden" class="current-asset-pv"
+                                                th:field="*{currentAssets[__${iterStat.index}__].name}" />
+                                            <input type="hidden" class="current-asset-pv"
+                                                th:field="*{currentAssets[__${iterStat.index}__].presentValue}" />
+                                        </div>
                                     </div>
-                                </div>
-                                <div class="col-md-3">
-                                    <div class="input-group">
-                                        <input type="number" class="form-control return-rate" step="0.5" th:field="*{currentAssets[__${iterStat.index}__].expectedReturnRate}">
-                                        <span class="input-group-text">%</span>
+                                    <div class="col-md-3">
+                                        <div class="input-group">
+                                            <input type="number" class="form-control return-rate" step="0.5"
+                                                th:field="*{currentAssets[__${iterStat.index}__].expectedReturnRate}">
+                                            <span class="input-group-text">%</span>
+                                        </div>
                                     </div>
-                                </div>
-                                <div class="col-md-3">
-                                    <div class="input-group">
-                                        <span class="input-group-text">FV ฿</span>
-                                        <input type="text" class="form-control fv-output" readonly>
+                                    <div class="col-md-3">
+                                        <div class="input-group">
+                                            <span class="input-group-text">FV ฿</span>
+                                            <input type="text" class="form-control fv-output" readonly>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
 
-                    <!-- Card 2: Future Income -->
-                    <div class="card shadow-sm border-0">
-                        <div class="card-header bg-transparent"><h5 class="mb-0">ทุนเกษียณที่คาดว่าจะได้รับ (อนาคต)</h5></div>
-                        <div class="card-body p-4">
-                             <div class="row g-3 mb-3" th:object="${step5Dto.futureIncome}">
-                                <div class="col-md-6"><label>บำเหน็จ</label><input type="number" class="form-control future-income-input" th:field="*{gratuity}"></div>
-                                <div class="col-md-6"><label>บำนาญจากประกันสังคม</label><input type="number" class="form-control future-income-input" th:field="*{socialSecurityPension}"></div>
-                                <div class="col-md-6"><label>กองทุนสำรองเลี้ยงชีพ</label><input type="number" class="form-control future-income-input" th:field="*{providentFund}"></div>
-                                <div class="col-md-6"><label>ประกันบำนาญ</label><input type="number" class="form-control future-income-input" th:field="*{annuityInsurance}"></div>
-                                <div class="col-md-6"><label>เงินครบกำหนดประกันชีวิต</label><input type="number" class="form-control future-income-input" th:field="*{lifeInsuranceMaturity}"></div>
-                                <div class="col-md-6"><label>อสังหาริมทรัพย์(ถ้าขาย)</label><input type="number" class="form-control future-income-input" th:field="*{realEstateForSale}"></div>
+                        <!-- Card 2: Future Income -->
+                        <div class="card shadow-sm border-0">
+                            <div class="card-header bg-transparent">
+                                <h5 class="mb-0">ทุนเกษียณที่คาดว่าจะได้รับ (อนาคต)</h5>
                             </div>
-                            <hr>
-                            <h6 class="mb-3">ทุนเกษียณอื่นๆ</h6>
-                            <div id="future-assets-container">
-                                <!-- Dynamic rows will be added here -->
-                            </div>
-                            <button type="button" id="add-future-asset-btn" class="btn btn-outline-secondary mt-2"><i class="bi bi-plus-lg"></i> Add More</button>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Right Column - Summary -->
-                <div class="col-lg-4">
-                    <div class="card shadow-sm border-0 position-sticky" style="top: 2rem;">
-                        <div class="card-header bg-success text-white"><h5 class="mb-0">Summary</h5></div>
-                        <div class="card-body">
-                            <dl>
-                                <dt>รวมทุนเกษียณที่คุณมี (ปัจจุบัน)</dt>
-                                <dd id="summary-current-fv">฿ 0</dd>
-                                <dt>รวมทุนเกษียณที่คาดว่าจะได้รับ (อนาคต)</dt>
-                                <dd id="summary-future-fv">฿ 0</dd>
+                            <div class="card-body p-4">
+                                <div class="row g-3 mb-3" th:object="${step5Dto.futureIncome}">
+                                    <div class="col-6"><label>บำเหน็จ</label><input type="number"
+                                            class="form-control future-income-input" th:field="*{gratuity}"></div>
+                                    <div class="col-6"><label>บำนาญจากประกันสังคม</label><input type="number"
+                                            class="form-control future-income-input"
+                                            th:field="*{socialSecurityPension}"></div>
+                                    <div class="col-6"><label>กองทุนสำรองเลี้ยงชีพ</label><input type="number"
+                                            class="form-control future-income-input" th:field="*{providentFund}"></div>
+                                    <div class="col-6"><label>ประกันบำนาญ</label><input type="number"
+                                            class="form-control future-income-input" th:field="*{annuityInsurance}">
+                                    </div>
+                                    <div class="col-6"><label>เงินครบกำหนดประกันชีวิต</label><input type="number"
+                                            class="form-control future-income-input"
+                                            th:field="*{lifeInsuranceMaturity}"></div>
+                                    <div class="col-6"><label>อสังหาริมทรัพย์(ถ้าขาย)</label><input type="number"
+                                            class="form-control future-income-input" th:field="*{realEstateForSale}">
+                                    </div>
+                                </div>
                                 <hr>
-                                <dt class="h5">รวมทุนเกษียณทั้งหมด</dt>
-                                <dd class="h5" id="summary-total-fv">฿ 0</dd>
-                            </dl>
+                                <h6 class="mb-3">ทุนเกษียณอื่นๆ</h6>
+                                <div id="future-assets-container">
+                                    <!-- Dynamic rows will be added here -->
+                                </div>
+                                <button type="button" id="add-future-asset-btn"
+                                    class="btn btn-outline-secondary mt-2"><i class="bi bi-plus-lg"></i> Add
+                                    More</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Right Column - Summary -->
+                    <div class="col-lg-4">
+                        <div class="card shadow-sm border-0 position-sticky" style="top: 2rem;">
+                            <div class="card-header bg-success text-white">
+                                <h5 class="mb-0">Summary</h5>
+                            </div>
+                            <div class="card-body">
+                                <dl>
+                                    <dt>รวมทุนเกษียณที่คุณมี (ปัจจุบัน)</dt>
+                                    <dd id="summary-current-fv">฿ 0</dd>
+                                    <dt>รวมทุนเกษียณที่คาดว่าจะได้รับ (อนาคต)</dt>
+                                    <dd id="summary-future-fv">฿ 0</dd>
+                                    <hr>
+                                    <dt class="h5">รวมทุนเกษียณทั้งหมด</dt>
+                                    <dd class="h5" id="summary-total-fv">฿ 0</dd>
+                                </dl>
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
 
-            <div class="col-12 d-flex justify-content-between mt-4">
-                <a th:href="@{/retirement/advanced/step4}" class="btn btn-secondary"><i class="bi bi-arrow-left"></i> ย้อนกลับ</a>
-                <button type="submit" class="btn btn-primary">ต่อไป <i class="bi bi-arrow-right"></i></button>
-            </div>
-        </form>
-    </div>
-</main>
+                <div class="col-12 d-flex justify-content-between mt-4">
+                    <a th:href="@{/retirement/advanced/step4}" class="btn btn-secondary"><i
+                            class="bi bi-arrow-left"></i> ย้อนกลับ</a>
+                    <button type="submit" class="btn btn-primary">ต่อไป <i class="bi bi-arrow-right"></i></button>
+                </div>
+            </form>
+        </div>
+    </main>
 
-<th:block th:fragment="scripts">
-    <script th:inline="javascript">
-        const yearsToRetirement = /*[[${planData.step1.yearsToRetirement}]]*/ 0;
+    <th:block th:fragment="scripts">
+        <script th:inline="javascript">
+            const yearsToRetirement = /*[[${planData.step1.yearsToRetirement}]]*/ 0;
 
-        function calculateAllFV() {
-            let totalCurrentFV = 0;
-            document.querySelectorAll('.return-rate').forEach(input => {
-                const row = input.closest('.row');
-                const pvInput = row.querySelector('input[type=hidden][name*="presentValue"]');
-                const pv = parseFloat(pvInput.value) || 0;
-                const rate = parseFloat(input.value) / 100 || 0;
-                
-                const fv = pv * Math.pow(1 + rate, yearsToRetirement);
-                
-                const fvOutput = row.querySelector('.fv-output');
-                fvOutput.value = fv.toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 0 });
-                totalCurrentFV += fv;
-            });
-            document.getElementById('summary-current-fv').textContent = '฿ ' + totalCurrentFV.toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 0 });
-            updateTotalFV();
-        }
+            function calculateAllFV() {
+                let totalCurrentFV = 0;
+                document.querySelectorAll('.return-rate').forEach(input => {
+                    const row = input.closest('.row');
+                    const pvInput = row.querySelector('input[type=hidden][name*="presentValue"]');
+                    const pv = parseFloat(pvInput.value) || 0;
+                    const rate = parseFloat(input.value) / 100 || 0;
 
-        function calculateFutureTotal() {
-            let totalFuture = 0;
-            // Fixed future income
-            document.querySelectorAll('.future-income-input').forEach(input => {
-                totalFuture += parseFloat(input.value) || 0;
-            });
-            
-            // Dynamically added future assets
-            document.querySelectorAll('#future-assets-container .row').forEach(row => {
-                const amountInput = row.querySelector('input[name*="amount"]');
-                const rateInput = row.querySelector('input[name*="expectedReturnRate"]');
-                const amount = parseFloat(amountInput.value) || 0;
-                const rate = parseFloat(rateInput.value) / 100 || 0;
-                
-                const fv = amount * Math.pow(1 + rate, yearsToRetirement);
-                totalFuture += fv;
-            });
+                    const fv = pv * Math.pow(1 + rate, yearsToRetirement);
 
-            document.getElementById('summary-future-fv').textContent = '฿ ' + totalFuture.toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 0 });
-            updateTotalFV();
-        }
+                    const fvOutput = row.querySelector('.fv-output');
+                    fvOutput.value = fv.toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 0 });
+                    totalCurrentFV += fv;
+                });
+                document.getElementById('summary-current-fv').textContent = '฿ ' + totalCurrentFV.toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 0 });
+                updateTotalFV();
+            }
 
-        function updateTotalFV() {
-            const currentFV = parseFloat(document.getElementById('summary-current-fv').textContent.replace(/[^0-9.-]+/g,"")) || 0;
-            const futureFV = parseFloat(document.getElementById('summary-future-fv').textContent.replace(/[^0-9.-]+/g,"")) || 0;
-            const total = currentFV + futureFV;
-            document.getElementById('summary-total-fv').textContent = '฿ ' + total.toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 0 });
-        }
+            function calculateFutureTotal() {
+                let totalFuture = 0;
+                // Fixed future income
+                document.querySelectorAll('.future-income-input').forEach(input => {
+                    totalFuture += parseFloat(input.value) || 0;
+                });
 
-        function addEventListenersToRow(row) {
-            row.querySelectorAll('input').forEach(input => {
-                input.addEventListener('input', calculateFutureTotal);
-            });
-        }
+                // Dynamically added future assets
+                document.querySelectorAll('#future-assets-container .row').forEach(row => {
+                    const amountInput = row.querySelector('input[name*="amount"]');
+                    const rateInput = row.querySelector('input[name*="expectedReturnRate"]');
+                    const amount = parseFloat(amountInput.value) || 0;
+                    const rate = parseFloat(rateInput.value) / 100 || 0;
 
-        document.getElementById('add-future-asset-btn').addEventListener('click', function() {
-            const container = document.getElementById('future-assets-container');
-            const index = container.querySelectorAll('.row').length;
-            const newRowHTML = `
+                    const fv = amount * Math.pow(1 + rate, yearsToRetirement);
+                    totalFuture += fv;
+                });
+
+                document.getElementById('summary-future-fv').textContent = '฿ ' + totalFuture.toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 0 });
+                updateTotalFV();
+            }
+
+            function updateTotalFV() {
+                const currentFV = parseFloat(document.getElementById('summary-current-fv').textContent.replace(/[^0-9.-]+/g, "")) || 0;
+                const futureFV = parseFloat(document.getElementById('summary-future-fv').textContent.replace(/[^0-9.-]+/g, "")) || 0;
+                const total = currentFV + futureFV;
+                document.getElementById('summary-total-fv').textContent = '฿ ' + total.toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 0 });
+            }
+
+            function addEventListenersToRow(row) {
+                row.querySelectorAll('input').forEach(input => {
+                    input.addEventListener('input', calculateFutureTotal);
+                });
+            }
+
+            document.getElementById('add-future-asset-btn').addEventListener('click', function () {
+                const container = document.getElementById('future-assets-container');
+                const index = container.querySelectorAll('.row').length;
+                const newRowHTML = `
                 <div class="row g-3 align-items-end mb-3">
                     <div class="col-md-4"><input type="text" class="form-control" name="futureAssets[${index}].name" placeholder="ชื่อรายการ"></div>
                     <div class="col-md-4"><input type="number" class="form-control" name="futureAssets[${index}].amount" placeholder="จำนวนเงิน"></div>
                     <div class="col-md-4"><div class="input-group"><input type="number" class="form-control" name="futureAssets[${index}].expectedReturnRate" value="0.0"><span class="input-group-text">%</span></div></div>
                 </div>`;
-            container.insertAdjacentHTML('beforeend', newRowHTML);
-            const newRowElement = container.lastElementChild;
-            addEventListenersToRow(newRowElement);
-        });
+                container.insertAdjacentHTML('beforeend', newRowHTML);
+                const newRowElement = container.lastElementChild;
+                addEventListenersToRow(newRowElement);
+            });
 
-        // Initial setup
-        document.querySelectorAll('.return-rate').forEach(input => input.addEventListener('input', calculateAllFV));
-        document.querySelectorAll('.future-income-input').forEach(input => input.addEventListener('input', calculateFutureTotal));
-        
-        document.addEventListener('DOMContentLoaded', (event) => {
-            calculateAllFV();
-            calculateFutureTotal();
-        });
-    </script>
-</th:block>
+            // Initial setup
+            document.querySelectorAll('.return-rate').forEach(input => input.addEventListener('input', calculateAllFV));
+            document.querySelectorAll('.future-income-input').forEach(input => input.addEventListener('input', calculateFutureTotal));
+
+            document.addEventListener('DOMContentLoaded', (event) => {
+                calculateAllFV();
+                calculateFutureTotal();
+            });
+        </script>
+    </th:block>
 
 </body>
+
 </html>

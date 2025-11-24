@@ -1,76 +1,85 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org"
-      th:replace="~{layout :: layout(~{::title}, ~{::main}, ~{::scripts})}">
+    th:replace="~{layout :: layout(~{::title}, ~{::main}, ~{::scripts})}">
+
 <head>
     <title>Advanced Retirement - Step 2: Life</title>
 </head>
+
 <body>
-<main role="main">
-    <div class="container-fluid">
-        <h1 class="h3 mb-4">Advanced Retirement Planner</h1>
-        <div class="progress mb-4" style="height: 20px;">
-            <div class="progress-bar" role="progressbar" style="width: 28%;" aria-valuenow="28" aria-valuemin="0" aria-valuemax="100">Step 2 of 6</div>
-        </div>
-        <div class="card shadow-sm border-0">
-            <div class="card-body p-4">
-                <h5 class="card-title mb-4"><i class="bi bi-heart-pulse me-2"></i>ขั้นตอนที่ 2: การประเมินอายุขัย</h5>
-                <form th:action="@{/retirement/advanced/step2}" th:object="${step2Dto}" method="post" class="row g-3">
-                    <div class="col-md-6">
-                        <label for="healthLevel" class="form-label">โดยรวมแล้ว สุขภาพของคุณเป็นอย่างไร?</label>
-                        <select class="form-select" id="healthLevel" th:field="*{healthLevel}" required>
-                            <option value="perfect">ยอดเยี่ยม (Perfect)</option>
-                            <option value="minor">ดี (Minor issues)</option>
-                            <option value="moderate" selected>ปานกลาง (Moderate issues)</option>
-                            <option value="major">ควรปรับปรุง (Major issues)</option>
-                        </select>
-                    </div>
-                    <div class="col-md-6">
-                        <label for="lifeExpectancy" class="form-label">อายุขัยคาดการณ์ (ปี)</label>
-                        <input type="number" class="form-control" id="lifeExpectancy" th:field="*{lifeExpectancy}" required>
-                    </div>
-                    <div class="col-12 d-flex justify-content-between mt-4">
-                        <a th:href="@{/retirement/advanced/step1}" class="btn btn-secondary"><i class="bi bi-arrow-left"></i> ย้อนกลับ</a>
-                        <button type="submit" class="btn btn-primary">ต่อไป <i class="bi bi-arrow-right"></i></button>
-                    </div>
-                </form>
+    <main role="main">
+        <div class="container-fluid">
+            <h1 class="h3 mb-4">Advanced Retirement Planner</h1>
+            <div class="progress mb-4" style="height: 20px;">
+                <div class="progress-bar" role="progressbar" style="width: 28%;" aria-valuenow="28" aria-valuemin="0"
+                    aria-valuemax="100">Step 2 of 6</div>
+            </div>
+            <div class="card shadow-sm border-0">
+                <div class="card-body p-4">
+                    <h5 class="card-title mb-4"><i class="bi bi-heart-pulse me-2"></i>ขั้นตอนที่ 2: การประเมินอายุขัย
+                    </h5>
+                    <form th:action="@{/retirement/advanced/step2}" th:object="${step2Dto}" method="post"
+                        class="row g-3">
+                        <div class="col-6">
+                            <label for="healthLevel" class="form-label">โดยรวมแล้ว สุขภาพของคุณเป็นอย่างไร?</label>
+                            <select class="form-select" id="healthLevel" th:field="*{healthLevel}" required>
+                                <option value="perfect">ยอดเยี่ยม (Perfect)</option>
+                                <option value="minor">ดี (Minor issues)</option>
+                                <option value="moderate" selected>ปานกลาง (Moderate issues)</option>
+                                <option value="major">ควรปรับปรุง (Major issues)</option>
+                            </select>
+                        </div>
+                        <div class="col-6">
+                            <label for="lifeExpectancy" class="form-label">อายุขัยคาดการณ์ (ปี)</label>
+                            <input type="number" class="form-control" id="lifeExpectancy" th:field="*{lifeExpectancy}"
+                                required>
+                        </div>
+                        <div class="col-12 d-flex justify-content-between mt-4">
+                            <a th:href="@{/retirement/advanced/step1}" class="btn btn-secondary"><i
+                                    class="bi bi-arrow-left"></i> ย้อนกลับ</a>
+                            <button type="submit" class="btn btn-primary">ต่อไป <i
+                                    class="bi bi-arrow-right"></i></button>
+                        </div>
+                    </form>
+                </div>
             </div>
         </div>
-    </div>
-</main>
+    </main>
 
-<th:block th:fragment="scripts">
-    <script th:inline="javascript">
-        const gender = /*[[${planData.step1.gender}]]*/ 'MALE';
-        const healthLevelSelect = document.getElementById('healthLevel');
-        const lifeExpectancyInput = document.getElementById('lifeExpectancy');
+    <th:block th:fragment="scripts">
+        <script th:inline="javascript">
+            const gender = /*[[${planData.step1.gender}]]*/ 'MALE';
+            const healthLevelSelect = document.getElementById('healthLevel');
+            const lifeExpectancyInput = document.getElementById('lifeExpectancy');
 
-        function updateLifeExpectancy() {
-            const selectedHealth = healthLevelSelect.value;
-            
-            // 1. Set base expectancy by gender (CORRECTED: use === for comparison)
-            const baseExpectancy = (gender === 'FEMALE') ? 80 : 75;
+            function updateLifeExpectancy() {
+                const selectedHealth = healthLevelSelect.value;
 
-            // 2. Adjust based on health
-            let healthAdjustment = 0;
-            switch (selectedHealth) {
-                case 'perfect': healthAdjustment = 3; break;
-                case 'minor': healthAdjustment = 1; break;
-                case 'moderate': healthAdjustment = -1; break;
-                case 'major': healthAdjustment = -3; break;
+                // 1. Set base expectancy by gender (CORRECTED: use === for comparison)
+                const baseExpectancy = (gender === 'FEMALE') ? 80 : 75;
+
+                // 2. Adjust based on health
+                let healthAdjustment = 0;
+                switch (selectedHealth) {
+                    case 'perfect': healthAdjustment = 3; break;
+                    case 'minor': healthAdjustment = 1; break;
+                    case 'moderate': healthAdjustment = -1; break;
+                    case 'major': healthAdjustment = -3; break;
+                }
+
+                lifeExpectancyInput.value = baseExpectancy + healthAdjustment;
             }
-            
-            lifeExpectancyInput.value = baseExpectancy + healthAdjustment;
-        }
 
-        healthLevelSelect.addEventListener('change', updateLifeExpectancy);
+            healthLevelSelect.addEventListener('change', updateLifeExpectancy);
 
-        document.addEventListener('DOMContentLoaded', (event) => {
-            if (!lifeExpectancyInput.value || lifeExpectancyInput.value === '0') {
-                updateLifeExpectancy();
-            }
-        });
-    </script>
-</th:block>
+            document.addEventListener('DOMContentLoaded', (event) => {
+                if (!lifeExpectancyInput.value || lifeExpectancyInput.value === '0') {
+                    updateLifeExpectancy();
+                }
+            });
+        </script>
+    </th:block>
 
 </body>
+
 </html>

@@ -1,65 +1,76 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org"
-      th:replace="~{layout :: layout(~{::title}, ~{::main})}">
+<html xmlns:th="http://www.thymeleaf.org" th:replace="~{layout :: layout(~{::title}, ~{::main})}">
+
 <head>
     <title>Retirement Planner (Basic)</title>
 </head>
+
 <body>
-<main role="main">
-    <div class="container mt-5">
-        <div class="row justify-content-center">
-            <div class="col-md-8">
-                <div class="card">
-                    <div class="card-header">
-                        <h3 class="text-center">Retirement Planner (Basic)</h3>
-                    </div>
-                    <div class="card-body">
-                        <form th:action="@{/retirement/basic}" method="post">
-                            <div class="row">
-                                <div class="col-md-6 mb-3">
-                                    <label for="currentAge" class="form-label">Current Age</label>
-                                    <input type="number" class="form-control" id="currentAge" name="currentAge" required>
+    <main role="main">
+        <div class="container mt-5">
+            <div class="row justify-content-center">
+                <div class="col-md-8">
+                    <div class="card">
+                        <div class="card-header">
+                            <h3 class="text-center">Retirement Planner (Basic)</h3>
+                        </div>
+                        <div class="card-body">
+                            <form th:action="@{/retirement/basic}" method="post">
+                                <div class="row">
+                                    <div class="col-6 mb-3">
+                                        <label for="currentAge" class="form-label">Current Age</label>
+                                        <input type="number" class="form-control" id="currentAge" name="currentAge"
+                                            required>
+                                    </div>
+                                    <div class="col-6 mb-3">
+                                        <label for="retireAge" class="form-label">Retirement Age</label>
+                                        <input type="number" class="form-control" id="retireAge" name="retireAge"
+                                            required>
+                                    </div>
                                 </div>
-                                <div class="col-md-6 mb-3">
-                                    <label for="retireAge" class="form-label">Retirement Age</label>
-                                    <input type="number" class="form-control" id="retireAge" name="retireAge" required>
+                                <div class="row">
+                                    <div class="col-6 mb-3">
+                                        <label for="monthlyExpense" class="form-label">Monthly Expense</label>
+                                        <input type="number" class="form-control" id="monthlyExpense"
+                                            name="monthlyExpense" required>
+                                    </div>
+                                    <div class="col-6 mb-3">
+                                        <label for="inflationRate" class="form-label">Inflation Rate (%)</label>
+                                        <input type="number" class="form-control" id="inflationRate"
+                                            name="inflationRate" required>
+                                    </div>
                                 </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-md-6 mb-3">
-                                    <label for="monthlyExpense" class="form-label">Monthly Expense</label>
-                                    <input type="number" class="form-control" id="monthlyExpense" name="monthlyExpense" required>
+                                <div class="row">
+                                    <div class="col-6 mb-3">
+                                        <label for="lifeExpectancy" class="form-label">Life Expectancy</label>
+                                        <input type="number" class="form-control" id="lifeExpectancy"
+                                            name="lifeExpectancy" required>
+                                    </div>
+                                    <div class="col-6 mb-3">
+                                        <label for="preRetireReturn" class="form-label">Pre-Retirement Return
+                                            (%)</label>
+                                        <input type="number" class="form-control" id="preRetireReturn"
+                                            name="preRetireReturn" required>
+                                    </div>
                                 </div>
-                                <div class="col-md-6 mb-3">
-                                    <label for="inflationRate" class="form-label">Inflation Rate (%)</label>
-                                    <input type="number" class="form-control" id="inflationRate" name="inflationRate" required>
+                                <div class="row">
+                                    <div class="col-6 mb-3">
+                                        <label for="postRetireReturn" class="form-label">Post-Retirement Return
+                                            (%)</label>
+                                        <input type="number" class="form-control" id="postRetireReturn"
+                                            name="postRetireReturn" required>
+                                    </div>
                                 </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-md-6 mb-3">
-                                    <label for="lifeExpectancy" class="form-label">Life Expectancy</label>
-                                    <input type="number" class="form-control" id="lifeExpectancy" name="lifeExpectancy" required>
+                                <div class="d-grid">
+                                    <button type="submit" class="btn btn-primary">Calculate</button>
                                 </div>
-                                <div class="col-md-6 mb-3">
-                                    <label for="preRetireReturn" class="form-label">Pre-Retirement Return (%)</label>
-                                    <input type="number" class="form-control" id="preRetireReturn" name="preRetireReturn" required>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-md-6 mb-3">
-                                    <label for="postRetireReturn" class="form-label">Post-Retirement Return (%)</label>
-                                    <input type="number" class="form-control" id="postRetireReturn" name="postRetireReturn" required>
-                                </div>
-                            </div>
-                            <div class="d-grid">
-                                <button type="submit" class="btn btn-primary">Calculate</button>
-                            </div>
-                        </form>
+                            </form>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
-</main>
+    </main>
 </body>
+
 </html>

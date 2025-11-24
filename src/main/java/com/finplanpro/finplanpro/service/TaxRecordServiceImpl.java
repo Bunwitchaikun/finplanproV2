@@ -9,6 +9,7 @@ import com.finplanpro.finplanpro.repository.UserRepository;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -26,11 +27,13 @@ public class TaxRecordServiceImpl implements TaxRecordService {
     @Override
     public void save(TaxRequestDTO request, TaxResultDTO result) {
         User user = getCurrentUser();
-        
+
         TaxRecord record = new TaxRecord();
         record.setUser(user);
         record.setTaxYear(request.getTaxYear());
         record.setAnnualIncome(result.getAnnualIncome());
+        record.setExpenseDeduction(result.getTotalExpenseDeduction());
+        record.setTotalAllowance(result.getTotalAllowance());
         record.setTotalDeduction(result.getTotalExpenseDeduction().add(result.getTotalAllowance()));
         record.setNetIncome(result.getNetIncome());
         record.setTaxPayable(result.getTaxAmount());
@@ -41,6 +44,12 @@ public class TaxRecordServiceImpl implements TaxRecordService {
     @Override
     public List<TaxRecord> findRecordsByUser() {
         return taxRecordRepository.findByUserOrderByTaxYearDesc(getCurrentUser());
+    }
+
+    @Override
+    @Transactional
+    public void deleteAllForCurrentUser() {
+        taxRecordRepository.deleteByUser(getCurrentUser());
     }
 
     private User getCurrentUser() {
