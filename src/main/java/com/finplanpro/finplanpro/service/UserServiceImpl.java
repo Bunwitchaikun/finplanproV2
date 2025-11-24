@@ -27,6 +27,34 @@ public class UserServiceImpl implements UserService {
         this.passwordEncoder = passwordEncoder;
     }
 
+    // ... (เมธอด saveUser, findUserByUsername, findUserByEmail เหมือนเดิม) ...
+
+    @Override
+    public User findUserByUsername(String username) {
+        return userRepository.findByUsername(username);
+    }
+
+    @Override
+    public User findUserByEmail(String email) {
+        return userRepository.findByEmail(email);
+    }
+
+    /**
+     * Validates a user's credentials.
+     * @param username the username to validate
+     * @param rawPassword the raw password to check
+     * @return true if the credentials are valid, false otherwise
+     */
+    @Override
+    public boolean validateUser(String username, String rawPassword) {
+        User user = findUserByUsername(username);
+        if (user == null) {
+            return false; // ไม่พบผู้ใช้
+        }
+        // ตรวจสอบรหัสผ่านที่เข้ารหัสแล้ว
+        return passwordEncoder.matches(rawPassword, user.getPassword());
+    }
+
     @Override
     @Transactional
     public void saveUser(UserDto userDto) {
@@ -52,16 +80,6 @@ public class UserServiceImpl implements UserService {
 
         // Save the user, and the profile will be saved automatically due to CascadeType.ALL
         userRepository.save(user);
-    }
-
-    @Override
-    public User findUserByUsername(String username) {
-        return userRepository.findByUsername(username);
-    }
-
-    @Override
-    public User findUserByEmail(String email) {
-        return userRepository.findByEmail(email);
     }
 
     private Role checkRoleExist() {
