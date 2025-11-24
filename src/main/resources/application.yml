@@ -2,7 +2,7 @@ server:
   port: 8083
   servlet:
     session:
-      timeout: 1m # m = minutes, s = seconds, h = hours
+      timeout: 40m # m = minutes, s = seconds, h = hours
 
 spring:
   datasource:
