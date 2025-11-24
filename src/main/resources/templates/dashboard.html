@@ -127,6 +127,9 @@
             // Net Worth Chart
             const netWorthLabels = /*[[${netWorthLabels}]]*/[];
             const netWorthData = /*[[${netWorthData}]]*/[];
+            const totalAssetsData = /*[[${totalAssetsData}]]*/[]; // เพิ่ม
+            const totalLiabilitiesData = /*[[${totalLiabilitiesData}]]*/[]; // เพิ่ม
+
             if (document.getElementById('netWorthChart')) {
                 const ctx = document.getElementById('netWorthChart').getContext('2d');
                 const gradient = ctx.createLinearGradient(0, 0, 0, 400);
@@ -146,13 +149,31 @@
                             borderWidth: 2,
                             pointBackgroundColor: '#06b6d4',
                             tension: 0.4
+                        },
+                        { // Dataset สำหรับ Total Assets
+                            label: 'Total Assets (THB)',
+                            data: totalAssetsData,
+                            fill: false,
+                            borderColor: '#10b981', // Green
+                            borderWidth: 2,
+                            pointBackgroundColor: '#10b981',
+                            tension: 0.4
+                        },
+                        { // Dataset สำหรับ Total Liabilities
+                            label: 'Total Liabilities (THB)',
+                            data: totalLiabilitiesData,
+                            fill: false,
+                            borderColor: '#ef4444', // Red
+                            borderWidth: 2,
+                            pointBackgroundColor: '#ef4444',
+                            tension: 0.4
                         }]
                     },
                     options: {
                         responsive: true,
                         maintainAspectRatio: false,
                         plugins: {
-                            legend: { display: false }
+                            legend: { display: true } // เปลี่ยนเป็น true เพื่อแสดง legend ของ Assets และ Liabilities
                         },
                         scales: {
                             y: { grid: { color: '#334155' } },

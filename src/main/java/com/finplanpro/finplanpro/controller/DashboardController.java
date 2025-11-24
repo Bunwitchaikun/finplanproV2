@@ -70,15 +70,25 @@ public class DashboardController {
         // --- Charts Data ---
 
         // Net Worth Trend Chart
-        Collections.reverse(snapshots);
+        Collections.reverse(snapshots); // Reverse to show oldest first for chart
         List<String> netWorthLabels = snapshots.stream()
                 .map(s -> s.getSnapshotDate().format(DateTimeFormatter.ofPattern("MMM yyyy")))
                 .collect(Collectors.toList());
         List<BigDecimal> netWorthData = snapshots.stream()
                 .map(NetWorthSnapshot::getNetWorth)
                 .collect(Collectors.toList());
+        // เพิ่มข้อมูล Assets และ Liabilities สำหรับกราฟ
+        List<BigDecimal> totalAssetsData = snapshots.stream()
+                .map(NetWorthSnapshot::getTotalAssets)
+                .collect(Collectors.toList());
+        List<BigDecimal> totalLiabilitiesData = snapshots.stream()
+                .map(NetWorthSnapshot::getTotalLiabilities)
+                .collect(Collectors.toList());
+
         model.addAttribute("netWorthLabels", netWorthLabels);
         model.addAttribute("netWorthData", netWorthData);
+        model.addAttribute("totalAssetsData", totalAssetsData); // เพิ่ม
+        model.addAttribute("totalLiabilitiesData", totalLiabilitiesData); // เพิ่ม
 
         // Insurance Coverage Chart
         if (insuranceSummary != null) {
