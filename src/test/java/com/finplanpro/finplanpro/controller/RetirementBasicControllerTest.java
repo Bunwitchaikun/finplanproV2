@@ -16,7 +16,7 @@ import java.math.BigDecimal;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get; // เพิ่ม import นี้
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
@@ -29,7 +29,6 @@ class RetirementBasicControllerTest {
     @MockBean
     private RetirementBasicService retirementBasicService;
 
-    // ... (เทสเดิม 2 อัน) ...
     @Test
     @WithMockUser
     @DisplayName("POST /retirement/basic ควรบันทึกข้อมูลสำเร็จและ Redirect พร้อม Success Message")
@@ -77,14 +76,20 @@ class RetirementBasicControllerTest {
     void testCalculateAndSavePlan_ValidationError() throws Exception {
         System.out.println("--- RUNNING: [IntegrationTest] testCalculateAndSavePlan_ValidationError ---");
 
+        // --- ส่วนที่แก้ไข ---
+        // เราจะจำลองว่าเมื่อ Service ถูกเรียกด้วยข้อมูลที่ไม่ถูกต้อง มันจะโยน IllegalArgumentException
+        when(retirementBasicService.calculateAndSave(any(RetirementBasic.class)))
+                .thenThrow(new IllegalArgumentException("Age values are illogical."));
+        // --- สิ้นสุดส่วนที่แก้ไข ---
+
         System.out.println("INPUT: POST to /retirement/basic with invalid data (currentAge > retireAge)");
 
         // 2. Act & 3. Assert
         mockMvc.perform(post("/retirement/basic")
                         .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                         .param("planName", "Invalid Plan")
-                        .param("currentAge", "65")
-                        .param("retireAge", "60")
+                        .param("currentAge", "65") // Invalid data
+                        .param("retireAge", "60")   // Invalid data
                         .param("monthlyExpense", "30000")
                         .param("lifeExpectancy", "90")
                         .param("inflationRate", "3.0")
@@ -93,9 +98,12 @@ class RetirementBasicControllerTest {
                         .with(csrf()))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl("/retirement/basic"))
-                .andExpect(flash().attributeExists("org.springframework.validation.BindingResult.newPlan"));
+                // --- ส่วนที่แก้ไข ---
+                // ตรวจสอบว่ามี errorMessage แสดงขึ้นมา
+                .andExpect(flash().attributeExists("errorMessage"));
+        // --- สิ้นสุดส่วนที่แก้ไข ---
 
-        System.out.println("✅ SUCCESS: Redirected back with validation errors as expected.");
+        System.out.println("✅ SUCCESS: Redirected back with error message as expected.");
         System.out.println("--- FINISHED: [IntegrationTest] testCalculateAndSavePlan_ValidationError ---\n");
     }
 

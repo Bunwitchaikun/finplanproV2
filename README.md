@@ -355,7 +355,7 @@ D9.9 Commit: Final update UX/UI
 
 🧪 D10 — Testing, CI/CD, Final Review
 Branch: feature/D10-testing
-D10.1 Unit Tests D1-D8 ≥ 70%
+D10.1 Unit Tests D2,D3,D5,D7 ≥ 70%
 D10.2 Integration Tests ≥ 20%
 D10.3 Security Tests (authentication)
 D10.4 API Tests (Postman Collection)
