@@ -1,198 +1,152 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org"
-      th:replace="~{layout :: layout(~{::title}, ~{::main}, ~{::scripts})}">
+    th:replace="~{layout :: layout(~{::title}, ~{::main}, ~{::scripts})}">
+
 <head>
     <title>Advanced Retirement - Step 6: Design</title>
 </head>
+
 <body>
-<main role="main">
-    <div class="container-fluid">
-        <h1 class="h3 mb-4">Advanced Retirement Planner</h1>
-        <div class="progress mb-4" style="height: 20px;">
-            <div class="progress-bar" role="progressbar" style="width: 85%;" aria-valuenow="85" aria-valuemin="0" aria-valuemax="100">Step 6 of 6</div>
-        </div>
-        <div class="card shadow-sm border-0">
-            <div class="card-body p-4">
-                <h5 class="card-title mb-4"><i class="bi bi-lightbulb me-2"></i>ขั้นตอนที่ 6: ออกแบบแผนการลงทุน</h5>
-
-                <div class="row g-4">
-                    <!-- Left Column: Summary and PMT Calculations -->
-                    <div class="col-lg-6">
-                        <div class="card bg-light border-primary mb-4">
-                            <div class="card-body">
-                                <h6 class="card-title text-primary">สรุปเป้าหมายเงินเกษียณ</h6>
-                                <div class="d-flex justify-content-between mb-2">
-                                    <span>รวมค่าใช้จ่ายเกษียณ (หลังปรับเงินเฟ้อ):</span>
-                                    <strong th:text="${#numbers.formatDecimal(step6Dto.totalExpensesFv ?: 0, 1, 'COMMA', 2, 'POINT')}">0.00</strong>
+    <main role="main">
+        <div class="container-fluid">
+            <h1 class="h3 mb-4">Advanced Retirement Planner</h1>
+            <div class="progress mb-4" style="height: 20px;">
+                <div class="progress-bar" role="progressbar" style="width: 85%;" aria-valuenow="85" aria-valuemin="0"
+                    aria-valuemax="100">Step 6 of 6</div>
+            </div>
+            <div class="card shadow-sm border-0">
+                <div class="card-body p-4">
+                    <h5 class="card-title mb-4"><i class="bi bi-lightbulb me-2"></i>ขั้นตอนที่ 6: ออกแบบแผนการลงทุน</h5>
+                    <div class="row g-4">
+                        <!-- Left Column: Summary and PMT calculations -->
+                        <div class="col-lg-6">
+                            <div class="card bg-light border-primary mb-4">
+                                <div class="card-body">
+                                    <h6 class="card-title text-primary">สรุปเป้าหมายเงินเกษียณ</h6>
+                                    <div class="d-flex justify-content-between mb-2">
+                                        <span>รวมค่าใช้จ่ายเกษียณ (หลังปรับเงินเฟ้อ):</span>
+                                        <strong
+                                            th:text="${#numbers.formatDecimal(step6Dto.totalExpensesFv ?: 0, 1, 'COMMA', 2, 'POINT')}">0.00</strong>
+                                    </div>
+                                    <div class="d-flex justify-content-between mb-2">
+                                        <span>รวมทุนเกษียณที่มีอยู่ (หลังปรับเงินเฟ้อ):</span>
+                                        <strong
+                                            th:text="${#numbers.formatDecimal(step6Dto.totalHavesFv ?: 0, 1, 'COMMA', 2, 'POINT')}">0.00</strong>
+                                    </div>
+                                    <div class="d-flex justify-content-between mb-2">
+                                        <span>รายได้เสริมที่คาดว่าจะได้รับ (หลังปรับเงินเฟ้อ):</span>
+                                        <strong
+                                            th:text="${#numbers.formatDecimal(step6Dto.totalExtraIncome ?: 0, 1, 'COMMA', 2, 'POINT')}">0.00</strong>
+                                    </div>
+                                    <hr />
+                                    <div class="d-flex justify-content-between">
+                                        <span class="h5 text-danger">เงินที่ยังขาด (Funding Gap):</span>
+                                        <strong class="h5 text-danger"
+                                            th:text="${#numbers.formatDecimal(step6Dto.fundingGap ?: 0, 1, 'COMMA', 2, 'POINT')}">0.00</strong>
+                                    </div>
                                 </div>
-                                <div class="d-flex justify-content-between mb-2">
-                                    <span>รวมทุนเกษียณที่มีอยู่ (หลังปรับเงินเฟ้อ):</span>
-                                    <strong th:text="${#numbers.formatDecimal(step6Dto.totalHavesFv ?: 0, 1, 'COMMA', 2, 'POINT')}">0.00</strong>
-                                </div>
-                                <div class="d-flex justify-content-between mb-2">
-                                    <span>รายได้เสริมที่คาดว่าจะได้รับ (หลังปรับเงินเฟ้อ):</span>
-                                    <strong th:text="${#numbers.formatDecimal(step6Dto.totalExtraIncome ?: 0, 1, 'COMMA', 2, 'POINT')}">0.00</strong>
-                                </div>
-                                <hr>
-                                <div class="d-flex justify-content-between">
-                                    <span class="h5 text-danger">เงินที่ยังขาด (Funding Gap):</span>
-                                    <strong class="h5 text-danger" th:text="${#numbers.formatDecimal(step6Dto.fundingGap ?: 0, 1, 'COMMA', 2, 'POINT')}">0.00</strong>
+                            </div>
+                            <div class="card shadow-sm border-0">
+                                <div class="card-body p-4">
+                                    <h6 class="card-title text-success mb-3">เงินที่ต้องลงทุนเพิ่มต่อเดือน
+                                        เพื่อถึงเป้าหมาย</h6>
+                                    <p class="text-muted small"
+                                        th:text="'จากเงินตั้งต้น ' + ${#numbers.formatDecimal(step6Dto.presentValue ?: 0, 1, 'COMMA', 2, 'POINT')} + ' บาท และระยะเวลา ' + ${step6Dto.yearsToRetirement} + ' ปี'">
+                                    </p>
+                                    <div class="mb-3">
+                                        <label class="form-label">สถานการณ์แย่ (Worst Case: 4% ต่อปี)</label>
+                                        <div class="input-group">
+                                            <span class="input-group-text">฿</span>
+                                            <input type="text" class="form-control" readonly
+                                                th:value="${#numbers.formatDecimal(step6Dto.pmtWorstCase ?: 0, 1, 'COMMA', 2, 'POINT')}" />
+                                            <span class="input-group-text">/ เดือน</span>
+                                        </div>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label class="form-label">สถานการณ์ปานกลาง (Base Case: 8% ต่อปี)</label>
+                                        <div class="input-group">
+                                            <span class="input-group-text">฿</span>
+                                            <input type="text" class="form-control" readonly
+                                                th:value="${#numbers.formatDecimal(step6Dto.pmtBaseCase ?: 0, 1, 'COMMA', 2, 'POINT')}" />
+                                            <span class="input-group-text">/ เดือน</span>
+                                        </div>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label class="form-label">สถานการณ์ดีเยี่ยม (Best Case: 15% ต่อปี)</label>
+                                        <div class="input-group">
+                                            <span class="input-group-text">฿</span>
+                                            <input type="text" class="form-control" readonly
+                                                th:value="${#numbers.formatDecimal(step6Dto.pmtBestCase ?: 0, 1, 'COMMA', 2, 'POINT')}" />
+                                            <span class="input-group-text">/ เดือน</span>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
-
-                        <div class="card shadow-sm border-0">
-                            <div class="card-body p-4">
-                                <h6 class="card-title text-success mb-3">เงินที่ต้องลงทุนเพิ่มต่อเดือน เพื่อถึงเป้าหมาย</h6>
-                                <p class="text-muted small">จากเงินตั้งต้น <strong th:text="${#numbers.formatDecimal(step6Dto.presentValue ?: 0, 1, 'COMMA', 2, 'POINT')}">0.00</strong> บาท และระยะเวลา <strong th:text="${step6Dto.yearsToRetirement}">0</strong> ปี</p>
-
-                                <div class="mb-3">
-                                    <label class="form-label">สถานการณ์แย่ (Worst Case: 4% ต่อปี)</label>
-                                    <div class="input-group">
-                                        <span class="input-group-text">฿</span>
-                                        <input type="text" class="form-control" readonly th:value="${#numbers.formatDecimal(step6Dto.pmtWorstCase ?: 0, 1, 'COMMA', 2, 'POINT')}">
-                                        <span class="input-group-text">/ เดือน</span>
-                                    </div>
-                                </div>
-                                <div class="mb-3">
-                                    <label class="form-label">สถานการณ์ปานกลาง (Base Case: 8% ต่อปี)</label>
-                                    <div class="input-group">
-                                        <span class="input-group-text">฿</span>
-                                        <input type="text" class="form-control" readonly th:value="${#numbers.formatDecimal(step6Dto.pmtBaseCase ?: 0, 1, 'COMMA', 2, 'POINT')}">
-                                        <span class="input-group-text">/ เดือน</span>
-                                    </div>
-                                </div>
-                                <div class="mb-3">
-                                    <label class="form-label">สถานการณ์ดีเยี่ยม (Best Case: 15% ต่อปี)</label>
-                                    <div class="input-group">
-                                        <span class="input-group-text">฿</span>
-                                        <input type="text" class="form-control" readonly th:value="${#numbers.formatDecimal(step6Dto.pmtBestCase ?: 0, 1, 'COMMA', 2, 'POINT')}">
-                                        <span class="input-group-text">/ เดือน</span>
+                        <!-- Right Column: Chart -->
+                        <div class="col-lg-12">
+                            <div class="card shadow-sm border-0 h-100">
+                                <div class="card-body p-4">
+                                    <h6 class="card-title text-info mb-3">เงินออมสะสมเพื่อให้ไปถึงเป้าหมาย (เปรียบเทียบ
+                                        3 สถานการณ์)</h6>
+                                    <div style="height: 600px; max-width: 100%;">
+                                        <canvas id="investmentGrowthChart"></canvas>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-
-                    <!-- Right Column: Chart -->
-                    <div class="col-lg-12"> <!-- เปลี่ยนจาก col-lg-6 เป็น col-lg-12 -->
-                        <div class="card shadow-sm border-0 h-100">
-                            <div class="card-body p-4">
-                                <h6 class="card-title text-info mb-3">เงินออมสะสมเพื่อให้ไปถึงเป้าหมาย (เปรียบเทียบ 3 สถานการณ์)</h6>
-                                <div style="height: 600px; max-width: 100%;"> <!-- ปรับ max-height และ max-width -->
-                                    <canvas id="investmentGrowthChart"></canvas>
-                                </div>
-                            </div>
+                    <!-- Save / Back Buttons -->
+                    <form th:action="@{/retirement/advanced/save}" method="post">
+                        <div class="col-12 d-flex justify-content-between mt-5">
+                            <a th:href="@{/retirement/advanced/step5}" class="btn btn-secondary"><i
+                                    class="bi bi-arrow-left"></i> ย้อนกลับ</a>
+                            <button type="submit" class="btn btn-success px-4"><i
+                                    class="bi bi-save me-2"></i>บันทึกแผน</button>
                         </div>
-                    </div>
-                </div>
-
-                <div class="col-12 d-flex justify-content-between mt-5">
-                    <a th:href="@{/retirement/advanced/step5}" class="btn btn-secondary"><i class="bi bi-arrow-left"></i> ย้อนกลับ</a>
-                    <button type="submit" class="btn btn-primary">ต่อไป <i class="bi bi-arrow-right"></i></button>
+                    </form>
                 </div>
             </div>
         </div>
-    </div>
-</main>
+    </main>
 
-<th:block th:fragment="scripts">
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script th:inline="javascript">
-        const chartLabels = /*[[${step6Dto.chartLabels}]]*/ [];
-        const worstCaseData = /*[[${step6Dto.worstCaseGrowth.![amount]}]]*/ [];
-        const baseCaseData = /*[[${step6Dto.baseCaseGrowth.![amount]}]]*/ [];
-        const bestCaseData = /*[[${step6Dto.bestCaseGrowth.![amount]}]]*/ [];
-        const fundingGap = /*[[${step6Dto.fundingGap}]]*/ 0;
+    <th:block th:fragment="scripts">
+        <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+        <script th:inline="javascript">
+            const chartLabels = /*[[${step6Dto.chartLabels}]]*/[];
+            const worstCaseData = /*[[${step6Dto.worstCaseGrowth.![amount]}]]*/[];
+            const baseCaseData = /*[[${step6Dto.baseCaseGrowth.![amount]}]]*/[];
+            const bestCaseData = /*[[${step6Dto.bestCaseGrowth.![amount]}]]*/[];
+            const fundingGap = /*[[${step6Dto.fundingGap}]]*/ 0;
 
-        const ctx = document.getElementById('investmentGrowthChart').getContext('2d');
-        const investmentGrowthChart = new Chart(ctx, {
-            type: 'line',
-            data: {
-                labels: chartLabels,
-                datasets: [
-                    {
-                        label: 'Worst Case (4%)',
-                        data: worstCaseData,
-                        borderColor: 'rgb(255, 99, 132)',
-                        backgroundColor: 'rgba(255, 99, 132, 0.2)',
-                        fill: true,
-                        tension: 0.3
-                    },
-                    {
-                        label: 'Base Case (8%)',
-                        data: baseCaseData,
-                        borderColor: 'rgb(54, 162, 235)',
-                        backgroundColor: 'rgba(54, 162, 235, 0.2)',
-                        fill: true,
-                        tension: 0.3
-                    },
-                    {
-                        label: 'Best Case (15%)',
-                        data: bestCaseData,
-                        borderColor: 'rgb(75, 192, 192)',
-                        backgroundColor: 'rgba(75, 192, 192, 0.2)',
-                        fill: true,
-                        tension: 0.3
-                    },
-                    {
-                        label: 'Funding Gap Target',
-                        data: Array(chartLabels.length).fill(fundingGap),
-                        borderColor: 'rgb(255, 159, 64)',
-                        backgroundColor: 'rgba(255, 159, 64, 0.2)',
-                        borderDash: [5, 5],
-                        fill: false,
-                        tension: 0
-                    }
-                ]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                plugins: {
-                    title: {
-                        display: true,
-                        text: 'เงินออมสะสมเพื่อให้ไปถึงเป้าหมาย'
-                    },
-                    tooltip: {
-                        callbacks: {
-                            label: function(context) {
-                                let label = context.dataset.label || '';
-                                if (label) {
-                                    label += ': ';
-                                }
-                                if (context.parsed.y !== null) {
-                                    label += new Intl.NumberFormat('en-US', { style: 'currency', currency: 'THB', minimumFractionDigits: 0, maximumFractionDigits: 0 }).format(context.parsed.y);
-                                }
-                                return label;
-                            }
-                        }
-                    }
+            const ctx = document.getElementById('investmentGrowthChart').getContext('2d');
+            const investmentGrowthChart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: chartLabels,
+                    datasets: [
+                        { label: 'Worst Case (4%)', data: worstCaseData, borderColor: 'rgb(255, 99, 132)', backgroundColor: 'rgba(255, 99, 132, 0.2)', fill: true, tension: 0.3 },
+                        { label: 'Base Case (8%)', data: baseCaseData, borderColor: 'rgb(54, 162, 235)', backgroundColor: 'rgba(54, 162, 235, 0.2)', fill: true, tension: 0.3 },
+                        { label: 'Best Case (15%)', data: bestCaseData, borderColor: 'rgb(75, 192, 192)', backgroundColor: 'rgba(75, 192, 192, 0.2)', fill: true, tension: 0.3 },
+                        { label: 'Funding Gap Target', data: Array(chartLabels.length).fill(fundingGap), borderColor: 'rgb(255, 159, 64)', backgroundColor: 'rgba(255, 159, 64, 0.2)', borderDash: [5, 5], fill: false, tension: 0 }
+                    ]
                 },
-                scales: {
-                    x: {
-                        title: {
-                            display: true,
-                            text: 'ปี'
-                        }
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        title: { display: true, text: 'เงินออมสะสมเพื่อให้ไปถึงเป้าหมาย' },
+                        tooltip: { callbacks: { label: function (context) { let label = context.dataset.label || ''; if (label) { label += ': '; } if (context.parsed.y !== null) { label += new Intl.NumberFormat('en-US', { style: 'currency', currency: 'THB', minimumFractionDigits: 0, maximumFractionDigits: 0 }).format(context.parsed.y); } return label; } } }
                     },
-                    y: {
-                        title: {
-                            display: true,
-                            text: 'จำนวนเงิน (บาท)'
-                        },
-                        beginAtZero: true,
-                        ticks: {
-                            callback: function(value, index, ticks) {
-                                return new Intl.NumberFormat('en-US', { style: 'currency', currency: 'THB', minimumFractionDigits: 0, maximumFractionDigits: 0 }).format(value);
-                            }
-                        }
+                    scales: {
+                        x: { title: { display: true, text: 'ปี' } },
+                        y: { title: { display: true, text: 'จำนวนเงิน (บาท)' }, beginAtZero: true, ticks: { callback: function (value) { return new Intl.NumberFormat('en-US', { style: 'currency', currency: 'THB', minimumFractionDigits: 0, maximumFractionDigits: 0 }).format(value); } } }
                     }
                 }
-            }
-        });
-    </script>
-</th:block>
+            });
+        </script>
+    </th:block>
 
 </body>
+
 </html>

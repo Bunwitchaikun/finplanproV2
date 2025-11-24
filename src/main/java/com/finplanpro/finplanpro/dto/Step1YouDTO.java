@@ -8,6 +8,7 @@ import lombok.Data;
 @Data
 public class Step1YouDTO {
     // --- INPUT ---
+    private String planName;
     private Integer currentAge;
     private String gender;
     private Integer retirementAge = 60; // Default value

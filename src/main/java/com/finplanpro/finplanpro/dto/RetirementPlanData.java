@@ -7,6 +7,7 @@ import lombok.Data;
  */
 @Data
 public class RetirementPlanData {
+    private String planName;
     private Step1YouDTO step1 = new Step1YouDTO();
     private Step2LifeDTO step2 = new Step2LifeDTO();
     private Step3WantsDTO step3 = new Step3WantsDTO();
