@@ -151,6 +151,8 @@
                                 <th>เงินก้อนที่ต้องมี (บาท)</th>
                                 <th>เงินที่ต้องลงทุนรายเดือนตั้งแต่วันนี้</th>
                                 <th>ระยะเวลาในการหาเงิน (ปี)</th>
+                                <!-- เพิ่มคอลัมน์ใหม่ตรงนี้ -->
+                                <th>ผลตอบแทนก่อนเกษียณ (%)</th>
                                 <th class="text-end">จัดการ</th>
                             </tr>
                         </thead>
@@ -169,6 +171,9 @@
                                 <td
                                     th:text="${plan.yearsToRetirement != null ? plan.yearsToRetirement : plan.retireAge - plan.currentAge}">
                                     0</td>
+                                <!-- แสดงข้อมูลในคอลัมน์ใหม่ตรงนี้ -->
+                                <td th:text="${#numbers.formatDecimal(plan.preRetireReturn, 1, 'COMMA', 2, 'POINT')}">
+                                    0.00</td>
                                 <td class="text-end">
                                     <form th:action="@{/retirement/basic/delete/{id}(id=${plan.id})}" method="post"
                                         onsubmit="return confirm('ต้องการลบแผนนี้หรือไม่?');" class="d-inline">
@@ -177,7 +182,7 @@
                                 </td>
                             </tr>
                             <tr th:if="${#lists.isEmpty(userPlans)}">
-                                <td colspan="6" class="text-center text-muted">ยังไม่มีแผนที่บันทึก</td>
+                                <td colspan="7" class="text-center text-muted">ยังไม่มีแผนที่บันทึก</td>
                             </tr>
                         </tbody>
                     </table>

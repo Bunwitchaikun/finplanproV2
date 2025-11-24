@@ -1396,7 +1396,7 @@ D4 User Journey :
         •
         รูปแบบ: กราฟเส้น (Line Chart) ที่มี 3 เส้น เปรียบเทียบการเติบโตของพอร์ตในสถานการณ์ Worst, Base, และ Best Case ตลอดระยะเวลาที่เหลือก่อนเกษียณ
     8.
-    Step 7: TEST & SAVE (ทดสอบและสรุปแผน):
+    Step 7: TEST & SAVE (ทดสอบและสรุปแผน): **ไม่ใช้แล้ว**
     ◦
     คำถาม: "แผนของคุณจะรอดหรือไม่ ถ้าเกิดเหตุการณ์ไม่คาดฝัน?"
     ◦
@@ -3401,6 +3401,62 @@ D10.9 Final Merge to main
 
 
 
+นี่คือ โครงสร้างโปรเจกต์ปัจจุบัน (เรียงตามโฟลเดอร์):
+
+Dockerfile
+
+docker-compose.yml
+
+pom.xml
+
+README.md
+
+HELP.md
+
+mvnw, mvnw.cmd
+
+system.properties
+
+docs/
+
+spec.md
+Final Project.py
+src/main/java/com/finplanpro/finplanpro/
+
+FinplanproApplication.java
+config/ – SecurityConfig.java
+controller/ – AuthController.java, DashboardController.java, ForgotPasswordController.java, HealthController.java, HomeController.java, InsuranceController.java, NetWorthController.java, ProfileController.java, RegisterController.java, RetirementAdvancedController.java, RetirementBasicController.java, TaxController.java
+dto/ – AssetLiabilityDTO.java, DesignResultDTO.java, InsuranceSummaryDto.java, RetirementAdvancedSummaryDTO.java, RetirementBasicResult.java, RetirementPlanData.java, ScenarioResultDTO.java, Step1YouDTO.java, Step2LifeDTO.java, Step3WantsDTO.java, Step4ExpenseDTO.java, Step5HavesDTO.java, Step6DesignDTO.java, Step7SimulationDTO.java, TaxRequestDTO.java, TaxResultDTO.java, UserDto.java, UserProfileDto.java
+entity/ – InsurancePolicy.java, NetWorthItem.java, NetWorthSnapshot.java, RetirementAdvanced.java, RetirementBasic.java, Role.java, TaxRecord.java, User.java, UserProfile.java, UserRole.java, UserRoleKey.java
+repository/ – InsurancePolicyRepository.java, NetWorthSnapshotRepository.java, ProfileRepository.java, RetirementAdvancedRepository.java, RetirementBasicRepository.java, RoleRepository.java, TaxRecordRepository.java, UserProfileRepository.java, UserRepository.java
+service/ – BasicCalculatorService.java, CustomUserDetailsService.java, InsurancePolicyService.java, InsurancePolicyServiceImpl.java, NetWorthSnapshotService.java, NetWorthSnapshotServiceImpl.java, ProfileService.java, RetirementAdvancedService.java, RetirementAdvancedServiceImpl.java, RetirementBasicService.java, RetirementBasicServiceImpl.java, TaxCalculationService.java, TaxRecordService.java, TaxRecordServiceImpl.java, TaxService.java, UserProfileService.java, UserProfileServiceImpl.java, UserService.java, UserServiceImpl.java
+service/calculation/ – FinancialCalculator.java, ScenarioSimulator.java
+util/ – package-info.java
+src/main/resources/
+
+application.yml
+static/css/ – style.css
+db/migration/ – V1__init_schema.sql, V2__add_user_profile_columns.sql, V3__create_retirement_basic_table.sql, V4__create_retirement_advanced_table.sql, V5__create_net_worth_snapshot_table.sql, V6__create_insurance_policy_table.sql, V7__create_tax_record_table.sql, V8__create_net_worth_items_table.sql, V9__update_insurance_policies_table.sql, V10__add_tax_deduction_fields.sql
+templates/
+layout.html, public-layout.html
+dashboard.html, profile.html, register.html, register-success.html
+profile/ – edit-profile.html, profile.html
+fragments/ – footer.html, navbar.html, sidebar.html
+auth/ – login.html, forgot-password.html, register.html
+assets/ – form.html, list.html
+insurance/ – form.html, list.html
+tax/ – form.html, list.html
+retirement/
+retirement_basic_form.html, retirement_basic_list.html
+basic/ – retirement_basic_form.html
+advanced/ – list.html, step1.html … step7.html, summary.html
+src/test/java/com/finplanpro/finplanpro/
+
+AuthControllerTest.java
+FinplanproApplicationTests.java
+target/ (ผล build) plus successfully" stray file/directory at root.
+
+จดจำเอาไว้ จะได้รู้ว่าฉันมีไฟลือะไรบ้าง
 
 
 
