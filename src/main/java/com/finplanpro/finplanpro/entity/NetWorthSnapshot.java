@@ -28,30 +28,41 @@ public class NetWorthSnapshot {
     @Column(nullable = false)
     private LocalDate snapshotDate;
 
-    // Assets
-    private BigDecimal cashAndEquivalents = BigDecimal.ZERO;
-    private BigDecimal stocks = BigDecimal.ZERO;
-    private BigDecimal funds = BigDecimal.ZERO;
-    private BigDecimal realEstate = BigDecimal.ZERO;
-    private BigDecimal otherAssets = BigDecimal.ZERO;
-
-    // Liabilities
-    private BigDecimal creditCardDebt = BigDecimal.ZERO;
-    private BigDecimal homeLoan = BigDecimal.ZERO;
-    private BigDecimal carLoan = BigDecimal.ZERO;
-    private BigDecimal otherLiabilities = BigDecimal.ZERO;
+    @OneToMany(mappedBy = "snapshot", cascade = CascadeType.ALL, orphanRemoval = true)
+    private java.util.List<NetWorthItem> items = new java.util.ArrayList<>();
 
     // Calculated Fields
     private BigDecimal totalAssets = BigDecimal.ZERO;
     private BigDecimal totalLiabilities = BigDecimal.ZERO;
     private BigDecimal netWorth = BigDecimal.ZERO;
 
+    public void addItem(NetWorthItem item) {
+        items.add(item);
+        item.setSnapshot(this);
+    }
+
+    public void removeItem(NetWorthItem item) {
+        items.remove(item);
+        item.setSnapshot(null);
+    }
+
     @PrePersist
     @PreUpdate
     public void calculateTotals() {
-        totalAssets = cashAndEquivalents.add(stocks).add(funds).add(realEstate).add(otherAssets);
-        totalLiabilities = creditCardDebt.add(homeLoan).add(carLoan).add(otherLiabilities);
+        totalAssets = items.stream()
+                .filter(i -> i.getType() == NetWorthItem.ItemType.ASSET)
+                .map(NetWorthItem::getAmount)
+                .filter(amount -> amount != null)
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
+
+        totalLiabilities = items.stream()
+                .filter(i -> i.getType() == NetWorthItem.ItemType.LIABILITY)
+                .map(NetWorthItem::getAmount)
+                .filter(amount -> amount != null)
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
+
         netWorth = totalAssets.subtract(totalLiabilities);
+
         if (snapshotDate == null) {
             snapshotDate = LocalDate.now();
         }

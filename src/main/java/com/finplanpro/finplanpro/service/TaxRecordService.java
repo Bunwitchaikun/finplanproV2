@@ -9,4 +9,5 @@ import java.util.List;
 public interface TaxRecordService {
     void save(TaxRequestDTO request, TaxResultDTO result);
     List<TaxRecord> findRecordsByUser();
+    void deleteAllForCurrentUser();
 }

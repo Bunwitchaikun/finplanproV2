@@ -8,4 +8,5 @@ import java.util.List;
 
 public interface TaxRecordRepository extends JpaRepository<TaxRecord, Long> {
     List<TaxRecord> findByUserOrderByTaxYearDesc(User user);
+    void deleteByUser(User user);
 }

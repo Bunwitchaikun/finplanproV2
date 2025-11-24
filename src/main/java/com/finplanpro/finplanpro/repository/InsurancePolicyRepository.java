@@ -18,11 +18,17 @@ public interface InsurancePolicyRepository extends JpaRepository<InsurancePolicy
            "COALESCE(SUM(i.disabilityCoverage), 0), " +
            "COALESCE(SUM(i.healthCareRoom), 0), " +
            "COALESCE(SUM(i.healthCarePerVisit), 0), " +
-           "COALESCE(SUM(i.healthCareOpd), 0), " +
-           "COALESCE(SUM(i.dailyCompensation), 0), " +
-           "COALESCE(SUM(i.criticalIllnessCoverage), 0), " +
+           "COALESCE(SUM(i.opdPerVisit), 0), " +
+           "COALESCE(SUM(i.compensationPerDay), 0), " +
            "COALESCE(SUM(i.mainPremium), 0), " +
-           "COALESCE(SUM(i.riderPremium), 0)) " +
+           "COALESCE(SUM(i.riderPremium), 0), " +
+           "COALESCE(SUM(i.accidentCoverage), 0), " +
+           "COALESCE(SUM(i.savingsReturn), 0), " +
+           "COALESCE(SUM(i.pension), 0), " +
+           "COALESCE(SUM(i.unitLinkedBenefits), 0), " +
+           "COALESCE(SUM(i.earlyMidCriticalIllness), 0), " +
+           "COALESCE(SUM(i.severeCriticalIllness), 0), " +
+           "COALESCE(SUM(i.partialAccidentCompensation), 0)) " +
            "FROM InsurancePolicy i WHERE i.user = :user")
     InsuranceSummaryDto getSummaryByUser(User user);
 }

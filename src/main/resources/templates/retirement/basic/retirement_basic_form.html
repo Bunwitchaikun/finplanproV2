@@ -1,156 +1,196 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org"
-      th:replace="~{layout :: layout(~{::title}, ~{::main}, ~{})}">
+<html lang="en" xmlns:th="http://www.thymeleaf.org" th:replace="~{layout :: layout(~{::title}, ~{::main}, ~{})}">
+
 <head>
     <title>Retirement Basic</title>
 </head>
+
 <body>
-<main role="main">
-    <div class="container-fluid">
-        <!-- Header -->
-        <div class="d-flex justify-content-between align-items-center mb-4">
-            <h1 class="h3">Retirement Planner ผู้ช่วยวางแผนเกษียณอย่างง่าย (พื้นฐาน)</h1>
-        </div>
-
-        <!-- Success/Error Messages -->
-        <div th:if="${successMessage}" class="alert alert-success" th:text="${successMessage}"></div>
-        <div th:if="${errorMessage}" class="alert alert-danger" th:text="${errorMessage}"></div>
-
-        <!-- Form Card -->
-        <div class="card shadow-sm border-0 mb-4">
-            <div class="card-header bg-transparent">
-                <h5 class="mb-0">สร้างแผนใหม่</h5>
+    <main role="main">
+        <div class="container-fluid">
+            <!-- Header -->
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h1 class="h3">Retirement Planner ผู้ช่วยวางแผนเกษียณอย่างง่าย (พื้นฐาน)</h1>
             </div>
-            <div class="card-body p-4">
-                <form th:action="@{/retirement/basic}" th:object="${newPlan}" method="post">
-                    <div class="row g-3">
-                        <div class="col-md-12">
-                            <label for="planName" class="form-label">ชื่อแผน</label>
-                            <input type="text" class="form-control" id="planName" th:field="*{planName}" required placeholder="เช่น แผนหลักของฉัน">
-                            <p th:if="${#fields.hasErrors('planName')}" class="text-danger mt-1" th:errors="*{planName}"></p>
-                        </div>
-                        <div class="col-md-6">
-                            <label for="currentAge" class="form-label">อายุปัจจุบัน</label>
-                            <input type="number" class="form-control" id="currentAge" th:field="*{currentAge}" required min="0" step="1" placeholder="เช่น 30">
-                            <p th:if="${#fields.hasErrors('currentAge')}" class="text-danger mt-1" th:errors="*{currentAge}"></p>
-                        </div>
-                        <div class="col-md-6">
-                            <label for="retireAge" class="form-label">อายุที่ต้องการเกษียณ</label>
-                            <input type="number" class="form-control" id="retireAge" th:field="*{retireAge}" required min="1" step="1" placeholder="เช่น 60">
-                            <p th:if="${#fields.hasErrors('retireAge')}" class="text-danger mt-1" th:errors="*{retireAge}"></p>
-                        </div>
-                        <div class="col-md-6">
-                            <label for="monthlyExpense" class="form-label">ค่าใช้จ่ายรายเดือนปัจจุบัน (บาท)</label>
-                            <input type="number" step="10000" class="form-control" id="monthlyExpense" th:field="*{monthlyExpense}" required min="0" placeholder="เช่น 30000">
-                            <p th:if="${#fields.hasErrors('monthlyExpense')}" class="text-danger mt-1" th:errors="*{monthlyExpense}"></p>
-                        </div>
-                        <div class="col-md-6">
-                            <label for="lifeExpectancy" class="form-label">อายุขัยคาดการณ์</label>
-                            <input type="number" class="form-control" id="lifeExpectancy" th:field="*{lifeExpectancy}" required min="1" step="1" placeholder="เช่น 90">
-                            <p th:if="${#fields.hasErrors('lifeExpectancy')}" class="text-danger mt-1" th:errors="*{lifeExpectancy}"></p>
-                        </div>
-                        <div class="col-md-4">
-                            <label for="inflationRate" class="form-label">อัตราเงินเฟ้อ (%)</label>
-                            <input type="number" step="1" class="form-control" id="inflationRate" th:field="*{inflationRate}" required min="0" placeholder="เช่น 3">
-                            <p th:if="${#fields.hasErrors('inflationRate')}" class="text-danger mt-1" th:errors="*{inflationRate}"></p>
-                        </div>
-                        <div class="col-md-4">
-                            <label for="preRetireReturn" class="form-label">ผลตอบแทนก่อนเกษียณ (%)</label>
-                            <input type="number" step="1" class="form-control" id="preRetireReturn" th:field="*{preRetireReturn}" required min="0" placeholder="เช่น 8">
-                            <p th:if="${#fields.hasErrors('preRetireReturn')}" class="text-danger mt-1" th:errors="*{preRetireReturn}"></p>
-                        </div>
-                        <div class="col-md-4">
-                            <label for="postRetireReturn" class="form-label">ผลตอบแทนหลังเกษียณ (%)</label>
-                            <input type="number" step="1" class="form-control" id="postRetireReturn" th:field="*{postRetireReturn}" required min="0" placeholder="เช่น 3">
-                            <p th:if="${#fields.hasErrors('postRetireReturn')}" class="text-danger mt-1" th:errors="*{postRetireReturn}"></p>
-                        </div>
-                    </div>
-                    <hr class="my-4">
-                    <button type="submit" class="btn btn-primary">คำนวณและบันทึกแผน</button>
-                </form>
-            </div>
-        </div>
 
-        <!-- Calculation Result -->
-        <div th:if="${calcResult}" class="card shadow-sm border-0 mb-4">
-            <div class="card-header bg-transparent">
-                <h5 class="mb-0">ผลการคำนวณ (THB)</h5>
+            <!-- Success/Error Messages -->
+            <div th:if="${successMessage}" class="alert alert-success" th:text="${successMessage}"></div>
+            <div th:if="${errorMessage}" class="alert alert-danger" th:text="${errorMessage}"></div>
+
+            <!-- Form Card -->
+            <div class="card shadow-sm border-0 mb-4">
+                <div class="card-header bg-transparent">
+                    <h5 class="mb-0">สร้างแผนใหม่</h5>
+                </div>
+                <div class="card-body p-4">
+                    <form th:action="@{/retirement/basic}" th:object="${newPlan}" method="post">
+                        <div class="row g-3">
+                            <div class="col-md-12">
+                                <label for="planName" class="form-label">ชื่อแผน</label>
+                                <input type="text" class="form-control" id="planName" th:field="*{planName}" required
+                                    placeholder="เช่น แผนหลักของฉัน">
+                                <p th:if="${#fields.hasErrors('planName')}" class="text-danger mt-1"
+                                    th:errors="*{planName}"></p>
+                            </div>
+                            <div class="col-6">
+                                <label for="currentAge" class="form-label">อายุปัจจุบัน</label>
+                                <input type="number" class="form-control" id="currentAge" th:field="*{currentAge}"
+                                    required min="0" step="1" placeholder="เช่น 30">
+                                <p th:if="${#fields.hasErrors('currentAge')}" class="text-danger mt-1"
+                                    th:errors="*{currentAge}"></p>
+                            </div>
+                            <div class="col-6">
+                                <label for="retireAge" class="form-label">อายุที่ต้องการเกษียณ</label>
+                                <input type="number" class="form-control" id="retireAge" th:field="*{retireAge}"
+                                    required min="1" step="1" placeholder="เช่น 60">
+                                <p th:if="${#fields.hasErrors('retireAge')}" class="text-danger mt-1"
+                                    th:errors="*{retireAge}"></p>
+                            </div>
+                            <div class="col-6">
+                                <label for="monthlyExpense" class="form-label">ค่าใช้จ่ายรายเดือนปัจจุบัน (บาท)</label>
+                                <input type="number" step="10000" class="form-control" id="monthlyExpense"
+                                    th:field="*{monthlyExpense}" required min="0" placeholder="เช่น 30000">
+                                <p th:if="${#fields.hasErrors('monthlyExpense')}" class="text-danger mt-1"
+                                    th:errors="*{monthlyExpense}"></p>
+                            </div>
+                            <div class="col-6">
+                                <label for="lifeExpectancy" class="form-label">อายุขัยคาดการณ์</label>
+                                <input type="number" class="form-control" id="lifeExpectancy"
+                                    th:field="*{lifeExpectancy}" required min="1" step="1" placeholder="เช่น 90">
+                                <p th:if="${#fields.hasErrors('lifeExpectancy')}" class="text-danger mt-1"
+                                    th:errors="*{lifeExpectancy}"></p>
+                            </div>
+                            <div class="col-md-4">
+                                <label for="inflationRate" class="form-label">อัตราเงินเฟ้อ (%)</label>
+                                <input type="number" step="1" class="form-control" id="inflationRate"
+                                    th:field="*{inflationRate}" required min="0" placeholder="เช่น 3">
+                                <p th:if="${#fields.hasErrors('inflationRate')}" class="text-danger mt-1"
+                                    th:errors="*{inflationRate}"></p>
+                            </div>
+                            <div class="col-md-4">
+                                <label for="preRetireReturn" class="form-label">ผลตอบแทนก่อนเกษียณ (%)</label>
+                                <input type="number" step="1" class="form-control" id="preRetireReturn"
+                                    th:field="*{preRetireReturn}" required min="0" placeholder="เช่น 8">
+                                <p th:if="${#fields.hasErrors('preRetireReturn')}" class="text-danger mt-1"
+                                    th:errors="*{preRetireReturn}"></p>
+                            </div>
+                            <div class="col-md-4">
+                                <label for="postRetireReturn" class="form-label">ผลตอบแทนหลังเกษียณ (%)</label>
+                                <input type="number" step="1" class="form-control" id="postRetireReturn"
+                                    th:field="*{postRetireReturn}" required min="0" placeholder="เช่น 3">
+                                <p th:if="${#fields.hasErrors('postRetireReturn')}" class="text-danger mt-1"
+                                    th:errors="*{postRetireReturn}"></p>
+                            </div>
+                        </div>
+                        <hr class="my-4">
+                        <button type="submit" class="btn btn-primary">คำนวณและบันทึกแผน</button>
+                    </form>
+                </div>
             </div>
-            <div class="card-body">
-                <div class="row row-cols-1 row-cols-md-2 g-3">
-                    <div class="col">
-                        <div class="p-3 bg-light rounded h-100">
-                            <p class="text-muted mb-1">ค่าใช้จ่ายต่อเดือน ที่ตั้งเป้าไว้</p>
-                            <h5 class="mb-0" th:text="'฿' + ${#numbers.formatDecimal(calcResult.retirementMonthlyExpense, 0, 'COMMA', 2, 'POINT')}">฿0.00</h5>
+
+            <!-- Calculation Result -->
+            <div th:if="${calcResult}" class="card shadow-sm border-0 mb-4">
+                <div class="card-header bg-transparent">
+                    <h5 class="mb-0">ผลการคำนวณ (THB)</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row row-cols-1 row-cols-md-2 g-3">
+                        <div class="col">
+                            <div class="p-3 bg-light rounded h-100">
+                                <p class="text-muted mb-1">ค่าใช้จ่ายต่อเดือน ที่ตั้งเป้าไว้</p>
+                                <h5 class="mb-0"
+                                    th:text="'฿' + ${#numbers.formatDecimal(calcResult.retirementMonthlyExpense, 0, 'COMMA', 2, 'POINT')}">
+                                    ฿0.00</h5>
+                            </div>
                         </div>
-                    </div>
-                    <div class="col">
-                        <div class="p-3 bg-light rounded h-100">
-                            <p class="text-muted mb-1">เงินที่ต้องลงทุนรายเดือนตั้งแต่วันนี้</p>
-                            <h5 class="mb-0" th:text="'฿' + ${#numbers.formatDecimal(calcResult.requiredMonthlyInvestment, 0, 'COMMA', 2, 'POINT')}">฿0.00</h5>
+                        <div class="col">
+                            <div class="p-3 bg-light rounded h-100">
+                                <p class="text-muted mb-1">เงินที่ต้องลงทุนรายเดือนตั้งแต่วันนี้</p>
+                                <h5 class="mb-0"
+                                    th:text="'฿' + ${#numbers.formatDecimal(calcResult.requiredMonthlyInvestment, 0, 'COMMA', 2, 'POINT')}">
+                                    ฿0.00</h5>
+                            </div>
                         </div>
-                    </div>
-                    <div class="col">
-                        <div class="p-3 bg-light rounded h-100">
-                            <p class="text-muted mb-1">เงินก้อนที่ต้องมีวันเกษียณ</p>
-                            <h5 class="mb-0" th:text="'฿' + ${#numbers.formatDecimal(calcResult.totalFundsNeeded, 0, 'COMMA', 2, 'POINT')}">฿0.00</h5>
+                        <div class="col">
+                            <div class="p-3 bg-light rounded h-100">
+                                <p class="text-muted mb-1">เงินก้อนที่ต้องมีวันเกษียณ</p>
+                                <h5 class="mb-0"
+                                    th:text="'฿' + ${#numbers.formatDecimal(calcResult.totalFundsNeeded, 0, 'COMMA', 2, 'POINT')}">
+                                    ฿0.00</h5>
+                            </div>
                         </div>
-                    </div>
-                    <div class="col">
-                        <div class="p-3 bg-light rounded h-100">
-                            <p class="text-muted mb-1">ระยะเวลาในการหาเงิน (ปี)</p>
-                            <h5 class="mb-0" th:text="${calcResult.yearsToRetirement}">0</h5>
+                        <div class="col">
+                            <div class="p-3 bg-light rounded h-100">
+                                <p class="text-muted mb-1">ระยะเวลาในการหาเงิน (ปี)</p>
+                                <h5 class="mb-0" th:text="${calcResult.yearsToRetirement}">0</h5>
+                            </div>
                         </div>
-                    </div>
-                    <div class="col">
-                        <div class="p-3 bg-light rounded h-100">
-                            <p class="text-muted mb-1">ค่าใช้จ่ายปีแรกหลังเกษียณ (ปรับเงินเฟ้อ)</p>
-                            <h5 class="mb-0" th:text="'฿' + ${#numbers.formatDecimal(calcResult.annualExpenseAtRetirement, 0, 'COMMA', 2, 'POINT')}">฿0.00</h5>
+                        <div class="col">
+                            <div class="p-3 bg-light rounded h-100">
+                                <p class="text-muted mb-1">ค่าใช้จ่ายปีแรกหลังเกษียณ (ปรับเงินเฟ้อ)</p>
+                                <h5 class="mb-0"
+                                    th:text="'฿' + ${#numbers.formatDecimal(calcResult.annualExpenseAtRetirement, 0, 'COMMA', 2, 'POINT')}">
+                                    ฿0.00</h5>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
 
-        <!-- Saved Plans Table -->
-        <div class="card shadow-sm border-0">
-            <div class="card-header bg-transparent">
-                <h5 class="mb-0">แผนที่บันทึกไว้</h5>
+            <!-- Saved Plans Table -->
+            <div class="card shadow-sm border-0">
+                <div class="card-header bg-transparent">
+                    <h5 class="mb-0">แผนที่บันทึกไว้</h5>
+                </div>
+                <div class="card-body">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>ชื่อแผน</th>
+                                <th>ค่าใช้จ่ายต่อเดือน ที่ตั้งเป้าไว้ (บาท)</th>
+                                <th>เงินก้อนที่ต้องมี (บาท)</th>
+                                <th>เงินที่ต้องลงทุนรายเดือนตั้งแต่วันนี้</th>
+                                <th>ระยะเวลาในการหาเงิน (ปี)</th>
+                                <!-- เพิ่มคอลัมน์ใหม่ตรงนี้ -->
+                                <th>ผลตอบแทนก่อนเกษียณ (%)</th>
+                                <th class="text-end">จัดการ</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr th:each="plan : ${userPlans}">
+                                <td th:text="${plan.planName}">My Plan</td>
+                                <td
+                                    th:text="'฿' + ${#numbers.formatDecimal(plan.retirementMonthlyExpense, 0, 'COMMA', 2, 'POINT')}">
+                                    ฿0.00</td>
+                                <td
+                                    th:text="'฿' + ${#numbers.formatDecimal(plan.totalFundsNeeded, 0, 'COMMA', 2, 'POINT')}">
+                                    ฿0.00</td>
+                                <td
+                                    th:text="'฿' + ${#numbers.formatDecimal(plan.requiredMonthlyInvestment, 0, 'COMMA', 2, 'POINT')}">
+                                    ฿0.00</td>
+                                <td
+                                    th:text="${plan.yearsToRetirement != null ? plan.yearsToRetirement : plan.retireAge - plan.currentAge}">
+                                    0</td>
+                                <!-- แสดงข้อมูลในคอลัมน์ใหม่ตรงนี้ -->
+                                <td th:text="${#numbers.formatDecimal(plan.preRetireReturn, 1, 'COMMA', 2, 'POINT')}">
+                                    0.00</td>
+                                <td class="text-end">
+                                    <form th:action="@{/retirement/basic/delete/{id}(id=${plan.id})}" method="post"
+                                        onsubmit="return confirm('ต้องการลบแผนนี้หรือไม่?');" class="d-inline">
+                                        <button type="submit" class="btn btn-sm btn-outline-danger">ลบ</button>
+                                    </form>
+                                </td>
+                            </tr>
+                            <tr th:if="${#lists.isEmpty(userPlans)}">
+                                <td colspan="7" class="text-center text-muted">ยังไม่มีแผนที่บันทึก</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
             </div>
-            <div class="card-body">
-                <table class="table table-hover">
-                    <thead>
-                        <tr>
-                            <th>ชื่อแผน</th>
-                            <th>ค่าใช้จ่ายต่อเดือน ที่ตั้งเป้าไว้ (บาท)</th>
-                            <th>เงินก้อนที่ต้องมี (บาท)</th>
-                            <th>เงินที่ต้องลงทุนรายเดือนตั้งแต่วันนี้</th>
-                            <th>ระยะเวลาในการหาเงิน (ปี)</th>
-                            <th class="text-end">จัดการ</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr th:each="plan : ${userPlans}">
-                            <td th:text="${plan.planName}">My Plan</td>
-                            <td th:text="'฿' + ${#numbers.formatDecimal(plan.retirementMonthlyExpense, 0, 'COMMA', 2, 'POINT')}">฿0.00</td>
-                            <td th:text="'฿' + ${#numbers.formatDecimal(plan.totalFundsNeeded, 0, 'COMMA', 2, 'POINT')}">฿0.00</td>
-                            <td th:text="'฿' + ${#numbers.formatDecimal(plan.requiredMonthlyInvestment, 0, 'COMMA', 2, 'POINT')}">฿0.00</td>
-                            <td th:text="${plan.yearsToRetirement != null ? plan.yearsToRetirement : plan.retireAge - plan.currentAge}">0</td>
-                            <td class="text-end">
-                                <form th:action="@{/retirement/basic/delete/{id}(id=${plan.id})}" method="post" onsubmit="return confirm('ต้องการลบแผนนี้หรือไม่?');" class="d-inline">
-                                    <button type="submit" class="btn btn-sm btn-outline-danger">ลบ</button>
-                                </form>
-                            </td>
-                        </tr>
-                        <tr th:if="${#lists.isEmpty(userPlans)}">
-                            <td colspan="6" class="text-center text-muted">ยังไม่มีแผนที่บันทึก</td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-        </div>
 
-    </div>
-</main>
+        </div>
+    </main>
 </body>
+
 </html>

@@ -1,49 +1,71 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org"
-      th:replace="~{layout :: layout(~{::title}, ~{::main}, ~{})}">
+<html lang="en" xmlns:th="http://www.thymeleaf.org" th:replace="~{layout :: layout(~{::title}, ~{::main}, ~{})}">
+
 <head>
     <title>Saved Tax Records</title>
 </head>
+
 <body>
-<main role="main">
-    <div class="container-fluid">
-        <div class="d-flex justify-content-between align-items-center mb-4">
-            <h1 class="h3">My Saved Tax Records</h1>
-            <a th:href="@{/tax}" class="btn btn-primary">
-                <i class="bi bi-calculator me-2"></i>New Calculation
-            </a>
-        </div>
+    <main role="main">
+        <div class="container-fluid">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h1 class="h3">My Saved Tax Records</h1>
+                <div class="d-flex align-items-center">
+                    <a th:href="@{/tax}" class="btn btn-primary">
+                        <i class="bi bi-calculator me-2"></i>New Calculation
+                    </a>
+                    <form th:action="@{/tax/delete-all}" method="post" class="d-inline-block ms-2 mb-0">
+                        <button type="submit" class="btn btn-outline-danger"
+                                onclick="return confirm('Delete all saved tax records?');">
+                            <i class="bi bi-trash me-2"></i>Delete All
+                        </button>
+                    </form>
+                </div>
+            </div>
 
-        <div th:if="${successMessage}" class="alert alert-success" th:text="${successMessage}"></div>
+            <div th:if="${successMessage}" class="alert alert-success mt-3 mb-4 me-3" th:text="${successMessage}"></div>
 
-        <div class="card shadow-sm border-0">
-            <div class="card-body">
-                <table class="table table-hover">
-                    <thead class="table-light">
-                        <tr>
-                            <th>Tax Year</th>
-                            <th>Annual Income</th>
-                            <th>Total Deduction</th>
-                            <th>Net Taxable Income</th>
-                            <th>Tax Payable</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr th:each="rec : ${records}">
-                            <td th:text="${rec.taxYear}"></td>
-                            <td th:text="${#numbers.formatDecimal(rec.annualIncome, 1, 'COMMA', 2, 'POINT')} + ' THB'"></td>
-                            <td th:text="${#numbers.formatDecimal(rec.totalDeduction, 1, 'COMMA', 2, 'POINT')} + ' THB'"></td>
-                            <td class="fw-bold" th:text="${#numbers.formatDecimal(rec.netIncome, 1, 'COMMA', 2, 'POINT')} + ' THB'"></td>
-                            <td class="text-danger fw-bold" th:text="${#numbers.formatDecimal(rec.taxPayable, 1, 'COMMA', 2, 'POINT')} + ' THB'"></td>
-                        </tr>
-                        <tr th:if="${#lists.isEmpty(records)}">
-                            <td colspan="5" class="text-center text-muted py-4">No saved records yet.</td>
-                        </tr>
-                    </tbody>
-                </table>
+            <div class="card shadow-sm border-0">
+                <div class="card-body">
+                    <table class="table table-hover">
+                        <thead class="table-light">
+                            <tr>
+                                <th>Tax Year</th>
+                                <th>รายได้ทั้งปี<br><small class="text-muted">Annual Income</small></th>
+                                <th>ค่าใช้จ่ายที่หักได้<br><small class="text-muted">Expense Deduction</small></th>
+                                <th>ค่าลดหย่อนรวม<br><small class="text-muted">Total Allowance</small></th>
+                                <th>เงินได้สุทธิ<br><small class="text-muted">Net Taxable Income</small></th>
+                                <th>จำนวนภาษีที่ต้องจ่าย<br><small class="text-muted">Tax Payable</small></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr th:each="rec : ${records}">
+                                <td th:text="${rec.taxYear}"></td>
+                                <td
+                                    th:text="${#numbers.formatDecimal(rec.annualIncome, 1, 'COMMA', 2, 'POINT')} + ' THB'">
+                                </td>
+                                <td
+                                    th:text="${#numbers.formatDecimal(rec.expenseDeduction, 1, 'COMMA', 2, 'POINT')} + ' THB'">
+                                </td>
+                                <td
+                                    th:text="${#numbers.formatDecimal(rec.totalAllowance, 1, 'COMMA', 2, 'POINT')} + ' THB'">
+                                </td>
+                                <td class="fw-bold"
+                                    th:text="${#numbers.formatDecimal(rec.netIncome, 1, 'COMMA', 2, 'POINT')} + ' THB'">
+                                </td>
+                                <td class="text-danger fw-bold"
+                                    th:text="${#numbers.formatDecimal(rec.taxPayable, 1, 'COMMA', 2, 'POINT')} + ' THB'">
+                                </td>
+                            </tr>
+                            <tr th:if="${#lists.isEmpty(records)}">
+                                <td colspan="6" class="text-center text-muted py-4">No saved records yet.</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </div>
-    </div>
-</main>
+    </main>
 </body>
+
 </html>

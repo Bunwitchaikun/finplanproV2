@@ -1,74 +1,197 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org"
-      th:replace="~{layout :: layout(~{::title}, ~{::main}, ~{})}">
+<html lang="en" xmlns:th="http://www.thymeleaf.org" th:replace="~{layout :: layout(~{::title}, ~{::main}, ~{})}">
+
 <head>
     <title>Insurance Management</title>
 </head>
+
 <body>
-<main role="main">
-    <div class="container-fluid">
-        <div class="d-flex justify-content-between align-items-center mb-4">
-            <h1 class="h3" th:text="${policy.id == null ? 'Add New Policy' : 'Edit Policy'}"></h1>
-            <a th:href="@{/insurance/list}" class="btn btn-outline-primary">
-                <i class="bi bi-list-ul me-2"></i>View All Policies
-            </a>
-        </div>
+    <main role="main">
+        <div class="container-fluid">S
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h1 class="h3" th:text="${policy.id == null ? '🏥 Insurance Management' : '✍️ แก้ไขกรมธรรม์'}"></h1>
+                <a th:href="@{/insurance/list}" class="btn btn-outline-primary">
+                    <i class="bi bi-list-ul me-2"></i>View Saved Records
+                </a>
+            </div>
 
-        <div th:if="${successMessage}" class="alert alert-success" th:text="${successMessage}"></div>
-        
-        <div class="row g-4">
-            <!-- Form Column -->
-            <div class="col-lg-8">
-                <div class="card shadow-sm border-0">
-                    <div class="card-body p-4">
-                        <form th:action="@{/insurance}" th:object="${policy}" method="post">
-                            <input type="hidden" th:field="*{id}" />
-                            <div class="mb-3">
-                                <label for="policyNumber" class="form-label">Policy Number</label>
-                                <input type="text" class="form-control" id="policyNumber" th:field="*{policyNumber}" required>
-                                <div th:if="${#fields.hasErrors('policyNumber')}" th:errors="*{policyNumber}" class="text-danger mt-1"></div>
+            <div th:if="${successMessage}" class="alert alert-success" th:text="${successMessage}"></div>
+
+            <div class="row g-4">
+                <!-- Form Column -->
+                <div class="col-lg-8">
+                    <div class="card shadow-sm border-0">
+                        <div class="card-body p-4">
+                            <form th:action="@{/insurance}" th:object="${policy}" method="post">
+                                <input type="hidden" th:field="*{id}" />
+                                <h5 class="mb-3">ข้อมูลกรมธรรม์</h5>
+                                <div class="row g-3 mb-4">
+                                    <div class="col-6"><label for="policyName"
+                                            class="form-label">ชื่อกรมธรรม์</label><input type="text"
+                                            class="form-control" id="policyName" th:field="*{policyName}"
+                                            placeholder="เช่น AIA Unit Linked"></div>
+                                    <div class="col-6"><label for="policyNumber"
+                                            class="form-label">เลขกรมธรรม์</label><input type="text"
+                                            class="form-control" id="policyNumber" th:field="*{policyNumber}" required>
+                                        <div th:if="${#fields.hasErrors('policyNumber')}" th:errors="*{policyNumber}"
+                                            class="text-danger mt-1 small"></div>
+                                    </div>
+                                </div>
+                                <h5 class="mb-3">เบี้ยประกันที่ต้องจ่ายต่อปี</h5>
+                                <div class="row g-3 mb-4">
+                                    <div class="col-6"><label>เบี้ยสัญญาหลัก/ปี</label><input type="number" step="0.01"
+                                            class="form-control" th:field="*{mainPremium}"></div>
+                                    <div class="col-6"><label>เบี้ยสัญญาเพิ่มเติม/ปี</label><input type="number"
+                                            step="0.01" class="form-control" th:field="*{riderPremium}"></div>
+                                </div>
+                                <h5 class="mb-3">รายละเอียดกรมธรรม์</h5>
+                                <div class="row g-3">
+                                    <div class="col-md-4"><label>ทุนคุ้มครองชีวิต</label><input type="number"
+                                            step="0.01" class="form-control" th:field="*{lifeCoverage}"></div>
+                                    <div class="col-md-4"><label>คุ้มครองทุพพลภาพ</label><input type="number"
+                                            step="0.01" class="form-control" th:field="*{disabilityCoverage}"></div>
+                                    <div class="col-md-4"><label>คุ้มครองจากอุบัติเหตุรวม(PA)</label><input
+                                            type="number" step="0.01" class="form-control"
+                                            th:field="*{accidentCoverage}"></div>
+                                    <div class="col-md-4"><label>เงินคืนสะสมทรัพย์รวม</label><input type="number"
+                                            step="0.01" class="form-control" th:field="*{savingsReturn}"></div>
+                                    <div class="col-md-4"><label>เงินบำนาญรวม</label><input type="number" step="0.01"
+                                            class="form-control" th:field="*{pension}"></div>
+                                    <div class="col-md-4"><label>ผลประโยชน์ Unit Linked</label><input type="number"
+                                            step="0.01" class="form-control" th:field="*{unitLinkedBenefits}"></div>
+                                    <div class="col-md-4"><label>ค่าห้องรวม</label><input type="number" step="0.01"
+                                            class="form-control" th:field="*{healthCareRoom}"></div>
+                                    <div class="col-md-4"><label>ค่ารักษา/ครั้ง</label><input type="number" step="0.01"
+                                            class="form-control" th:field="*{healthCarePerVisit}"></div>
+                                    <div class="col-md-4"><label>ผู้ป่วยนอก/ครั้ง(OPD)</label><input type="number"
+                                            step="0.01" class="form-control" th:field="*{opdPerVisit}"></div>
+                                    <div class="col-md-4"><label>ชดเชย/วัน</label><input type="number" step="0.01"
+                                            class="form-control" th:field="*{compensationPerDay}"></div>
+                                    <div class="col-md-4"><label>โรคร้ายแรงต้น-กลาง</label><input type="number"
+                                            step="0.01" class="form-control" th:field="*{earlyMidCriticalIllness}">
+                                    </div>
+                                    <div class="col-md-4"><label>โรคร้ายแรงระยะรุนแรง</label><input type="number"
+                                            step="0.01" class="form-control" th:field="*{severeCriticalIllness}"></div>
+                                    <div class="col-md-4"><label>ชดเชยอุบัติเหตุบางส่วน/สัปดาห์</label><input
+                                            type="number" step="0.01" class="form-control"
+                                            th:field="*{partialAccidentCompensation}"></div>
+                                </div>
+                                <hr class="my-4">
+                                <button type="submit" class="btn btn-primary px-4"
+                                    th:text="${policy.id == null ? 'บันทึกกรมธรรม์' : 'อัปเดตกรมธรรม์'}"></button>
+                                <a th:href="@{/insurance}" class="btn btn-secondary px-4"
+                                    th:if="${policy.id != null}">ยกเลิกการแก้ไข</a>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Summary Column -->
+                <div class="col-lg-4">
+                    <div class="row g-3">
+                        <div class="col-12">
+                            <div class="card shadow-sm border-0">
+                                <div class="card-header bg-primary text-white">
+                                    <h6 class="mb-0">1. ความคุ้มครองชีวิตและทุพพลภาพ</h6>
+                                </div>
+                                <ul class="list-group list-group-flush">
+                                    <li class="list-group-item d-flex justify-content-between">
+                                        <span>ทุนคุ้มครองชีวิต:</span><strong
+                                            th:text="${'฿' + #numbers.formatDecimal(summary.totalLifeCoverage, 0, 'COMMA', 2, 'POINT')}"></strong>
+                                    </li>
+                                    <li class="list-group-item d-flex justify-content-between">
+                                        <span>คุ้มครองทุพพลภาพ:</span><strong
+                                            th:text="${'฿' + #numbers.formatDecimal(summary.totalDisabilityCoverage, 0, 'COMMA', 2, 'POINT')}"></strong>
+                                    </li>
+                                </ul>
                             </div>
-                            <hr>
-                            <h5 class="mb-3">Coverage Details</h5>
-                            <div class="row g-3">
-                                <div class="col-md-6"><label>Life Coverage</label><input type="number" step="0.01" class="form-control" th:field="*{lifeCoverage}"></div>
-                                <div class="col-md-6"><label>Disability Coverage</label><input type="number" step="0.01" class="form-control" th:field="*{disabilityCoverage}"></div>
-                                <div class="col-md-4"><label>Health - Room</label><input type="number" step="0.01" class="form-control" th:field="*{healthCareRoom}"></div>
-                                <div class="col-md-4"><label>Health - Per Visit</label><input type="number" step="0.01" class="form-control" th:field="*{healthCarePerVisit}"></div>
-                                <div class="col-md-4"><label>Health - OPD</label><input type="number" step="0.01" class="form-control" th:field="*{healthCareOpd}"></div>
-                                <div class="col-md-6"><label>Daily Compensation</label><input type="number" step="0.01" class="form-control" th:field="*{dailyCompensation}"></div>
-                                <div class="col-md-6"><label>Critical Illness</label><input type="number" step="0.01" class="form-control" th:field="*{criticalIllnessCoverage}"></div>
+                        </div>
+                        <div class="col-12">
+                            <div class="card shadow-sm border-0">
+                                <div class="card-header bg-success text-white">
+                                    <h6 class="mb-0">2. การออมและลงทุน</h6>
+                                </div>
+                                <ul class="list-group list-group-flush">
+                                    <li class="list-group-item d-flex justify-content-between">
+                                        <span>เงินคืนสะสมทรัพย์:</span><strong
+                                            th:text="${'฿' + #numbers.formatDecimal(summary.savingsReturn, 0, 'COMMA', 2, 'POINT')}"></strong>
+                                    </li>
+                                    <li class="list-group-item d-flex justify-content-between">
+                                        <span>เงินบำนาญ:</span><strong
+                                            th:text="${'฿' + #numbers.formatDecimal(summary.pension, 0, 'COMMA', 2, 'POINT')}"></strong>
+                                    </li>
+                                    <li class="list-group-item d-flex justify-content-between"><span>ผลประโยชน์ Unit
+                                            Linked:</span><strong
+                                            th:text="${'฿' + #numbers.formatDecimal(summary.unitLinkedBenefits, 0, 'COMMA', 2, 'POINT')}"></strong>
+                                    </li>
+                                </ul>
                             </div>
-                            <hr>
-                            <h5 class="mb-3">Premiums</h5>
-                            <div class="row g-3">
-                                <div class="col-md-6"><label>Main Premium</label><input type="number" step="0.01" class="form-control" th:field="*{mainPremium}"></div>
-                                <div class="col-md-6"><label>Rider(s) Premium</label><input type="number" step="0.01" class="form-control" th:field="*{riderPremium}"></div>
+                        </div>
+                        <div class="col-12">
+                            <div class="card shadow-sm border-0">
+                                <div class="card-header bg-warning text-dark">
+                                    <h6 class="mb-0">3. ความคุ้มครองสุขภาพ</h6>
+                                </div>
+                                <ul class="list-group list-group-flush">
+                                    <li class="list-group-item d-flex justify-content-between">
+                                        <span>ค่าห้อง:</span><strong
+                                            th:text="${'฿' + #numbers.formatDecimal(summary.totalHealthCareRoom, 0, 'COMMA', 2, 'POINT')}"></strong>
+                                    </li>
+                                    <li class="list-group-item d-flex justify-content-between">
+                                        <span>ค่ารักษา/ครั้ง:</span><strong
+                                            th:text="${'฿' + #numbers.formatDecimal(summary.totalHealthCarePerVisit, 0, 'COMMA', 2, 'POINT')}"></strong>
+                                    </li>
+                                    <li class="list-group-item d-flex justify-content-between">
+                                        <span>OPD/ครั้ง:</span><strong
+                                            th:text="${'฿' + #numbers.formatDecimal(summary.opdPerVisit, 0, 'COMMA', 2, 'POINT')}"></strong>
+                                    </li>
+                                    <li class="list-group-item d-flex justify-content-between">
+                                        <span>ชดเชย/วัน:</span><strong
+                                            th:text="${'฿' + #numbers.formatDecimal(summary.compensationPerDay, 0, 'COMMA', 2, 'POINT')}"></strong>
+                                    </li>
+                                </ul>
                             </div>
-                            <hr class="my-4">
-                            <button type="submit" class="btn btn-primary px-4" th:text="${policy.id == null ? 'Save Policy' : 'Update Policy'}"></button>
-                            <a th:href="@{/insurance}" class="btn btn-secondary px-4" th:if="${policy.id != null}">Cancel Edit</a>
-                        </form>
+                        </div>
+                        <div class="col-12">
+                            <div class="card shadow-sm border-0">
+                                <div class="card-header bg-danger text-white">
+                                    <h6 class="mb-0">4. โรคร้ายแรงและอุบัติเหตุ</h6>
+                                </div>
+                                <ul class="list-group list-group-flush">
+                                    <li class="list-group-item d-flex justify-content-between"><span>โรคร้ายแรง
+                                            (ต้น-กลาง):</span><strong
+                                            th:text="${'฿' + #numbers.formatDecimal(summary.earlyMidCriticalIllness, 0, 'COMMA', 2, 'POINT')}"></strong>
+                                    </li>
+                                    <li class="list-group-item d-flex justify-content-between"><span>โรคร้ายแรง
+                                            (รุนแรง):</span><strong
+                                            th:text="${'฿' + #numbers.formatDecimal(summary.severeCriticalIllness, 0, 'COMMA', 2, 'POINT')}"></strong>
+                                    </li>
+                                    <li class="list-group-item d-flex justify-content-between">
+                                        <span>ชดเชยอุบัติเหตุ/สัปดาห์:</span><strong
+                                            th:text="${'฿' + #numbers.formatDecimal(summary.partialAccidentCompensation, 0, 'COMMA', 2, 'POINT')}"></strong>
+                                    </li>
+                                    <li class="list-group-item d-flex justify-content-between"><span>คุ้มครองอุบัติเหตุ
+                                            (PA):</span><strong
+                                            th:text="${'฿' + #numbers.formatDecimal(summary.accidentCoverage, 0, 'COMMA', 2, 'POINT')}"></strong>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="col-12">
+                            <div class="card text-white bg-dark">
+                                <div class="card-body text-center">
+                                    <h6 class="card-title">รวมเบี้ยประกันชีวิตที่ต้องจ่าย/ปี</h6>
+                                    <h4 class="card-text"
+                                        th:text="${'฿' + #numbers.formatDecimal(summary.totalPremium, 0, 'COMMA', 2, 'POINT')}">
+                                    </h4>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
-
-            <!-- Summary Column -->
-            <div class="col-lg-4">
-                <div class="card shadow-sm border-0">
-                    <div class="card-header bg-transparent"><h5 class="mb-0">Total Summary</h5></div>
-                    <div class="card-body" th:object="${summary}">
-                        <ul class="list-group list-group-flush">
-                            <li class="list-group-item d-flex justify-content-between"><span>Life Coverage:</span> <strong th:text="${#numbers.formatCurrency(summary.totalLifeCoverage)}"></strong></li>
-                            <li class="list-group-item d-flex justify-content-between"><span>Disability:</span> <strong th:text="${#numbers.formatCurrency(summary.totalDisabilityCoverage)}"></strong></li>
-                            <li class="list-group-item d-flex justify-content-between"><span>Critical Illness:</span> <strong th:text="${#numbers.formatCurrency(summary.totalCriticalIllnessCoverage)}"></strong></li>
-                            <li class="list-group-item d-flex justify-content-between"><span>Total Premium:</span> <strong th:text="${#numbers.formatCurrency(summary.totalPremium)}"></strong></li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
         </div>
-    </div>
-</main>
+    </main>
 </body>
+
 </html>

@@ -26,7 +26,9 @@ public class TaxRecord {
 
     // Results to be saved
     private BigDecimal annualIncome;
-    private BigDecimal totalDeduction;
-    private BigDecimal netIncome;
-    private BigDecimal taxPayable;
+    private BigDecimal expenseDeduction; // ค่าใช้จ่ายที่หักได้
+    private BigDecimal totalAllowance; // ค่าลดหย่อนรวม
+    private BigDecimal totalDeduction; // รวม expense + allowance
+    private BigDecimal netIncome; // เงินได้สุทธิ
+    private BigDecimal taxPayable; // จำนวนภาษีที่ต้องจ่าย
 }

@@ -44,7 +44,7 @@ public class InsuranceController {
         }
         policyService.save(policy);
         redirectAttributes.addFlashAttribute("successMessage", "Policy '" + policy.getPolicyNumber() + "' saved successfully!");
-        return "redirect:/insurance";
+        return "redirect:/insurance"; // REDIRECT BACK TO THE FORM
     }
 
     @GetMapping("/list")
@@ -61,12 +61,17 @@ public class InsuranceController {
             redirectAttributes.addFlashAttribute("errorMessage", "Policy not found.");
             return "redirect:/insurance/list";
         }
+        // Use Flash Attribute to pass the object through redirect
         redirectAttributes.addFlashAttribute("policy", policyOpt.get());
         return "redirect:/insurance";
     }
 
     @PostMapping("/delete-selected")
-    public String deleteSelected(@RequestParam("selectedIds") List<Long> selectedIds, RedirectAttributes redirectAttributes) {
+    public String deleteSelected(@RequestParam(value = "selectedIds", required = false) List<Long> selectedIds, RedirectAttributes redirectAttributes) {
+        if (selectedIds == null || selectedIds.isEmpty()) {
+            redirectAttributes.addFlashAttribute("errorMessage", "Please select at least one policy to delete.");
+            return "redirect:/insurance/list";
+        }
         try {
             policyService.deleteByIds(selectedIds);
             redirectAttributes.addFlashAttribute("successMessage", "Selected policies deleted successfully.");

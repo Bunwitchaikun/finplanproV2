@@ -2,12 +2,13 @@ package com.finplanpro.finplanpro.controller;
 
 import com.finplanpro.finplanpro.dto.InsuranceSummaryDto;
 import com.finplanpro.finplanpro.entity.NetWorthSnapshot;
-import com.finplanpro.finplanpro.entity.RetirementBasic;
+import com.finplanpro.finplanpro.entity.RetirementAdvanced;
 import com.finplanpro.finplanpro.entity.TaxRecord;
 import com.finplanpro.finplanpro.service.InsurancePolicyService;
 import com.finplanpro.finplanpro.service.NetWorthSnapshotService;
-import com.finplanpro.finplanpro.service.RetirementBasicService;
+import com.finplanpro.finplanpro.service.RetirementAdvancedService;
 import com.finplanpro.finplanpro.service.TaxRecordService;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -22,54 +23,85 @@ import java.util.stream.Collectors;
 public class DashboardController {
 
     private final NetWorthSnapshotService netWorthSnapshotService;
-    private final RetirementBasicService retirementBasicService;
+    private final RetirementAdvancedService retirementAdvancedService;
     private final InsurancePolicyService insurancePolicyService;
     private final TaxRecordService taxRecordService;
 
     public DashboardController(NetWorthSnapshotService netWorthSnapshotService,
-                               RetirementBasicService retirementBasicService,
-                               InsurancePolicyService insurancePolicyService,
-                               TaxRecordService taxRecordService) {
+            RetirementAdvancedService retirementAdvancedService,
+            InsurancePolicyService insurancePolicyService,
+            TaxRecordService taxRecordService) {
         this.netWorthSnapshotService = netWorthSnapshotService;
-        this.retirementBasicService = retirementBasicService;
+        this.retirementAdvancedService = retirementAdvancedService;
         this.insurancePolicyService = insurancePolicyService;
         this.taxRecordService = taxRecordService;
     }
 
     @GetMapping("/dashboard")
-    public String showDashboard(Model model) {
+    public String showDashboard(Model model, Authentication authentication) {
         model.addAttribute("activeMenu", "dashboard");
 
-        // Card 1: Net Worth
+        // --- Summary Cards Data ---
         List<NetWorthSnapshot> snapshots = netWorthSnapshotService.findSnapshotsByUser();
         BigDecimal latestNetWorth = snapshots.isEmpty() ? BigDecimal.ZERO : snapshots.get(0).getNetWorth();
         model.addAttribute("latestNetWorth", latestNetWorth);
 
-        // Card 2: Retirement
-        List<RetirementBasic> retirementPlans = retirementBasicService.findPlansByUser();
-        BigDecimal retirementFundsNeeded = retirementPlans.isEmpty() ? BigDecimal.ZERO : retirementPlans.get(0).getTotalFundsNeeded();
+        // Get retirement goal from Advanced planner (latest plan)
+        BigDecimal retirementFundsNeeded = BigDecimal.ZERO;
+        if (authentication != null) {
+            List<RetirementAdvanced> advancedPlans = retirementAdvancedService
+                    .findAllPlansByUser(authentication.getName());
+            if (!advancedPlans.isEmpty()) {
+                retirementFundsNeeded = advancedPlans.get(0).getTotalFundsNeeded();
+                if (retirementFundsNeeded == null) {
+                    retirementFundsNeeded = BigDecimal.ZERO;
+                }
+            }
+        }
         model.addAttribute("retirementFundsNeeded", retirementFundsNeeded);
 
-        // Card 3: Insurance
         InsuranceSummaryDto insuranceSummary = insurancePolicyService.getSummaryForCurrentUser();
-        model.addAttribute("totalLifeCoverage", insuranceSummary.getTotalLifeCoverage());
+        model.addAttribute("insuranceSummary", insuranceSummary);
 
-        // Card 4: Tax
         List<TaxRecord> taxRecords = taxRecordService.findRecordsByUser();
         BigDecimal latestTaxPayable = taxRecords.isEmpty() ? BigDecimal.ZERO : taxRecords.get(0).getTaxPayable();
         model.addAttribute("latestTaxPayable", latestTaxPayable);
 
-        // Chart 1: Net Worth Trend
-        // Reverse the list to have dates in chronological order for the chart
-        Collections.reverse(snapshots); 
+        // --- Charts Data ---
+
+        // Net Worth Trend Chart
+        Collections.reverse(snapshots); // Reverse to show oldest first for chart
         List<String> netWorthLabels = snapshots.stream()
                 .map(s -> s.getSnapshotDate().format(DateTimeFormatter.ofPattern("MMM yyyy")))
                 .collect(Collectors.toList());
         List<BigDecimal> netWorthData = snapshots.stream()
                 .map(NetWorthSnapshot::getNetWorth)
                 .collect(Collectors.toList());
+        // เพิ่มข้อมูล Assets และ Liabilities สำหรับกราฟ
+        List<BigDecimal> totalAssetsData = snapshots.stream()
+                .map(NetWorthSnapshot::getTotalAssets)
+                .collect(Collectors.toList());
+        List<BigDecimal> totalLiabilitiesData = snapshots.stream()
+                .map(NetWorthSnapshot::getTotalLiabilities)
+                .collect(Collectors.toList());
+
         model.addAttribute("netWorthLabels", netWorthLabels);
         model.addAttribute("netWorthData", netWorthData);
+        model.addAttribute("totalAssetsData", totalAssetsData); // เพิ่ม
+        model.addAttribute("totalLiabilitiesData", totalLiabilitiesData); // เพิ่ม
+
+        // Insurance Coverage Chart
+        if (insuranceSummary != null) {
+            model.addAttribute("insuranceLabels",
+                    List.of("Life", "Disability", "Critical Illness", "Health", "Accident"));
+            model.addAttribute("insuranceData", List.of(
+                    insuranceSummary.getTotalLifeCoverage(),
+                    insuranceSummary.getTotalDisabilityCoverage(),
+                    insuranceSummary.getTotalCriticalIllnessCoverage(),
+                    insuranceSummary.getTotalHealthCareRoom().add(insuranceSummary.getTotalHealthCarePerVisit()), // Combine
+                                                                                                                  // health
+                    insuranceSummary.getAccidentCoverage()));
+        }
 
         return "dashboard";
     }

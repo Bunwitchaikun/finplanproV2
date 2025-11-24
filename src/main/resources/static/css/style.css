@@ -1,0 +1,466 @@
+/* Global Variables & Theme */
+:root {
+    /* Backgrounds */
+    --bg-body: #0f172a;
+    /* Darkest blue/slate */
+    --bg-sidebar: #1e293b;
+    /* Slightly lighter */
+    --bg-card: #1e293b;
+    /* Same as sidebar for cards */
+    --bg-card-hover: #334155;
+
+    /* Text */
+    --text-primary: #f8fafc;
+    --text-secondary: #94a3b8;
+    --text-muted: #64748b;
+
+    /* Accents */
+    --accent-blue: #3b82f6;
+    --accent-cyan: #06b6d4;
+    --accent-purple: #8b5cf6;
+    --accent-orange: #f97316;
+    --accent-green: #10b981;
+    --accent-red: #ef4444;
+
+    /* Borders */
+    --border-color: #334155;
+
+    /* Spacing */
+    --sidebar-width: 260px;
+}
+
+body {
+    font-family: 'Prompt', 'Outfit', sans-serif;
+    /* Modern font */
+    background-color: var(--bg-body);
+    color: var(--text-primary);
+    overflow-x: hidden;
+    letter-spacing: 0.01em;
+    /* Slightly increased spacing */
+}
+
+a {
+    text-decoration: none;
+    color: inherit;
+}
+
+/* Layout */
+.main-content {
+    display: flex;
+    min-height: 100vh;
+}
+
+.content-wrapper {
+    flex-grow: 1;
+    padding: 2rem 2rem 2rem 4rem;
+    /* Increased left padding */
+    background-color: var(--bg-body);
+    /* Match body bg */
+    margin-left: var(--sidebar-width);
+    /* Offset for fixed sidebar */
+    width: calc(100% - var(--sidebar-width));
+}
+
+/* Sidebar */
+.sidebar-container {
+    width: var(--sidebar-width);
+    background-color: var(--bg-sidebar);
+    color: var(--text-secondary);
+    height: 100vh;
+    position: fixed;
+    top: 0;
+    left: 0;
+    display: flex;
+    flex-direction: column;
+    padding: 1.5rem;
+    border-right: 1px solid var(--border-color);
+    z-index: 1000;
+}
+
+.sidebar-container ul {
+    list-style: none;
+    padding-left: 0;
+}
+
+.sidebar-brand {
+    color: var(--text-primary);
+    font-size: 1.5rem;
+    font-weight: 700;
+    margin-bottom: 2rem;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    letter-spacing: -0.02em;
+}
+
+.nav-pills .nav-link {
+    color: var(--text-secondary);
+    font-weight: 500;
+    padding: 0.875rem 1rem;
+    /* Increased padding */
+    border-radius: 0.75rem;
+    /* More rounded */
+    margin-bottom: 0.5rem;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.nav-pills .nav-link:hover {
+    background-color: rgba(255, 255, 255, 0.05);
+    color: var(--text-primary);
+}
+
+.nav-pills .nav-link.active {
+    background-color: var(--accent-blue);
+    color: white;
+    box-shadow: 0 4px 12px -2px rgba(59, 130, 246, 0.5);
+    /* Softer shadow */
+}
+
+.nav-pills .nav-link i {
+    font-size: 1.2rem;
+}
+
+/* Cards */
+.card {
+    background-color: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: 1.25rem;
+    /* More rounded */
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    color: var(--text-primary);
+    margin-bottom: 1.5rem;
+}
+
+.card-header {
+    background-color: transparent;
+    border-bottom: 1px solid var(--border-color);
+    padding: 1.5rem;
+    font-weight: 600;
+    font-size: 1.1rem;
+}
+
+.card-body {
+    padding: 1.5rem;
+}
+
+/* Typography & Utilities */
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+    color: var(--text-primary);
+    font-weight: 600;
+    letter-spacing: -0.02em;
+    /* Tighter headings */
+}
+
+.text-muted {
+    color: var(--text-muted) !important;
+}
+
+.text-secondary {
+    color: var(--text-secondary) !important;
+}
+
+.text-accent-blue {
+    color: var(--accent-blue);
+}
+
+.text-accent-cyan {
+    color: var(--accent-cyan);
+}
+
+.text-accent-purple {
+    color: var(--accent-purple);
+}
+
+.text-accent-orange {
+    color: var(--accent-orange);
+}
+
+.text-accent-green {
+    color: var(--accent-green);
+}
+
+.bg-accent-blue {
+    background-color: var(--accent-blue);
+}
+
+.bg-accent-cyan {
+    background-color: var(--accent-cyan);
+}
+
+.bg-accent-purple {
+    background-color: var(--accent-purple);
+}
+
+.bg-accent-orange {
+    background-color: var(--accent-orange);
+}
+
+.bg-accent-green {
+    background-color: var(--accent-green);
+}
+
+/* Buttons */
+.btn {
+    padding: 0.625rem 1.25rem;
+    border-radius: 0.75rem;
+    font-weight: 500;
+    letter-spacing: 0.01em;
+}
+
+.btn-primary {
+    background-color: var(--accent-blue);
+    border-color: var(--accent-blue);
+}
+
+.btn-primary:hover {
+    background-color: #2563eb;
+    border-color: #2563eb;
+}
+
+.btn-outline-light {
+    border-color: var(--border-color);
+    color: var(--text-secondary);
+}
+
+.btn-outline-light:hover {
+    background-color: var(--bg-card-hover);
+    border-color: var(--text-secondary);
+    color: var(--text-primary);
+}
+
+/* Form Controls (Dark Mode) */
+.form-label {
+    color: var(--text-secondary);
+    font-weight: 500;
+    margin-bottom: 0.5rem;
+    font-size: 0.9rem;
+}
+
+.form-control,
+.form-select {
+    background-color: #0f172a;
+    /* Darker than card */
+    border: 1px solid var(--border-color);
+    color: var(--text-primary);
+    padding: 0.75rem 1rem;
+    /* Larger touch target */
+    border-radius: 0.75rem;
+    font-size: 0.95rem;
+}
+
+.form-control:focus,
+.form-select:focus {
+    background-color: #0f172a;
+    border-color: var(--accent-blue);
+    color: var(--text-primary);
+    box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.15);
+    /* Modern focus ring */
+}
+
+.form-control::placeholder {
+    color: var(--text-muted);
+    opacity: 0.7;
+}
+
+/* Input Group */
+.input-group-text {
+    background-color: var(--bg-card-hover);
+    border-color: var(--border-color);
+    color: var(--text-secondary);
+    border-radius: 0.75rem;
+}
+
+/* Tables */
+.table {
+    color: var(--text-secondary);
+    --bs-table-bg: transparent;
+    --bs-table-border-color: var(--border-color);
+}
+
+.table thead th {
+    color: var(--text-primary);
+    border-bottom-width: 1px;
+    font-weight: 600;
+    text-transform: uppercase;
+    font-size: 0.75rem;
+    letter-spacing: 0.05em;
+    padding: 1rem;
+}
+
+.table tbody td {
+    padding: 1rem;
+    vertical-align: middle;
+}
+
+.table-hover tbody tr:hover {
+    color: var(--text-primary);
+    background-color: rgba(255, 255, 255, 0.02);
+}
+
+/* Authentication Page Styles */
+.auth-wrapper {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #2d2b42;
+    /* Dark purple background from reference */
+    padding: 2rem;
+}
+
+.auth-card-modern {
+    display: flex;
+    width: 100%;
+    max-width: 2500px;
+    /* Significantly increased width */
+    background-color: #1e1c2e;
+    /* Darker card bg */
+    border-radius: 1.5rem;
+    overflow: hidden;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+    min-height: 800px;
+    /* Increased from 600px */
+}
+
+.auth-image-side {
+    flex: 1;
+    background-image: url('https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80&w=2564&auto=format&fit=crop');
+    /* Abstract dark purple landscape */
+    background-size: cover;
+    background-position: center;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 2rem;
+    color: white;
+}
+
+.auth-image-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(to bottom, rgba(45, 43, 66, 0.3), rgba(45, 43, 66, 0.8));
+    z-index: 1;
+}
+
+.auth-image-content {
+    position: relative;
+    z-index: 2;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.auth-form-side {
+    flex: 1;
+    padding: 3rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    background-color: #232136;
+    /* Slightly lighter than wrapper */
+}
+
+.auth-title {
+    font-size: 3rem;
+    /* Increased from 2.5rem */
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+    color: #ffffff;
+}
+
+.auth-subtitle {
+    color: #a0a0a0;
+    margin-bottom: 2.5rem;
+    font-size: 1.1rem;
+    /* Slightly larger */
+}
+
+.auth-input {
+    background-color: #2d2b42;
+    border: 1px solid #3f3d56;
+    color: #ffffff;
+    padding: 1rem 1.25rem;
+    /* Increased padding */
+    border-radius: 0.5rem;
+    margin-bottom: 1rem;
+    width: 100%;
+    transition: all 0.3s ease;
+    font-size: 1.1rem;
+    /* Larger text */
+}
+
+.auth-input:focus {
+    background-color: #2d2b42;
+    border-color: #6c5dd3;
+    box-shadow: 0 0 0 2px rgba(108, 93, 211, 0.2);
+    outline: none;
+    color: white;
+}
+
+.auth-btn {
+    background-color: #6c5dd3;
+    /* Purple accent */
+    color: white;
+    border: none;
+    padding: 0.875rem;
+    border-radius: 0.5rem;
+    font-weight: 600;
+    width: 100%;
+    margin-top: 1rem;
+    transition: background-color 0.3s ease;
+}
+
+.auth-btn:hover {
+    background-color: #5b4eb5;
+    color: white;
+}
+
+.auth-link {
+    color: #6c5dd3;
+    text-decoration: none;
+    font-weight: 500;
+}
+
+.auth-link:hover {
+    text-decoration: underline;
+}
+
+.form-check-input-custom {
+    background-color: #2d2b42;
+    border-color: #3f3d56;
+}
+
+.form-check-input-custom:checked {
+    background-color: #6c5dd3;
+    border-color: #6c5dd3;
+}
+
+@media (max-width: 768px) {
+    .auth-card-modern {
+        flex-direction: column;
+        max-width: 500px;
+    }
+
+    .auth-image-side {
+        display: none;
+        /* Hide image on mobile for better UX */
+    }
+
+    .auth-form-side {
+        padding: 2rem;
+    }
+}
+

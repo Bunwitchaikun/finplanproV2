@@ -1,92 +1,424 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org"
-      th:replace="~{layout :: layout(~{::title}, ~{::main}, ~{})}">
-<head>
-    <title>Assets & Liabilities</title>
-</head>
-<body>
-<main role="main">
-    <div class="container-fluid">
-        <div class="d-flex justify-content-between align-items-center mb-4">
-            <h1 class="h3" th:text="${snapshot.id == null ? 'Create New Snapshot' : 'Edit Snapshot'}"></h1>
-            <a th:href="@{/assets/list}" class="btn btn-outline-primary">
-                <i class="bi bi-list-ul me-2"></i>View All Snapshots
-            </a>
-        </div>
+    th:replace="~{layout :: layout(~{::title}, ~{::main}, ~{::scripts})}">
 
-        <form th:action="@{/assets}" th:object="${snapshot}" method="post">
-            <input type="hidden" th:field="*{id}" />
-            <input type="hidden" th:field="*{user}" />
+<head>
+    <title>Net Worth Snapshot</title>
+</head>
+
+<body>
+    <main role="main">
+        <div class="container-fluid">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h1 class="h3">Net Worth Snapshot</h1>
+                <a th:href="@{/assets/list}" class="btn btn-outline-primary">
+                    <i class="bi bi-list-ul"></i> View All Snapshots
+                </a>
+            </div>
 
             <div class="card shadow-sm border-0">
                 <div class="card-body p-4">
-                    <div class="row g-3 mb-3">
-                        <div class="col-md-6">
-                            <label for="snapshotName" class="form-label">Snapshot Name</label>
-                            <input type="text" class="form-control" id="snapshotName" th:field="*{snapshotName}" required placeholder="e.g., Q4 2025">
-                        </div>
-                        <div class="col-md-6">
-                            <label for="snapshotDate" class="form-label">Snapshot Date</label>
-                            <input type="date" class="form-control" id="snapshotDate" th:field="*{snapshotDate}" required>
-                        </div>
-                    </div>
-                    <hr>
-                    <div class="row g-4">
-                        <!-- Assets Column -->
-                        <div class="col-lg-6">
-                            <h4><i class="bi bi-plus-circle-fill text-success me-2"></i>Assets</h4>
-                            <div class="mb-2">
-                                <label for="cashAndEquivalents" class="form-label">Cash & Equivalents</label>
-                                <input type="number" step="0.01" class="form-control" id="cashAndEquivalents" th:field="*{cashAndEquivalents}">
+                    <form th:action="@{/assets}" th:object="${snapshot}" method="post">
+                        <input type="hidden" th:field="*{id}" />
+
+                        <div class="row mb-4">
+                            <div class="col-6">
+                                <label for="snapshotName" class="form-label">Snapshot Name</label>
+                                <input type="text" class="form-control" id="snapshotName" th:field="*{snapshotName}"
+                                    required>
                             </div>
-                            <div class="mb-2">
-                                <label for="stocks" class="form-label">Stocks</label>
-                                <input type="number" step="0.01" class="form-control" id="stocks" th:field="*{stocks}">
-                            </div>
-                            <div class="mb-2">
-                                <label for="funds" class="form-label">Funds</label>
-                                <input type="number" step="0.01" class="form-control" id="funds" th:field="*{funds}">
-                            </div>
-                            <div class="mb-2">
-                                <label for="realEstate" class="form-label">Real Estate</label>
-                                <input type="number" step="0.01" class="form-control" id="realEstate" th:field="*{realEstate}">
-                            </div>
-                            <div class="mb-2">
-                                <label for="otherAssets" class="form-label">Other Assets</label>
-                                <input type="number" step="0.01" class="form-control" id="otherAssets" th:field="*{otherAssets}">
+                            <div class="col-6">
+                                <label for="snapshotDate" class="form-label">Date</label>
+                                <input type="date" class="form-control" id="snapshotDate" th:field="*{snapshotDate}"
+                                    required>
                             </div>
                         </div>
 
-                        <!-- Liabilities Column -->
-                        <div class="col-lg-6">
-                            <h4><i class="bi bi-dash-circle-fill text-danger me-2"></i>Liabilities</h4>
-                            <div class="mb-2">
-                                <label for="creditCardDebt" class="form-label">Credit Card Debt</label>
-                                <input type="number" step="0.01" class="form-control" id="creditCardDebt" th:field="*{creditCardDebt}">
+                        <div class="row">
+                            <!-- LEFT COLUMN: Assets -->
+                            <div class="col-6 border-end">
+                                <h6 class="text-success mb-3">ทรัพย์สิน (Assets)</h6>
+                                <div id="assets-container">
+                                    <!-- Predefined Assets -->
+                                    <th:block th:if="${snapshot.items == null or snapshot.items.empty}">
+                                        <!-- 1. Cash -->
+                                        <div class="row g-2 align-items-center mb-2">
+                                            <div class="col-5 d-flex align-items-center">
+                                                <span class="text-primary fw-medium">เงินสด</span>
+                                                <input type="hidden" name="items[0].name" value="เงินสด">
+                                            </div>
+                                            <div class="col-7">
+                                                <input type="number" class="form-control form-control-sm"
+                                                    name="items[0].amount" placeholder="">
+                                                <input type="hidden" name="items[0].type" value="ASSET">
+                                            </div>
+                                        </div>
+                                        <!-- 2. Bonds -->
+                                        <div class="row g-2 align-items-center mb-2">
+                                            <div class="col-5 d-flex align-items-center">
+                                                <span class="text-primary fw-medium">ตราสารหนี้/พันธบัตร/หุ้นกู้</span>
+                                                <input type="hidden" name="items[1].name"
+                                                    value="ตราสารหนี้/พันธบัตร/หุ้นกู้">
+                                            </div>
+                                            <div class="col-7">
+                                                <input type="number" class="form-control form-control-sm"
+                                                    name="items[1].amount" placeholder="">
+                                                <input type="hidden" name="items[1].type" value="ASSET">
+                                            </div>
+                                        </div>
+                                        <!-- 3. RMF/LTF -->
+                                        <div class="row g-2 align-items-center mb-2">
+                                            <div class="col-5 d-flex align-items-center">
+                                                <span class="text-primary fw-medium">กองทุนสำรองเลี้ยงชีพ RMF/LTF</span>
+                                                <input type="hidden" name="items[2].name"
+                                                    value="กองทุนสำรองเลี้ยงชีพ RMF/LTF">
+                                            </div>
+                                            <div class="col-7">
+                                                <input type="number" class="form-control form-control-sm"
+                                                    name="items[2].amount" placeholder="">
+                                                <input type="hidden" name="items[2].type" value="ASSET">
+                                            </div>
+                                        </div>
+                                        <!-- 4. Equity Fund -->
+                                        <div class="row g-2 align-items-center mb-2">
+                                            <div class="col-5 d-flex align-items-center">
+                                                <span class="text-primary fw-medium">กองทุนหุ้น</span>
+                                                <input type="hidden" name="items[3].name" value="กองทุนหุ้น">
+                                            </div>
+                                            <div class="col-7">
+                                                <input type="number" class="form-control form-control-sm"
+                                                    name="items[3].amount" placeholder="">
+                                                <input type="hidden" name="items[3].type" value="ASSET">
+                                            </div>
+                                        </div>
+                                        <!-- 5. Individual Stocks -->
+                                        <div class="row g-2 align-items-center mb-2">
+                                            <div class="col-5 d-flex align-items-center">
+                                                <span class="text-primary fw-medium">หุ้นรายตัว</span>
+                                                <input type="hidden" name="items[4].name" value="หุ้นรายตัว">
+                                            </div>
+                                            <div class="col-7">
+                                                <input type="number" class="form-control form-control-sm"
+                                                    name="items[4].amount" placeholder="">
+                                                <input type="hidden" name="items[4].type" value="ASSET">
+                                            </div>
+                                        </div>
+                                        <!-- 6. Gold -->
+                                        <div class="row g-2 align-items-center mb-2">
+                                            <div class="col-5 d-flex align-items-center">
+                                                <span class="text-primary fw-medium">ทองคำ</span>
+                                                <input type="hidden" name="items[5].name" value="ทองคำ">
+                                            </div>
+                                            <div class="col-7">
+                                                <input type="number" class="form-control form-control-sm"
+                                                    name="items[5].amount" placeholder="">
+                                                <input type="hidden" name="items[5].type" value="ASSET">
+                                            </div>
+                                        </div>
+                                        <!-- 7. Bitcoin -->
+                                        <div class="row g-2 align-items-center mb-2">
+                                            <div class="col-5 d-flex align-items-center">
+                                                <span class="text-primary fw-medium">บิตคอย</span>
+                                                <input type="hidden" name="items[6].name" value="บิตคอย">
+                                            </div>
+                                            <div class="col-7">
+                                                <input type="number" class="form-control form-control-sm"
+                                                    name="items[6].amount" placeholder="">
+                                                <input type="hidden" name="items[6].type" value="ASSET">
+                                            </div>
+                                        </div>
+                                    </th:block>
+
+                                    <th:block th:each="item, stat : ${snapshot.items}">
+                                        <div th:if="${item.type.name() == 'ASSET'}"
+                                            class="row g-2 align-items-center mb-2">
+                                            <div class="col-5 d-flex align-items-center">
+                                                <!-- Predefined Asset: Show Text -->
+                                                <th:block
+                                                    th:if="${item.name == 'เงินสด' or item.name == 'ตราสารหนี้/พันธบัตร/หุ้นกู้' or item.name == 'กองทุนสำรองเลี้ยงชีพ RMF/LTF' or item.name == 'กองทุนหุ้น' or item.name == 'หุ้นรายตัว' or item.name == 'ทองคำ' or item.name == 'บิตคอย'}">
+                                                    <span class="text-primary fw-medium" th:text="${item.name}"></span>
+                                                    <input type="hidden" th:field="*{items[__${stat.index}__].name}">
+                                                </th:block>
+                                                <!-- Custom Asset: Show Input -->
+                                                <th:block
+                                                    th:unless="${item.name == 'เงินสด' or item.name == 'ตราสารหนี้/พันธบัตร/หุ้นกู้' or item.name == 'กองทุนสำรองเลี้ยงชีพ RMF/LTF' or item.name == 'กองทุนหุ้น' or item.name == 'หุ้นรายตัว' or item.name == 'ทองคำ' or item.name == 'บิตคอย'}">
+                                                    <input type="text" class="form-control form-control-sm"
+                                                        th:field="*{items[__${stat.index}__].name}"
+                                                        placeholder="ชื่อรายการ">
+                                                </th:block>
+                                            </div>
+                                            <div class="col-7">
+                                                <input type="number" class="form-control form-control-sm"
+                                                    th:field="*{items[__${stat.index}__].amount}" placeholder="">
+                                                <input type="hidden" th:field="*{items[__${stat.index}__].type}">
+                                            </div>
+                                        </div>
+                                    </th:block>
+                                </div>
+                                <button type="button" id="add-asset-btn" class="btn btn-sm btn-outline-secondary mt-2">
+                                    <i class="bi bi-plus-lg"></i> ทรัพย์สินอื่นๆ
+                                </button>
+
+                                <!-- Asset Total Output -->
+                                <div class="mt-4 p-3 bg-light rounded">
+                                    <div class="d-flex justify-content-between">
+                                        <span>รวมทรัพย์สิน:</span>
+                                        <strong class="text-success" id="totalAssetsDisplay"
+                                            th:text="${#numbers.formatDecimal(snapshot.totalAssets ?: 0, 1, 'COMMA', 2, 'POINT')}">0.00</strong>
+                                    </div>
+                                </div>
                             </div>
-                            <div class="mb-2">
-                                <label for="homeLoan" class="form-label">Home Loan</label>
-                                <input type="number" step="0.01" class="form-control" id="homeLoan" th:field="*{homeLoan}">
-                            </div>
-                            <div class="mb-2">
-                                <label for="carLoan" class="form-label">Car Loan</label>
-                                <input type="number" step="0.01" class="form-control" id="carLoan" th:field="*{carLoan}">
-                            </div>
-                            <div class="mb-2">
-                                <label for="otherLiabilities" class="form-label">Other Liabilities</label>
-                                <input type="number" step="0.01" class="form-control" id="otherLiabilities" th:field="*{otherLiabilities}">
+
+
+
+                            <!-- RIGHT COLUMN: Liabilities -->
+                            <div class="col-6">
+                                <h6 class="text-danger mb-3">หนี้สิน (Liabilities)</h6>
+                                <div id="liabilities-container">
+                                    <!-- Predefined Liabilities -->
+                                    <th:block th:if="${snapshot.items == null or snapshot.items.empty}">
+                                        <!-- 1. Credit Card -->
+                                        <div class="row g-2 align-items-center mb-2">
+                                            <div class="col-5 d-flex align-items-center">
+                                                <span class="text-danger fw-medium">บัตรเครดิต</span>
+                                                <input type="hidden" name="items[7].name" value="บัตรเครดิต">
+                                            </div>
+                                            <div class="col-7">
+                                                <input type="number" class="form-control form-control-sm"
+                                                    name="items[7].amount" placeholder="">
+                                                <input type="hidden" name="items[7].type" value="LIABILITY">
+                                            </div>
+                                        </div>
+                                        <!-- 2. Cash Card -->
+                                        <div class="row g-2 align-items-center mb-2">
+                                            <div class="col-5 d-flex align-items-center">
+                                                <span class="text-danger fw-medium">บัตรกดเงินสด</span>
+                                                <input type="hidden" name="items[8].name" value="บัตรกดเงินสด">
+                                            </div>
+                                            <div class="col-7">
+                                                <input type="number" class="form-control form-control-sm"
+                                                    name="items[8].amount" placeholder="">
+                                                <input type="hidden" name="items[8].type" value="LIABILITY">
+                                            </div>
+                                        </div>
+                                        <!-- 3. Personal Loan -->
+                                        <div class="row g-2 align-items-center mb-2">
+                                            <div class="col-5 d-flex align-items-center">
+                                                <span class="text-danger fw-medium">สินเชื่อส่วนบุคคล</span>
+                                                <input type="hidden" name="items[9].name" value="สินเชื่อส่วนบุคคล">
+                                            </div>
+                                            <div class="col-7">
+                                                <input type="number" class="form-control form-control-sm"
+                                                    name="items[9].amount" placeholder="">
+                                                <input type="hidden" name="items[9].type" value="LIABILITY">
+                                            </div>
+                                        </div>
+                                        <!-- 4. Installment -->
+                                        <div class="row g-2 align-items-center mb-2">
+                                            <div class="col-5 d-flex align-items-center">
+                                                <span class="text-danger fw-medium">ผ่อนสินค้า</span>
+                                                <input type="hidden" name="items[10].name" value="ผ่อนสินค้า">
+                                            </div>
+                                            <div class="col-7">
+                                                <input type="number" class="form-control form-control-sm"
+                                                    name="items[10].amount" placeholder="">
+                                                <input type="hidden" name="items[10].type" value="LIABILITY">
+                                            </div>
+                                        </div>
+                                        <!-- 5. Informal Debt -->
+                                        <div class="row g-2 align-items-center mb-2">
+                                            <div class="col-5 d-flex align-items-center">
+                                                <span class="text-danger fw-medium">หนี้นอกระบบ</span>
+                                                <input type="hidden" name="items[11].name" value="หนี้นอกระบบ">
+                                            </div>
+                                            <div class="col-7">
+                                                <input type="number" class="form-control form-control-sm"
+                                                    name="items[11].amount" placeholder="">
+                                                <input type="hidden" name="items[11].type" value="LIABILITY">
+                                            </div>
+                                        </div>
+                                        <!-- 6. Home Loan -->
+                                        <div class="row g-2 align-items-center mb-2">
+                                            <div class="col-5 d-flex align-items-center">
+                                                <span class="text-danger fw-medium">กู้ซื้อบ้าน</span>
+                                                <input type="hidden" name="items[12].name" value="กู้ซื้อบ้าน">
+                                            </div>
+                                            <div class="col-7">
+                                                <input type="number" class="form-control form-control-sm"
+                                                    name="items[12].amount" placeholder="">
+                                                <input type="hidden" name="items[12].type" value="LIABILITY">
+                                            </div>
+                                        </div>
+                                        <!-- 7. Car Loan -->
+                                        <div class="row g-2 align-items-center mb-2">
+                                            <div class="col-5 d-flex align-items-center">
+                                                <span class="text-danger fw-medium">กู้ซื้อรถ</span>
+                                                <input type="hidden" name="items[13].name" value="กู้ซื้อรถ">
+                                            </div>
+                                            <div class="col-7">
+                                                <input type="number" class="form-control form-control-sm"
+                                                    name="items[13].amount" placeholder="">
+                                                <input type="hidden" name="items[13].type" value="LIABILITY">
+                                            </div>
+                                        </div>
+                                    </th:block>
+
+                                    <th:block th:each="item, stat : ${snapshot.items}">
+                                        <div th:if="${item.type.name() == 'LIABILITY'}"
+                                            class="row g-2 align-items-center mb-2">
+                                            <div class="col-5 d-flex align-items-center">
+                                                <!-- Predefined Liability: Show Text -->
+                                                <th:block
+                                                    th:if="${item.name == 'บัตรเครดิต' or item.name == 'บัตรกดเงินสด' or item.name == 'สินเชื่อส่วนบุคคล' or item.name == 'ผ่อนสินค้า' or item.name == 'หนี้นอกระบบ' or item.name == 'กู้ซื้อบ้าน' or item.name == 'กู้ซื้อรถ'}">
+                                                    <span class="text-danger fw-medium" th:text="${item.name}"></span>
+                                                    <input type="hidden" th:field="*{items[__${stat.index}__].name}">
+                                                </th:block>
+                                                <!-- Custom Liability: Show Input -->
+                                                <th:block
+                                                    th:unless="${item.name == 'บัตรเครดิต' or item.name == 'บัตรกดเงินสด' or item.name == 'สินเชื่อส่วนบุคคล' or item.name == 'ผ่อนสินค้า' or item.name == 'หนี้นอกระบบ' or item.name == 'กู้ซื้อบ้าน' or item.name == 'กู้ซื้อรถ'}">
+                                                    <input type="text" class="form-control form-control-sm"
+                                                        th:field="*{items[__${stat.index}__].name}"
+                                                        placeholder="ชื่อรายการ">
+                                                </th:block>
+                                            </div>
+                                            <div class="col-7">
+                                                <input type="number" class="form-control form-control-sm"
+                                                    th:field="*{items[__${stat.index}__].amount}" placeholder="">
+                                                <input type="hidden" th:field="*{items[__${stat.index}__].type}">
+                                            </div>
+                                        </div>
+                                    </th:block>
+                                </div>
+                                <button type="button" id="add-liability-btn"
+                                    class="btn btn-sm btn-outline-secondary mt-2">
+                                    <i class="bi bi-plus-lg"></i> หนี้สินอื่นๆ
+                                </button>
+
+                                <!-- Liability Total Output -->
+                                <div class="mt-4 p-3 bg-light rounded">
+                                    <div class="d-flex justify-content-between">
+                                        <span>รวมหนี้สิน:</span>
+                                        <strong class="text-danger" id="totalLiabilitiesDisplay"
+                                            th:text="${#numbers.formatDecimal(snapshot.totalLiabilities ?: 0, 1, 'COMMA', 2, 'POINT')}">0.00</strong>
+                                    </div>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                    <hr class="my-4">
-                    <button type="submit" class="btn btn-primary px-4">
-                        <i class="bi bi-save me-2"></i>
-                        <span th:text="${snapshot.id == null ? 'Save Snapshot' : 'Update Snapshot'}"></span>
-                    </button>
+
+                        <!-- Summary Section -->
+                        <div class="row mt-4">
+                            <div class="col-12">
+                                <div class="card bg-light border-primary">
+                                    <div class="card-body">
+                                        <h5 class="card-title text-center text-primary">ความมั่งคั่งสุทธิ (Net Worth)
+                                        </h5>
+                                        <div class="row text-center mt-3">
+                                            <div class="col-12">
+                                                <h4 class="text-dark" id="netWorthDisplay"
+                                                    th:text="${#numbers.formatDecimal(snapshot.netWorth ?: 0, 1, 'COMMA', 2, 'POINT')}">
+                                                    0.00</h4>
+                                                <p class="text-muted mb-0 fst-italic">"เราจะมั่งคั่งมากแค่ไหน
+                                                    ขึ้นอยู่กับว่าเรากำลังสะสมอะไรอยู่"</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-12 d-flex justify-content-between mt-5">
+                            <a th:href="@{/assets/list}" class="btn btn-secondary">Cancel</a>
+                            <div>
+                                <button type="button" onclick="calculateTotals()"
+                                    class="btn btn-info text-white me-2"><i class="bi bi-calculator"></i> คำนวณ
+                                    (Calculate)</button>
+                                <button type="submit" class="btn btn-primary">Save
+                                    Snapshot</button>
+                            </div>
+                        </div>
+                    </form>
                 </div>
             </div>
-        </form>
-    </div>
-</main>
+        </div>
+    </main>
+
+    <th:block th:fragment="scripts">
+        <script>
+            // Add Asset Item
+            document.getElementById('add-asset-btn').addEventListener('click', function () {
+                const container = document.getElementById('assets-container');
+                const index = container.querySelectorAll('.row').length;
+                const newRow = `
+                <div class="row g-2 align-items-center mb-2">
+                    <div class="col-5">
+                        <input type="text" class="form-control form-control-sm" name="items[${index}].name" placeholder="ชื่อรายการ">
+                    </div>
+                    <div class="col-7">
+                        <input type="number" class="form-control form-control-sm" name="items[${index}].amount" placeholder="">
+                        <input type="hidden" name="items[${index}].type" value="ASSET">
+                    </div>
+                </div>`;
+                container.insertAdjacentHTML('beforeend', newRow);
+            });
+
+            // Add Liability Item
+            document.getElementById('add-liability-btn').addEventListener('click', function () {
+                const container = document.getElementById('liabilities-container');
+                const index = container.querySelectorAll('.row').length + 7; // offset for assets
+                const newRow = `
+                <div class="row g-2 align-items-center mb-2">
+                    <div class="col-5">
+                        <input type="text" class="form-control form-control-sm" name="items[${index}].name" placeholder="ชื่อรายการ">
+                    </div>
+                    <div class="col-7">
+                        <input type="number" class="form-control form-control-sm" name="items[${index}].amount" placeholder="">
+                        <input type="hidden" name="items[${index}].type" value="LIABILITY">
+                    </div>
+                </div>`;
+                container.insertAdjacentHTML('beforeend', newRow);
+            });
+
+            // Calculate Totals (client-side only, no save)
+            function calculateTotals() {
+                let totalAssets = 0;
+                let totalLiabilities = 0;
+
+                // Sum all asset amounts
+                document.querySelectorAll('input[name*="].amount"]').forEach(input => {
+                    const typeInput = input.parentElement.querySelector('input[name*="].type"]');
+                    if (typeInput && typeInput.value === 'ASSET') {
+                        totalAssets += parseFloat(input.value) || 0;
+                    } else if (typeInput && typeInput.value === 'LIABILITY') {
+                        totalLiabilities += parseFloat(input.value) || 0;
+                    }
+                });
+
+                const netWorth = totalAssets - totalLiabilities;
+
+                // Update display using IDs
+                const totalAssetsEl = document.getElementById('totalAssetsDisplay');
+                const totalLiabilitiesEl = document.getElementById('totalLiabilitiesDisplay');
+                const netWorthEl = document.getElementById('netWorthDisplay');
+
+                if (totalAssetsEl) {
+                    totalAssetsEl.textContent = totalAssets.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+                }
+                if (totalLiabilitiesEl) {
+                    totalLiabilitiesEl.textContent = totalLiabilities.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+                }
+                if (netWorthEl) {
+                    netWorthEl.textContent = netWorth.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+                    // Update color based on positive/negative
+                    if (netWorth >= 0) {
+                        netWorthEl.className = 'text-success';
+                    } else {
+                        netWorthEl.className = 'text-danger';
+                    }
+                }
+            }
+        </script>
+    </th:block>
+
 </body>
+
 </html>

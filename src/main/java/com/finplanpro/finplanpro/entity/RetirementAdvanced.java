@@ -8,6 +8,7 @@ import lombok.Setter;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.UUID;
 
 @Getter
 @Setter
@@ -18,22 +19,22 @@ import java.time.LocalDate;
 public class RetirementAdvanced {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private UUID id;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
-    
+
     private String planName;
 
     // Step 1: YOU
     private LocalDate dateOfBirth;
     private String gender;
-    private int retireAge;
+    private Integer retireAge;
 
     // Step 2: LIFE
-    private int lifeExpectancy;
+    private Integer lifeExpectancy;
 
     // Step 3: WANT
     private String lifestyle; // e.g., BASIC, COMFORTABLE, LUXURY
