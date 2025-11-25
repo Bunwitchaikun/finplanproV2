@@ -53,116 +53,278 @@ finplanpro/
 
 
 
-# 🧱 Installation & Setup
+===================================================
 
-# 🛠 1️⃣ ติดตั้ง Tech Stack
+---
+
+# 🧱 Installation & Setup — FinPlanPro
+
+FinPlanPro คือเว็บแอปสำหรับวางแผนการเงินและเกษียณแบบครบวงจร
+สร้างด้วย **Spring Boot 3 + PostgreSQL + Docker Compose + Thymeleaf**
+พร้อมโครงสร้างตาม Milestone D1–D10
+
+---
+
+# 🛠 1. Tech Stack Requirements
 
 ### **Backend**
-- Java 17
-- Spring Boot 3.5.x
-- Spring MVC
-- Spring Data JPA
-- Spring Security
-- Spring Validation
-- Actuator
-- Flyway Migration
-- Lombok
+
+* Java **17**
+* Spring Boot **3.5.x**
+* Spring MVC
+* Spring Data JPA
+* Spring Security (Session-based)
+* Spring Validation
+* Flyway Migration
+* Lombok
+* Actuator
 
 ### **Frontend**
-- Thymeleaf
-- HTML5 / CSS3 / JS
-- Bootstrap 5
-- Chart.js
+
+* Thymeleaf
+* HTML5 / CSS3 / JS
+* Bootstrap 5
+* Chart.js
 
 ### **Database**
-- PostgreSQL 15
-- Docker + docker-compose
-- pgAdmin4
 
-### **Dev / Tools**
-- IntelliJ IDEA
-- Maven
-- Git + GitLab
-- Docker Desktop
+* PostgreSQL **15**
+* Docker + docker-compose
+* pgAdmin4
 
-## 1️⃣ Clone Repository  
+### **Development Tools**
+
+* IntelliJ IDEA / VS Code
+* Maven
+* Git + GitLab
+* Docker Desktop
+
+---
+
+# 📂 2. Clone Repository
+
 ```bash
 git clone https://gitlab.com/bosstanasit2546-group/finplanpro-main-v2.git
-cd finplanpro
+cd finplanpro-main-v2
+```
 
-2️⃣ Run PostgreSQL + pgAdmin (Docker)
+---
+
+# 🐳 3. Start PostgreSQL + pgAdmin (Docker)
+
+```bash
 docker-compose up -d
+```
 
-pgAdmin available at:
- ➡ http://localhost:5050
- Login:
-Email: admin@finplanpro.com
+ระบบจะสร้าง containers:
 
+| Service        | URL                                            | Description        |
+| -------------- | ---------------------------------------------- | ------------------ |
+| **PostgreSQL** | -                                              | DB ของระบบ         |
+| **pgAdmin4**   | [http://localhost:5050](http://localhost:5050) | UI บริหารจัดการ DB |
 
-Password: admin123
+### 🔑 pgAdmin Login
 
+| Field    | Value                                               |
+| -------- | --------------------------------------------------- |
+| Email    | [admin@finplanpro.com](mailto:admin@finplanpro.com) |
+| Password | admin123                                            |
 
-Database info:
-Host: finplanpro-db
+### 🗄 Database Connection
 
+| Field    | Value         |
+| -------- | ------------- |
+| Host     | finplanpro-db |
+| Port     | 5432          |
+| Database | finplanpro    |
+| Username | postgres      |
+| Password | postgres      |
 
-Port: 5432
+---
 
+# ⚙️ 4. Application Configuration
 
-DB: finplanpro
+ค่ามาตรฐานถูกตั้งไว้แล้วในไฟล์:
 
+```
+src/main/resources/application.yml
+```
 
-User: postgres
-
-
-Pass: postgres
-
-
-
-3️⃣ Configure application.yml
-(ไฟล์ในโปรเจกต์มีให้แล้ว)
+```yaml
 spring:
   datasource:
     url: jdbc:postgresql://finplanpro-db:5432/finplanpro
     username: postgres
     password: postgres
+```
 
+> ไม่ต้องแก้ไข หากใช้ Docker Compose ตาม repo
 
-4️⃣ Run Migration (Flyway)
-เพียงเปิด Spring Boot แล้ว Flyway จะ migrate อัตโนมัติ
+---
+
+# 🐦 5. Run Flyway Migration
+
+เมื่อรัน Spring Boot → Flyway จะ migrate อัตโนมัติ
+
+```bash
 mvn spring-boot:run
+```
 
-เมื่อสำเร็จ จะเห็น log:
+หากสำเร็จจะเห็น log:
+
+```
 Flyway - Successfully applied 1 migration
+```
 
+**Flyway V1** จะสร้างตาราง เช่น:
 
-5️⃣ Access Application
+* users
+* roles
+* user_roles
+* user_profiles
+* retirement_basic
+* retirement_advanced
+* assets
+* liabilities
+* insurance_policies
+* tax_records
+* net_worth_snapshots
+
+---
+
+# 🚀 6. Start Application
+
+```bash
+mvn spring-boot:run
+```
+
+หรือกด **Run ▶** ใน IntelliJ IDEA
+
+---
+
+# 🌐 7. Access Web App
+
+```
 http://localhost:8083
+```
 
+---
 
-🧬 Database Schema (ERD)
-Entity หลัก 10 กลุ่ม (ตาม D2–D8)
-[users] 1---* [user_profiles]
-[users] *---* [roles]
-[users] 1---* [retirement_basic]
-[users] 1---* [retirement_advanced]
-[users] 1---* [assets]
-[users] 1---* [liabilities]
-[users] 1---* [insurance_policies]
-[users] 1---* [tax_records]
-[users] 1---* [net_worth_snapshots]
+# 🧬 8. Database Schema Overview
 
-Flyway Version 1 ประกอบด้วย:
-users
+ระบบ FinPlanPro แบ่งข้อมูลเป็น 6 กลุ่มหลัก:
 
+### 👤 Authentication
 
-roles
+* users
+* roles
+* user_roles
+* user_profiles
 
+### 🏦 Retirement Planning
 
-user_roles
+* retirement_basic
+* retirement_advanced (JSONB)
 
+### 💰 Assets & Liabilities
 
-user_profiles
+* assets
+* liabilities
+* net_worth_snapshots
+
+### 🛡 Insurance
+
+* insurance_policies
+
+### 🧾 Tax
+
+* tax_records
+
+---
+
+# 📦 9. Features After Installation
+
+### 🔐 D2 — Authentication
+
+* Register / Login / Logout
+* Profile edit
+* Session-based security
+
+### 🧮 D3 — Retirement Basic
+
+* FV / Target / PMT
+* Validation
+* Save plan to DB
+
+### 🧠 D4 — Retirement Advanced (7 Steps)
+
+* Step-by-step wizard
+* Auto-save session
+* Summary + Chart.js
+
+### 💸 D5 — Assets & Liabilities
+
+* CRUD
+* Net Worth Calculation
+* Pie Chart
+
+### 🛡 D6 — Insurance
+
+* Add/Edit/Delete Policy
+* Annual Premium Summary
+* Visualization
+
+### 🧾 D7 — Tax
+
+* Thai tax bracket
+* Net income
+* Tax history
+
+### 📊 D8 — Dashboard
+
+* Summary Cards
+* Target vs Actual Graph
+* Quick Links
+
+---
+
+# ❗ 10. Common Issues & Fixes
+
+### ❌ Docker ไม่ขึ้น container
+
+* เปิด Docker Desktop
+* เช็ก WSL2 backend (Windows)
+
+### ❌ pgAdmin เข้าไม่ได้
+
+* ตรวจ email/password
+* รีสตาร์ท container
+
+### ❌ Migration ไม่ทำงาน
+
+```
+mvn clean
+rm -rf target/
+mvn spring-boot:run
+```
+
+---
+
+# 🎉 Installation Complete!
+
+ตอนนี้ระบบ **FinPlanPro พร้อมใช้งาน!**
+รองรับการพัฒนาแบบ Full-stack และ Milestone D1–D10 แบบครบถ้วน 🔥
+
+---
+
+ถ้าต้องการผมสามารถเขียนให้เพิ่มได้:
+
+✅ README.md ฉบับเต็ม
+✅ Deployment Guide (Render / Railway / Fly.io)
+✅ ERD Diagram แบบกราฟิก
+✅ Admin Account Auto-Seed
+
+===================================================
 
 
 
