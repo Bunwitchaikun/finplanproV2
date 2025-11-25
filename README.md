@@ -20,35 +20,7 @@
 
 ---
 
-# 🛠 Tech Stack
 
-### **Backend**
-- Java 17
-- Spring Boot 3.5.x
-- Spring MVC
-- Spring Data JPA
-- Spring Security
-- Spring Validation
-- Actuator
-- Flyway Migration
-- Lombok
-
-### **Frontend**
-- Thymeleaf
-- HTML5 / CSS3 / JS
-- Bootstrap 5
-- Chart.js
-
-### **Database**
-- PostgreSQL 15
-- Docker + docker-compose
-- pgAdmin4
-
-### **Dev / Tools**
-- IntelliJ IDEA
-- Maven
-- Git + GitLab
-- Docker Desktop
 
 
 ## 🧱 Project Structure (High-level)
@@ -83,9 +55,39 @@ finplanpro/
 
 # 🧱 Installation & Setup
 
+# 🛠 1️⃣ ติดตั้ง Tech Stack
+
+### **Backend**
+- Java 17
+- Spring Boot 3.5.x
+- Spring MVC
+- Spring Data JPA
+- Spring Security
+- Spring Validation
+- Actuator
+- Flyway Migration
+- Lombok
+
+### **Frontend**
+- Thymeleaf
+- HTML5 / CSS3 / JS
+- Bootstrap 5
+- Chart.js
+
+### **Database**
+- PostgreSQL 15
+- Docker + docker-compose
+- pgAdmin4
+
+### **Dev / Tools**
+- IntelliJ IDEA
+- Maven
+- Git + GitLab
+- Docker Desktop
+
 ## 1️⃣ Clone Repository  
 ```bash
-git clone https://gitlab.com/YOUR_REPO_HERE/finplanpro.git
+git clone https://gitlab.com/bosstanasit2546-group/finplanpro-main-v2.git
 cd finplanpro
 
 2️⃣ Run PostgreSQL + pgAdmin (Docker)
@@ -135,7 +137,7 @@ Flyway - Successfully applied 1 migration
 
 
 5️⃣ Access Application
-http://localhost:8080
+http://localhost:8083
 
 
 🧬 Database Schema (ERD)
