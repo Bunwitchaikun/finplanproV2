@@ -195,6 +195,7 @@ public class RetirementAdvancedController {
         try {
             RetirementPlanData loadedPlan = retirementService.loadPlanToSession(id);
             // Copy loaded data to session
+            planData.setId(loadedPlan.getId()); // Set ID to session
             planData.setPlanName(loadedPlan.getPlanName());
             planData.setStep1(loadedPlan.getStep1());
             planData.setStep2(loadedPlan.getStep2());

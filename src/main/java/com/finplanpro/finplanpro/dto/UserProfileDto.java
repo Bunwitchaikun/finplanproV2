@@ -18,4 +18,11 @@ public class UserProfileDto {
     private LocalDate dateOfBirth;
 
     private String gender;
+
+    private org.springframework.web.multipart.MultipartFile profileImage;
+
+    private String profileImageUrl;
+
+    private String email;
+    private String username;
 }

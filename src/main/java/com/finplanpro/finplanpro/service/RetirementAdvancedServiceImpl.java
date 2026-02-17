@@ -335,7 +335,18 @@ public class RetirementAdvancedServiceImpl implements RetirementAdvancedService 
             throw new RuntimeException("User not found: " + username);
         }
 
-        RetirementAdvanced entity = new RetirementAdvanced();
+        RetirementAdvanced entity;
+        if (planData.getId() != null) {
+            entity = retirementAdvancedRepository.findById(planData.getId())
+                    .orElse(new RetirementAdvanced());
+            // Verify ownership securely
+            if (entity.getId() != null && !entity.getUser().getId().equals(user.getId())) {
+                throw new RuntimeException("Unauthorized access to update plan");
+            }
+        } else {
+            entity = new RetirementAdvanced();
+        }
+
         entity.setUser(user);
         entity.setPlanName(planData.getPlanName());
 
@@ -364,14 +375,34 @@ public class RetirementAdvancedServiceImpl implements RetirementAdvancedService 
         }
 
         // Map Step4 data
+        // Map Step4 data
         if (planData.getStep4() != null) {
             Step4ExpenseDTO step4 = planData.getStep4();
             entity.setDesiredMonthlyExpense(
                     step4.getTotalBasicExpensesFV() != null ? step4.getTotalBasicExpensesFV() : BigDecimal.ZERO);
             entity.setSpecialExpense(
                     step4.getTotalSpecialExpensesFV() != null ? step4.getTotalSpecialExpensesFV() : BigDecimal.ZERO);
+
+            // Clear and Add Basic Expenses
+            entity.getBasicExpenses().clear();
+            if (step4.getBasicItems() != null) {
+                for (Step4ExpenseDTO.ExpenseItem item : step4.getBasicItems()) {
+                    entity.getBasicExpenses().add(new com.finplanpro.finplanpro.entity.ExpenseItemEmbeddable(
+                            item.getName(), item.getAmountToday(), item.getInflationRate(), item.getFutureValue()));
+                }
+            }
+
+            // Clear and Add Special Expenses
+            entity.getSpecialExpenses().clear();
+            if (step4.getSpecialItems() != null) {
+                for (Step4ExpenseDTO.ExpenseItem item : step4.getSpecialItems()) {
+                    entity.getSpecialExpenses().add(new com.finplanpro.finplanpro.entity.ExpenseItemEmbeddable(
+                            item.getName(), item.getAmountToday(), item.getInflationRate(), item.getFutureValue()));
+                }
+            }
         }
 
+        // Map Step5 data
         // Map Step5 data
         if (planData.getStep5() != null) {
             Step5HavesDTO step5 = planData.getStep5();
@@ -386,6 +417,24 @@ public class RetirementAdvancedServiceImpl implements RetirementAdvancedService 
                                 : BigDecimal.ZERO);
                 entity.setAnnuity(futureIncome.getAnnuityInsurance() != null ? futureIncome.getAnnuityInsurance()
                         : BigDecimal.ZERO);
+            }
+
+            // Clear and Add Current Assets
+            entity.getCurrentAssetItems().clear();
+            if (step5.getCurrentAssets() != null) {
+                for (Step5HavesDTO.CurrentAssetItem item : step5.getCurrentAssets()) {
+                    entity.getCurrentAssetItems().add(new com.finplanpro.finplanpro.entity.AssetItemEmbeddable(
+                            item.getName(), item.getPresentValue(), item.getExpectedReturnRate()));
+                }
+            }
+
+            // Clear and Add Future Assets
+            entity.getFutureAssetItems().clear();
+            if (step5.getFutureAssets() != null) {
+                for (Step5HavesDTO.FutureAssetItem item : step5.getFutureAssets()) {
+                    entity.getFutureAssetItems().add(new com.finplanpro.finplanpro.entity.AssetItemEmbeddable(
+                            item.getName(), item.getAmount(), item.getExpectedReturnRate()));
+                }
             }
         }
 
@@ -420,6 +469,7 @@ public class RetirementAdvancedServiceImpl implements RetirementAdvancedService 
     public RetirementPlanData loadPlanToSession(UUID id) {
         RetirementAdvanced entity = findPlanById(id);
         RetirementPlanData planData = new RetirementPlanData();
+        planData.setId(entity.getId()); // Set ID for tracking updates
 
         // Load plan name
         planData.setPlanName(entity.getPlanName());
@@ -459,6 +509,30 @@ public class RetirementAdvancedServiceImpl implements RetirementAdvancedService 
         Step4ExpenseDTO step4 = new Step4ExpenseDTO();
         step4.setTotalBasicExpensesFV(entity.getDesiredMonthlyExpense());
         step4.setTotalSpecialExpensesFV(entity.getSpecialExpense());
+
+        // Load Basic Expenses
+        if (entity.getBasicExpenses() != null) {
+            for (com.finplanpro.finplanpro.entity.ExpenseItemEmbeddable item : entity.getBasicExpenses()) {
+                Step4ExpenseDTO.ExpenseItem dtoItem = new Step4ExpenseDTO.ExpenseItem();
+                dtoItem.setName(item.getName());
+                dtoItem.setAmountToday(item.getAmountToday());
+                dtoItem.setInflationRate(item.getInflationRate());
+                dtoItem.setFutureValue(item.getFutureValue());
+                step4.getBasicItems().add(dtoItem);
+            }
+        }
+
+        // Load Special Expenses
+        if (entity.getSpecialExpenses() != null) {
+            for (com.finplanpro.finplanpro.entity.ExpenseItemEmbeddable item : entity.getSpecialExpenses()) {
+                Step4ExpenseDTO.ExpenseItem dtoItem = new Step4ExpenseDTO.ExpenseItem();
+                dtoItem.setName(item.getName());
+                dtoItem.setAmountToday(item.getAmountToday());
+                dtoItem.setInflationRate(item.getInflationRate());
+                dtoItem.setFutureValue(item.getFutureValue());
+                step4.getSpecialItems().add(dtoItem);
+            }
+        }
         planData.setStep4(step4);
 
         // Load Step5 data
@@ -469,6 +543,28 @@ public class RetirementAdvancedServiceImpl implements RetirementAdvancedService 
         futureIncome.setSocialSecurityPension(entity.getPension());
         futureIncome.setAnnuityInsurance(entity.getAnnuity());
         step5.setFutureIncome(futureIncome);
+
+        // Load Current Asset Items
+        if (entity.getCurrentAssetItems() != null) {
+            for (com.finplanpro.finplanpro.entity.AssetItemEmbeddable item : entity.getCurrentAssetItems()) {
+                Step5HavesDTO.CurrentAssetItem dtoItem = new Step5HavesDTO.CurrentAssetItem();
+                dtoItem.setName(item.getName());
+                dtoItem.setPresentValue(item.getAmount());
+                dtoItem.setExpectedReturnRate(item.getExpectedReturnRate());
+                step5.getCurrentAssets().add(dtoItem);
+            }
+        }
+
+        // Load Future Asset Items
+        if (entity.getFutureAssetItems() != null) {
+            for (com.finplanpro.finplanpro.entity.AssetItemEmbeddable item : entity.getFutureAssetItems()) {
+                Step5HavesDTO.FutureAssetItem dtoItem = new Step5HavesDTO.FutureAssetItem();
+                dtoItem.setName(item.getName());
+                dtoItem.setAmount(item.getAmount());
+                dtoItem.setExpectedReturnRate(item.getExpectedReturnRate());
+                step5.getFutureAssets().add(dtoItem);
+            }
+        }
         planData.setStep5(step5);
 
         return planData;

@@ -11,105 +11,356 @@
         <div class="container-fluid">
             <!-- Header -->
             <div class="d-flex justify-content-between align-items-center mb-4">
-                <h1 class="h3">ภาพรวมการวางแผนการเงินแบบครบวงจร (Dashboard)</h1>
-                <div class="text-secondary">
-                    Welcome back, <strong class="text-primary" sec:authentication="name">User</strong>!
+                <h1 class="h3 mb-0"
+                    style="font-family: 'Outfit','Prompt',sans-serif; font-weight: 700; color: #1e293b;">
+                    ภาพรวมการวางแผนการเงินแบบครบวงจร
+                </h1>
+                <div class="d-flex align-items-center gap-2">
+                    <span style="color: #64748b;">Welcome back,</span>
+                    <strong style="color: #1e293b;" sec:authentication="name">User</strong>
+                    <span style="color: #1e293b;">!</span>
+                    <img th:if="${loggedInUserProfile != null && loggedInUserProfile.profileImageUrl != null}"
+                        th:src="@{${loggedInUserProfile.profileImageUrl}}" alt="" width="36" height="36"
+                        class="rounded-circle ms-1" style="border: 2px solid #e2e8f0; object-fit: cover;">
+                    <img th:unless="${loggedInUserProfile != null && loggedInUserProfile.profileImageUrl != null}"
+                        src="https://via.placeholder.com/36" alt="" width="36" height="36" class="rounded-circle ms-1"
+                        style="border: 2px solid #e2e8f0;">
                 </div>
             </div>
 
-            <!-- Summary Cards -->
-            <div class="row g-4 mb-4">
+            <!-- ====== 4 Summary Cards ====== -->
+            <div class="row g-3 mb-4">
+                <!-- 1) Net Worth -->
                 <div class="col-md-6 col-lg-3">
-                    <div class="card h-100">
+                    <div class="card h-100 stat-card">
                         <div class="card-body">
-                            <div class="d-flex justify-content-between align-items-start mb-3">
-                                <div>
-                                    <h6 class="card-subtitle mb-1 text-secondary">Net Worth</h6>
-                                    <h4 class="card-title mb-0"
-                                        th:text="${#numbers.formatDecimal(latestNetWorth, 1, 'COMMA', 2, 'POINT')} + ' THB'">
-                                    </h4>
+                            <div class="d-flex justify-content-between align-items-start mb-2">
+                                <div class="d-flex align-items-center gap-2">
+                                    <div class="dashboard-icon-patch blue">
+                                        <i class="bi bi-graph-up-arrow"></i>
+                                    </div>
+                                    <span style="font-weight:500; color:#64748b; font-size:0.8125rem;">Net Worth</span>
                                 </div>
-                                <div class="p-2 rounded bg-accent-blue bg-opacity-10">
-                                    <i class="bi bi-graph-up-arrow text-accent-blue fs-4"></i>
+                                <i class="bi bi-arrow-up-right" style="color:#3b82f6; font-size:1rem;"></i>
+                            </div>
+                            <h3 class="mb-2" style="font-weight:700; color:#1e293b; font-family:'Outfit',sans-serif;">
+                                ฿<span
+                                    th:text="${#numbers.formatDecimal(latestNetWorth, 1, 'COMMA', 2, 'POINT')}">0.00</span>
+                            </h3>
+                            <div class="d-flex justify-content-between" style="font-size:0.75rem;">
+                                <span style="color:#94a3b8;">Assets</span>
+                                <span style="font-weight:600; color:#1e293b;">฿ <span
+                                        th:text="${#numbers.formatDecimal(latestTotalAssets, 1, 'COMMA', 2, 'POINT')}">0.00</span></span>
+                            </div>
+                            <div class="d-flex justify-content-between" style="font-size:0.75rem;">
+                                <span style="color:#94a3b8;">Liabilities</span>
+                                <span style="font-weight:600; color:#1e293b;">฿ <span
+                                        th:text="${#numbers.formatDecimal(latestTotalLiabilities, 1, 'COMMA', 2, 'POINT')}">0.00</span></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 2) Retirement Goal / Gap -->
+                <div class="col-md-6 col-lg-3">
+                    <div class="card h-100 stat-card">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between align-items-start mb-2">
+                                <div class="d-flex align-items-center gap-2">
+                                    <div class="dashboard-icon-patch purple">
+                                        <i class="bi bi-bullseye"></i>
+                                    </div>
+                                    <span style="font-weight:500; color:#64748b; font-size:0.8125rem;">Retirement Goal /
+                                        Gap</span>
+                                </div>
+                                <i class="bi bi-flag" style="color:#8b5cf6; font-size:1rem;"></i>
+                            </div>
+                            <h3 class="mb-2" style="font-weight:700; color:#1e293b; font-family:'Outfit',sans-serif;">
+                                ฿<span
+                                    th:text="${#numbers.formatDecimal(retirementFundsNeeded, 1, 'COMMA', 2, 'POINT')}">0.00</span>
+                            </h3>
+                            <!-- Progress bar -->
+                            <div
+                                th:if="${latestNetWorth.doubleValue() > 0 and retirementFundsNeeded.doubleValue() > 0}">
+                                <div class="d-flex justify-content-between mb-1" style="font-size:0.75rem;">
+                                    <span style="color:#94a3b8;"
+                                        th:text="'Progress ' + ${#numbers.formatDecimal(latestNetWorth.doubleValue() * 100 / retirementFundsNeeded.doubleValue(), 1, 'COMMA', 0, 'POINT')} + '% to Target'">
+                                    </span>
+                                    <span style="font-weight:600; color:#1e293b;"
+                                        th:text="'฿' + ${#numbers.formatDecimal(retirementFundsNeeded.doubleValue() - latestNetWorth.doubleValue(), 1, 'COMMA', 2, 'POINT')}">
+                                    </span>
+                                </div>
+                                <div class="progress" style="height:6px;">
+                                    <div class="progress-bar" role="progressbar"
+                                        th:style="'width:' + ${T(java.lang.Math).min(latestNetWorth.doubleValue() * 100.0 / retirementFundsNeeded.doubleValue(), 100.0)} + '%'">
+                                    </div>
+                                </div>
+                                <div class="text-end mt-1" style="font-size:0.6875rem; color:#94a3b8;"
+                                    th:text="'Progress ' + ${#numbers.formatDecimal(latestNetWorth.doubleValue() * 100 / retirementFundsNeeded.doubleValue(), 1, 'COMMA', 0, 'POINT')} + '% to Target'">
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
+
+                <!-- 3) Insurance Overview -->
                 <div class="col-md-6 col-lg-3">
-                    <div class="card h-100">
+                    <div class="card h-100 stat-card">
                         <div class="card-body">
-                            <div class="d-flex justify-content-between align-items-start mb-3">
-                                <div>
-                                    <h6 class="card-subtitle mb-1 text-secondary">Retirement Goal</h6>
-                                    <h4 class="card-title mb-0"
-                                        th:text="${#numbers.formatDecimal(retirementFundsNeeded, 1, 'COMMA', 2, 'POINT')} + ' THB'">
-                                    </h4>
+                            <div class="d-flex justify-content-between align-items-start mb-2">
+                                <div class="d-flex align-items-center gap-2">
+                                    <div class="dashboard-icon-patch green">
+                                        <i class="bi bi-shield-check"></i>
+                                    </div>
+                                    <span style="font-weight:500; color:#64748b; font-size:0.8125rem;">Insurance
+                                        Overview</span>
                                 </div>
-                                <div class="p-2 rounded bg-accent-purple bg-opacity-10">
-                                    <i class="bi bi-bullseye text-accent-purple fs-4"></i>
+                                <i class="bi bi-arrow-up-right" style="color:#10b981; font-size:1rem;"></i>
+                            </div>
+                            <h3 class="mb-0" style="font-weight:700; color:#1e293b; font-family:'Outfit',sans-serif;">
+                                ฿<span
+                                    th:text="${#numbers.formatDecimal(insuranceSummary.totalPremium, 1, 'COMMA', 2, 'POINT')}">0.00</span>
+                                <small style="font-size:0.6875rem; color:#94a3b8; font-weight:400;"> / year</small>
+                            </h3>
+                            <div class="mt-2">
+                                <div class="d-flex justify-content-between" style="font-size:0.75rem;">
+                                    <span style="color:#94a3b8;">Life</span>
+                                    <span style="font-weight:600; color:#1e293b;">฿ <span
+                                            th:text="${#numbers.formatDecimal(insuranceSummary.totalLifeCoverage, 1, 'COMMA', 2, 'POINT')}">0.00</span></span>
+                                </div>
+                                <div class="d-flex justify-content-between" style="font-size:0.75rem;">
+                                    <span style="color:#94a3b8;">Health</span>
+                                    <span style="font-weight:600; color:#1e293b;">฿ <span
+                                            th:text="${#numbers.formatDecimal(insuranceSummary.totalHealthCareRoom.add(insuranceSummary.totalHealthCarePerVisit), 1, 'COMMA', 2, 'POINT')}">0.00</span></span>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
+
+                <!-- 4) Latest Tax -->
                 <div class="col-md-6 col-lg-3">
-                    <div class="card h-100">
+                    <div class="card h-100 stat-card">
                         <div class="card-body">
-                            <div class="d-flex justify-content-between align-items-start mb-3">
-                                <div>
-                                    <h6 class="card-subtitle mb-1 text-secondary">Insurance Overview</h6>
-                                    <h4 class="card-title mb-0"
-                                        th:text="${#numbers.formatDecimal(insuranceSummary.totalLifeCoverage, 1, 'COMMA', 0, 'POINT')} + ' THB'">
-                                    </h4>
-                                    <small class="text-secondary mt-1 d-block"
-                                        th:text="'Premium: ' + ${#numbers.formatDecimal(insuranceSummary.totalPremium, 1, 'COMMA', 0, 'POINT')} + ' THB'"></small>
-                                </div>
-                                <div class="p-2 rounded bg-accent-green bg-opacity-10">
-                                    <i class="bi bi-shield-check text-accent-green fs-4"></i>
+                            <div class="d-flex align-items-start mb-2">
+                                <div class="d-flex align-items-center gap-2">
+                                    <div class="dashboard-icon-patch orange">
+                                        <i class="bi bi-receipt"></i>
+                                    </div>
+                                    <span style="font-weight:500; color:#64748b; font-size:0.8125rem;">Latest Tax</span>
                                 </div>
                             </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-6 col-lg-3">
-                    <div class="card h-100">
-                        <div class="card-body">
-                            <div class="d-flex justify-content-between align-items-start mb-3">
-                                <div>
-                                    <h6 class="card-subtitle mb-1 text-secondary">Latest Tax</h6>
-                                    <h4 class="card-title mb-0"
-                                        th:text="${#numbers.formatDecimal(latestTaxPayable, 1, 'COMMA', 2, 'POINT')} + ' THB'">
-                                    </h4>
-                                </div>
-                                <div class="p-2 rounded bg-accent-orange bg-opacity-10">
-                                    <i class="bi bi-receipt text-accent-orange fs-4"></i>
-                                </div>
+                            <h3 class="mb-2" style="font-weight:700; color:#1e293b; font-family:'Outfit',sans-serif;">
+                                ฿<span
+                                    th:text="${#numbers.formatDecimal(latestTaxPayable, 1, 'COMMA', 2, 'POINT')}">0.00</span>
+                            </h3>
+                            <div class="d-flex justify-content-between" style="font-size:0.75rem;">
+                                <span style="color:#94a3b8;">Net Income</span>
+                                <span style="font-weight:600; color:#1e293b;">฿ <span
+                                        th:text="${#numbers.formatDecimal(latestNetIncome, 1, 'COMMA', 2, 'POINT')}">0.00</span></span>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <!-- Charts -->
-            <div class="row g-4">
+            <!-- ====== Charts Row ====== -->
+            <div class="row g-3 mb-4">
+                <!-- Net Worth Trend (12 months) -->
                 <div class="col-lg-8">
                     <div class="card h-100">
-                        <div class="card-header">
-                            <h5 class="card-title mb-0">Net Worth Trend</h5>
+                        <div class="card-header d-flex justify-content-between align-items-center"
+                            style="border-bottom:1px solid #e2e8f0;">
+                            <h5 class="card-title mb-0"
+                                style="font-family:'Outfit',sans-serif; font-weight:600; color:#1e293b; font-size:0.9375rem;">
+                                Net Worth Trend (12 months)
+                            </h5>
+                            <div class="d-flex gap-2">
+                                <i class="bi bi-graph-up" style="color:#94a3b8;"></i>
+                                <i class="bi bi-chevron-down" style="color:#94a3b8;"></i>
+                            </div>
                         </div>
                         <div class="card-body">
-                            <canvas id="netWorthChart"></canvas>
+                            <div style="height:320px;">
+                                <canvas id="netWorthChart"></canvas>
+                            </div>
                         </div>
                     </div>
                 </div>
+
+                <!-- Insurance Coverage -->
                 <div class="col-lg-4">
                     <div class="card h-100">
-                        <div class="card-header">
-                            <h5 class="card-title mb-0">Insurance Coverage</h5>
+                        <div class="card-header" style="border-bottom:1px solid #e2e8f0;">
+                            <h5 class="card-title mb-0"
+                                style="font-family:'Outfit',sans-serif; font-weight:600; color:#1e293b; font-size:0.9375rem;">
+                                Insurance Coverage
+                            </h5>
                         </div>
                         <div class="card-body">
-                            <canvas id="insuranceChart"></canvas>
+                            <!-- Horizontal bars -->
+                            <div class="mb-3">
+                                <div class="d-flex justify-content-between align-items-center mb-2"
+                                    style="font-size:0.8125rem;">
+                                    <div class="d-flex align-items-center gap-2">
+                                        <span
+                                            style="width:8px; height:8px; border-radius:50%; background-color:#3b82f6; display:inline-block;"></span>
+                                        <span style="color:#94a3b8;">Life</span>
+                                    </div>
+                                    <span style="font-weight:600; color:#1e293b;"
+                                        th:text="'฿ ' + ${#numbers.formatDecimal(insuranceSummary.totalLifeCoverage, 1, 'COMMA', 0, 'POINT')}">
+                                    </span>
+                                </div>
+                                <div class="d-flex justify-content-between align-items-center mb-2"
+                                    style="font-size:0.8125rem;">
+                                    <div class="d-flex align-items-center gap-2">
+                                        <span
+                                            style="width:8px; height:8px; border-radius:50%; background-color:#10b981; display:inline-block;"></span>
+                                        <span style="color:#94a3b8;">Health</span>
+                                    </div>
+                                    <span style="font-weight:600; color:#1e293b;"
+                                        th:text="'฿ ' + ${#numbers.formatDecimal(insuranceSummary.totalHealthCareRoom.add(insuranceSummary.totalHealthCarePerVisit), 1, 'COMMA', 0, 'POINT')}">
+                                    </span>
+                                </div>
+                                <div class="d-flex justify-content-between align-items-center mb-2"
+                                    style="font-size:0.8125rem;">
+                                    <div class="d-flex align-items-center gap-2">
+                                        <span
+                                            style="width:8px; height:8px; border-radius:50%; background-color:#f97316; display:inline-block;"></span>
+                                        <span style="color:#94a3b8;">Critical Illness</span>
+                                    </div>
+                                    <span style="font-weight:600; color:#1e293b;"
+                                        th:text="'฿ ' + ${#numbers.formatDecimal(insuranceSummary.totalCriticalIllnessCoverage, 1, 'COMMA', 0, 'POINT')}">
+                                    </span>
+                                </div>
+                                <div class="d-flex justify-content-between align-items-center"
+                                    style="font-size:0.8125rem;">
+                                    <div class="d-flex align-items-center gap-2">
+                                        <span
+                                            style="width:8px; height:8px; border-radius:50%; background-color:#ef4444; display:inline-block;"></span>
+                                        <span style="color:#94a3b8;">Accident</span>
+                                    </div>
+                                    <span style="font-weight:600; color:#1e293b;"
+                                        th:text="'฿ ' + ${#numbers.formatDecimal(insuranceSummary.accidentCoverage, 1, 'COMMA', 0, 'POINT')}">
+                                    </span>
+                                </div>
+                            </div>
+                            <!-- Doughnut chart -->
+                            <div class="d-flex align-items-center justify-content-center">
+                                <div style="max-width:200px; width:100%;">
+                                    <canvas id="insuranceChart"></canvas>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ====== Bottom Row: Quick Actions + Recent Activity ====== -->
+            <div class="row g-3 mb-4">
+                <!-- Quick Actions -->
+                <div class="col-lg-6">
+                    <div class="card">
+                        <div class="card-header d-flex justify-content-between align-items-center"
+                            style="border-bottom:1px solid #e2e8f0;">
+                            <h5 class="card-title mb-0"
+                                style="font-family:'Outfit',sans-serif; font-weight:600; color:#1e293b; font-size:0.9375rem;">
+                                Quick Actions
+                            </h5>
+                            <div class="d-flex gap-2">
+                                <i class="bi bi-list" style="color:#94a3b8;"></i>
+                                <i class="bi bi-sliders" style="color:#94a3b8;"></i>
+                                <i class="bi bi-filter" style="color:#94a3b8;"></i>
+                                <i class="bi bi-arrow-clockwise" style="color:#94a3b8;"></i>
+                            </div>
+                        </div>
+                        <div class="card-body py-3">
+                            <div class="d-flex flex-wrap gap-2">
+                                <a th:href="@{/assets}" class="quick-action-btn"
+                                    style="border-color:#3b82f6; color:#3b82f6;">
+                                    <i class="bi bi-plus-circle"></i> Add Snapshot
+                                </a>
+                                <a th:href="@{/retirement/advanced/start}" class="quick-action-btn"
+                                    style="border-color:#f97316; color:#f97316;">
+                                    <i class="bi bi-sunrise"></i> New Plan
+                                </a>
+                                <a th:href="@{/insurance}" class="quick-action-btn"
+                                    style="border-color:#10b981; color:#10b981;">
+                                    <i class="bi bi-shield-plus"></i> Add Policy
+                                </a>
+                                <a th:href="@{/tax}" class="quick-action-btn"
+                                    style="border-color:#ef4444; color:#ef4444;">
+                                    <i class="bi bi-calculator"></i> Calculate Tax
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Recent Activity -->
+                <div class="col-lg-6">
+                    <div class="card">
+                        <div class="card-header d-flex justify-content-between align-items-center"
+                            style="border-bottom:1px solid #e2e8f0;">
+                            <h5 class="card-title mb-0"
+                                style="font-family:'Outfit',sans-serif; font-weight:600; color:#1e293b; font-size:0.9375rem;">
+                                Recent Activity
+                            </h5>
+                            <i class="bi bi-three-dots" style="color:#94a3b8; cursor:pointer;"></i>
+                        </div>
+                        <div class="card-body">
+                            <div class="activity-item">
+                                <div class="activity-dot orange"></div>
+                                <div class="flex-grow-1">
+                                    <div style="font-size:0.8125rem; color:#1e293b; font-weight:500;">New tax record
+                                        calculated</div>
+                                    <div style="font-size:0.6875rem; color:#94a3b8;">ปี สุดท้ายที่ยื่น</div>
+                                </div>
+                                <div class="text-end">
+                                    <span style="font-size:0.6875rem; color:#94a3b8;">Today</span>
+                                    <i class="bi bi-arrow-up-right ms-1"
+                                        style="font-size:0.6875rem; color:#3b82f6;"></i>
+                                </div>
+                            </div>
+                            <div class="activity-item">
+                                <div class="activity-dot green"></div>
+                                <div class="flex-grow-1">
+                                    <div style="font-size:0.8125rem; color:#1e293b; font-weight:500;">Edited insurance
+                                        policy</div>
+                                    <div style="font-size:0.6875rem; color:#94a3b8;">ปรับ ยอดค่าเบี้ย</div>
+                                </div>
+                                <div class="text-end">
+                                    <span style="font-size:0.6875rem; color:#94a3b8;">2 days ago</span>
+                                    <i class="bi bi-arrow-up-right ms-1"
+                                        style="font-size:0.6875rem; color:#3b82f6;"></i>
+                                </div>
+                            </div>
+                            <div class="activity-item">
+                                <div class="activity-dot blue"></div>
+                                <div class="flex-grow-1">
+                                    <div style="font-size:0.8125rem; color:#1e293b; font-weight:500;">Wealth snapshot
+                                        added</div>
+                                    <div style="font-size:0.6875rem; color:#94a3b8;">สินทรัพย์ อัปเดต</div>
+                                </div>
+                                <div class="text-end">
+                                    <span style="font-size:0.6875rem; color:#94a3b8;">5 days ago</span>
+                                    <i class="bi bi-arrow-up-right ms-1"
+                                        style="font-size:0.6875rem; color:#3b82f6;"></i>
+                                </div>
+                            </div>
+                            <div class="activity-item">
+                                <div class="activity-dot purple"></div>
+                                <div class="flex-grow-1">
+                                    <div style="font-size:0.8125rem; color:#1e293b; font-weight:500;">Created new
+                                        retirement plan</div>
+                                    <div style="font-size:0.6875rem; color:#94a3b8;">วางแผน เกษียณ</div>
+                                </div>
+                                <div class="text-end">
+                                    <span style="font-size:0.6875rem; color:#94a3b8;">1 week ago</span>
+                                    <i class="bi bi-arrow-up-right ms-1"
+                                        style="font-size:0.6875rem; color:#3b82f6;"></i>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -120,20 +371,21 @@
     <th:block th:fragment="scripts">
         <script th:inline="javascript">
             /*<![CDATA[*/
-            // Chart Defaults
-            Chart.defaults.color = '#94a3b8';
-            Chart.defaults.borderColor = '#334155';
+            // Chart Defaults — light background
+            Chart.defaults.color = '#64748b';
+            Chart.defaults.borderColor = '#e2e8f0';
+            Chart.defaults.font.family = "'Outfit', 'Prompt', sans-serif";
 
-            // Net Worth Chart
+            // Net Worth Trend Chart
             const netWorthLabels = /*[[${netWorthLabels}]]*/[];
             const netWorthData = /*[[${netWorthData}]]*/[];
-            const totalAssetsData = /*[[${totalAssetsData}]]*/[]; // เพิ่ม
-            const totalLiabilitiesData = /*[[${totalLiabilitiesData}]]*/[]; // เพิ่ม
+            const totalAssetsData = /*[[${totalAssetsData}]]*/[];
+            const totalLiabilitiesData = /*[[${totalLiabilitiesData}]]*/[];
 
             if (document.getElementById('netWorthChart')) {
                 const ctx = document.getElementById('netWorthChart').getContext('2d');
-                const gradient = ctx.createLinearGradient(0, 0, 0, 400);
-                gradient.addColorStop(0, 'rgba(6, 182, 212, 0.5)'); // Cyan
+                const gradient = ctx.createLinearGradient(0, 0, 0, 320);
+                gradient.addColorStop(0, 'rgba(6, 182, 212, 0.25)');
                 gradient.addColorStop(1, 'rgba(6, 182, 212, 0.0)');
 
                 new Chart(ctx, {
@@ -141,31 +393,34 @@
                     data: {
                         labels: netWorthLabels,
                         datasets: [{
-                            label: 'Net Worth (THB)',
+                            label: 'Net Worth',
                             data: netWorthData,
                             fill: true,
                             backgroundColor: gradient,
-                            borderColor: '#06b6d4', // Cyan
-                            borderWidth: 2,
+                            borderColor: '#06b6d4',
+                            borderWidth: 2.5,
                             pointBackgroundColor: '#06b6d4',
+                            pointRadius: 3,
                             tension: 0.4
                         },
-                        { // Dataset สำหรับ Total Assets
-                            label: 'Total Assets (THB)',
+                        {
+                            label: 'Total Assets',
                             data: totalAssetsData,
                             fill: false,
-                            borderColor: '#10b981', // Green
+                            borderColor: '#10b981',
                             borderWidth: 2,
                             pointBackgroundColor: '#10b981',
+                            pointRadius: 2,
                             tension: 0.4
                         },
-                        { // Dataset สำหรับ Total Liabilities
-                            label: 'Total Liabilities (THB)',
+                        {
+                            label: 'Total Liabilities',
                             data: totalLiabilitiesData,
                             fill: false,
-                            borderColor: '#ef4444', // Red
+                            borderColor: '#ef4444',
                             borderWidth: 2,
                             pointBackgroundColor: '#ef4444',
+                            pointRadius: 2,
                             tension: 0.4
                         }]
                     },
@@ -173,17 +428,41 @@
                         responsive: true,
                         maintainAspectRatio: false,
                         plugins: {
-                            legend: { display: true } // เปลี่ยนเป็น true เพื่อแสดง legend ของ Assets และ Liabilities
+                            legend: {
+                                display: true,
+                                position: 'bottom',
+                                labels: {
+                                    usePointStyle: true,
+                                    boxWidth: 8,
+                                    padding: 16,
+                                    color: '#64748b',
+                                    font: { size: 11 }
+                                }
+                            }
                         },
                         scales: {
-                            y: { grid: { color: '#334155' } },
-                            x: { grid: { display: false } }
+                            y: {
+                                grid: { color: '#f1f5f9' },
+                                ticks: {
+                                    color: '#94a3b8',
+                                    callback: function (value) {
+                                        if (value >= 1000000) return '฿' + (value / 1000000).toFixed(1) + 'M';
+                                        if (value >= 1000) return '฿' + (value / 1000).toFixed(0) + 'K';
+                                        return '฿' + value;
+                                    },
+                                    font: { size: 10 }
+                                }
+                            },
+                            x: {
+                                grid: { display: false },
+                                ticks: { color: '#94a3b8', font: { size: 10 } }
+                            }
                         }
                     }
                 });
             }
 
-            // Insurance Chart
+            // Insurance Doughnut Chart
             const insuranceLabels = /*[[${insuranceLabels}]]*/[];
             const insuranceData = /*[[${insuranceData}]]*/[];
             if (document.getElementById('insuranceChart')) {
@@ -194,20 +473,21 @@
                         datasets: [{
                             data: insuranceData,
                             backgroundColor: [
-                                '#3b82f6', // Blue
-                                '#8b5cf6', // Purple
-                                '#f97316', // Orange
-                                '#10b981', // Green
-                                '#ef4444'  // Red
+                                '#3b82f6',
+                                '#8b5cf6',
+                                '#f97316',
+                                '#10b981',
+                                '#ef4444'
                             ],
                             borderWidth: 0
                         }]
                     },
                     options: {
                         responsive: true,
-                        maintainAspectRatio: false,
                         plugins: {
-                            legend: { position: 'bottom' }
+                            legend: {
+                                display: false // Hide default legend
+                            }
                         },
                         cutout: '70%'
                     }

@@ -92,7 +92,7 @@
                         <div class="col-12">
                             <div class="card shadow-sm border-0">
                                 <div class="card-header bg-primary text-white">
-                                    <h6 class="mb-0">1. ความคุ้มครองชีวิตและทุพพลภาพ</h6>
+                                    <h6 class="mb-0 text-white">1. ความคุ้มครองชีวิตและทุพพลภาพ</h6>
                                 </div>
                                 <ul class="list-group list-group-flush">
                                     <li class="list-group-item d-flex justify-content-between">
@@ -109,7 +109,7 @@
                         <div class="col-12">
                             <div class="card shadow-sm border-0">
                                 <div class="card-header bg-success text-white">
-                                    <h6 class="mb-0">2. การออมและลงทุน</h6>
+                                    <h6 class="mb-0 text-white">2. การออมและลงทุน</h6>
                                 </div>
                                 <ul class="list-group list-group-flush">
                                     <li class="list-group-item d-flex justify-content-between">
@@ -129,8 +129,8 @@
                         </div>
                         <div class="col-12">
                             <div class="card shadow-sm border-0">
-                                <div class="card-header bg-warning text-dark">
-                                    <h6 class="mb-0">3. ความคุ้มครองสุขภาพ</h6>
+                                <div class="card-header bg-warning text-white">
+                                    <h6 class="mb-0 text-white">3. ความคุ้มครองสุขภาพ</h6>
                                 </div>
                                 <ul class="list-group list-group-flush">
                                     <li class="list-group-item d-flex justify-content-between">
@@ -155,7 +155,7 @@
                         <div class="col-12">
                             <div class="card shadow-sm border-0">
                                 <div class="card-header bg-danger text-white">
-                                    <h6 class="mb-0">4. โรคร้ายแรงและอุบัติเหตุ</h6>
+                                    <h6 class="mb-0 text-white">4. โรคร้ายแรงและอุบัติเหตุ</h6>
                                 </div>
                                 <ul class="list-group list-group-flush">
                                     <li class="list-group-item d-flex justify-content-between"><span>โรคร้ายแรง
@@ -178,10 +178,11 @@
                             </div>
                         </div>
                         <div class="col-12">
-                            <div class="card text-white bg-dark">
+                            <div class="card text-white shadow-sm border-0"
+                                style="background: linear-gradient(135deg, #4f46e5 0%, #7e22ce 100%);">
                                 <div class="card-body text-center">
-                                    <h6 class="card-title">รวมเบี้ยประกันชีวิตที่ต้องจ่าย/ปี</h6>
-                                    <h4 class="card-text"
+                                    <h6 class="card-title text-white">รวมเบี้ยประกันชีวิตที่ต้องจ่าย/ปี</h6>
+                                    <h4 class="card-text text-white"
                                         th:text="${'฿' + #numbers.formatDecimal(summary.totalPremium, 0, 'COMMA', 2, 'POINT')}">
                                     </h4>
                                 </div>
