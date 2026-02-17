@@ -64,7 +64,7 @@ a {
 /* Sidebar */
 .sidebar-container {
     width: var(--sidebar-width);
-    background-color: var(--bg-sidebar);
+    background: linear-gradient(180deg, #1e1b4b 0%, #312e81 40%, #1e293b 100%);
     color: var(--text-secondary);
     height: 100vh;
     position: fixed;
@@ -73,7 +73,7 @@ a {
     display: flex;
     flex-direction: column;
     padding: 1.5rem;
-    border-right: 1px solid var(--border-color);
+    border-right: 1px solid rgba(139, 92, 246, 0.15);
     z-index: 1000;
 }
 
@@ -311,8 +311,7 @@ h6 {
     display: flex;
     align-items: center;
     justify-content: center;
-    background-color: #2d2b42;
-    /* Dark purple background from reference */
+    background: linear-gradient(135deg, #1e1b4b 0%, #0f172a 40%, #1e293b 100%);
     padding: 2rem;
 }
 
@@ -469,9 +468,10 @@ h6 {
    Light content area + White cards inside dark sidebar shell
    ============================================================ */
 
-/* Content area: light background */
+/* Content area: light gradient background */
 .content-wrapper {
-    background-color: #f8fafc !important;
+    background: linear-gradient(135deg, #f8fafc 0%, #eef2ff 50%, #f1f5f9 100%) !important;
+    background-attachment: fixed !important;
 }
 
 /* Cards on light bg: white, subtle shadow, no heavy border */
