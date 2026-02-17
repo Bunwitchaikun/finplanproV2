@@ -60,7 +60,11 @@
 
         <div class="mt-auto">
             <div class="d-flex align-items-center mb-2">
-                <img src="https://github.com/mdo.png" alt="" width="40" height="40" class="rounded-circle me-3">
+                <img th:if="${loggedInUserProfile != null && loggedInUserProfile.profileImageUrl != null}"
+                    th:src="@{${loggedInUserProfile.profileImageUrl}}" alt="" width="40" height="40"
+                    class="rounded-circle me-3" style="object-fit: cover;">
+                <img th:unless="${loggedInUserProfile != null && loggedInUserProfile.profileImageUrl != null}"
+                    src="https://via.placeholder.com/40" alt="" width="40" height="40" class="rounded-circle me-3">
                 <strong sec:authentication="name" class="text-white">username</strong>
             </div>
             <div class="ps-1">

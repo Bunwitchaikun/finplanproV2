@@ -19,7 +19,11 @@
                     <span style="color: #64748b;">Welcome back,</span>
                     <strong style="color: #1e293b;" sec:authentication="name">User</strong>
                     <span style="color: #1e293b;">!</span>
-                    <img src="https://github.com/mdo.png" alt="" width="36" height="36" class="rounded-circle ms-1"
+                    <img th:if="${loggedInUserProfile != null && loggedInUserProfile.profileImageUrl != null}"
+                        th:src="@{${loggedInUserProfile.profileImageUrl}}" alt="" width="36" height="36"
+                        class="rounded-circle ms-1" style="border: 2px solid #e2e8f0; object-fit: cover;">
+                    <img th:unless="${loggedInUserProfile != null && loggedInUserProfile.profileImageUrl != null}"
+                        src="https://via.placeholder.com/36" alt="" width="36" height="36" class="rounded-circle ms-1"
                         style="border: 2px solid #e2e8f0;">
                 </div>
             </div>
@@ -198,28 +202,44 @@
                             <div class="mb-3">
                                 <div class="d-flex justify-content-between align-items-center mb-2"
                                     style="font-size:0.8125rem;">
-                                    <span style="color:#94a3b8;">Life</span>
+                                    <div class="d-flex align-items-center gap-2">
+                                        <span
+                                            style="width:8px; height:8px; border-radius:50%; background-color:#3b82f6; display:inline-block;"></span>
+                                        <span style="color:#94a3b8;">Life</span>
+                                    </div>
                                     <span style="font-weight:600; color:#1e293b;"
                                         th:text="'฿ ' + ${#numbers.formatDecimal(insuranceSummary.totalLifeCoverage, 1, 'COMMA', 0, 'POINT')}">
                                     </span>
                                 </div>
                                 <div class="d-flex justify-content-between align-items-center mb-2"
                                     style="font-size:0.8125rem;">
-                                    <span style="color:#94a3b8;">Health</span>
+                                    <div class="d-flex align-items-center gap-2">
+                                        <span
+                                            style="width:8px; height:8px; border-radius:50%; background-color:#10b981; display:inline-block;"></span>
+                                        <span style="color:#94a3b8;">Health</span>
+                                    </div>
                                     <span style="font-weight:600; color:#1e293b;"
                                         th:text="'฿ ' + ${#numbers.formatDecimal(insuranceSummary.totalHealthCareRoom.add(insuranceSummary.totalHealthCarePerVisit), 1, 'COMMA', 0, 'POINT')}">
                                     </span>
                                 </div>
                                 <div class="d-flex justify-content-between align-items-center mb-2"
                                     style="font-size:0.8125rem;">
-                                    <span style="color:#94a3b8;">Critical Illness</span>
+                                    <div class="d-flex align-items-center gap-2">
+                                        <span
+                                            style="width:8px; height:8px; border-radius:50%; background-color:#f97316; display:inline-block;"></span>
+                                        <span style="color:#94a3b8;">Critical Illness</span>
+                                    </div>
                                     <span style="font-weight:600; color:#1e293b;"
                                         th:text="'฿ ' + ${#numbers.formatDecimal(insuranceSummary.totalCriticalIllnessCoverage, 1, 'COMMA', 0, 'POINT')}">
                                     </span>
                                 </div>
                                 <div class="d-flex justify-content-between align-items-center"
                                     style="font-size:0.8125rem;">
-                                    <span style="color:#94a3b8;">Accident</span>
+                                    <div class="d-flex align-items-center gap-2">
+                                        <span
+                                            style="width:8px; height:8px; border-radius:50%; background-color:#ef4444; display:inline-block;"></span>
+                                        <span style="color:#94a3b8;">Accident</span>
+                                    </div>
                                     <span style="font-weight:600; color:#1e293b;"
                                         th:text="'฿ ' + ${#numbers.formatDecimal(insuranceSummary.accidentCoverage, 1, 'COMMA', 0, 'POINT')}">
                                     </span>
@@ -466,14 +486,7 @@
                         responsive: true,
                         plugins: {
                             legend: {
-                                position: 'bottom',
-                                labels: {
-                                    usePointStyle: true,
-                                    boxWidth: 8,
-                                    padding: 12,
-                                    color: '#64748b',
-                                    font: { size: 10 }
-                                }
+                                display: false // Hide default legend
                             }
                         },
                         cutout: '70%'

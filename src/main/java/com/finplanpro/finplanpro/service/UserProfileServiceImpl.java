@@ -33,6 +33,11 @@ public class UserProfileServiceImpl implements UserProfileService {
 
     @Override
     public UserProfile save(UserProfileDto userProfileDto) {
+        return save(userProfileDto, null);
+    }
+
+    @Override
+    public UserProfile save(UserProfileDto userProfileDto, String profileImageUrl) {
         User user = getCurrentUser();
         UserProfile userProfile = userProfileRepository.findByUser(user)
                 .orElseGet(() -> {
@@ -45,6 +50,10 @@ public class UserProfileServiceImpl implements UserProfileService {
         userProfile.setLastName(userProfileDto.getLastName());
         userProfile.setDateOfBirth(userProfileDto.getDateOfBirth());
         userProfile.setGender(userProfileDto.getGender());
+
+        if (profileImageUrl != null && !profileImageUrl.isEmpty()) {
+            userProfile.setProfileImageUrl(profileImageUrl);
+        }
 
         return userProfileRepository.save(userProfile);
     }
