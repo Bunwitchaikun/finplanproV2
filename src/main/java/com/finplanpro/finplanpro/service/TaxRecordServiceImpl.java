@@ -52,6 +52,19 @@ public class TaxRecordServiceImpl implements TaxRecordService {
         taxRecordRepository.deleteByUser(getCurrentUser());
     }
 
+    @Override
+    @Transactional
+    public void deleteByIds(List<Long> ids) {
+        // Ensure that the records belong to the current user before deleting
+        User currentUser = getCurrentUser();
+        List<TaxRecord> records = taxRecordRepository.findAllById(ids);
+        for (TaxRecord record : records) {
+            if (record.getUser().getId().equals(currentUser.getId())) {
+                taxRecordRepository.delete(record);
+            }
+        }
+    }
+
     private User getCurrentUser() {
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
         User user = userRepository.findByEmail(username);
