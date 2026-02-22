@@ -15,8 +15,8 @@ WORKDIR /app
 
 COPY --from=build /app/target/*.jar app.jar
 
-# Railway uses dynamic PORT via env variable
-EXPOSE ${PORT:-8083}
+# Railway injects PORT=8080 by default
+EXPOSE 8080
 
 ENTRYPOINT ["java", "-Xmx400m", "-Xms200m", "-jar", "app.jar"]
 
