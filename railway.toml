@@ -2,8 +2,7 @@
 builder = "dockerfile"
 
 [deploy]
-startCommand = "java -Xmx400m -Xms200m -jar app.jar"
-healthcheckPath = "/login"
-healthcheckTimeout = 100
+healthcheckPath = "/"
+healthcheckTimeout = 300
 restartPolicyType = "on_failure"
 restartPolicyMaxRetries = 3
