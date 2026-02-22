@@ -34,24 +34,27 @@ public class TaxController {
     }
 
     @PostMapping("/calculate")
-    public String calculateTax(@ModelAttribute("taxRequest") TaxRequestDTO taxRequest, RedirectAttributes redirectAttributes) {
+    public String calculateTax(@ModelAttribute("taxRequest") TaxRequestDTO taxRequest,
+            RedirectAttributes redirectAttributes) {
         TaxResultDTO result = calculationService.calculateTax(taxRequest);
-        
+
         redirectAttributes.addFlashAttribute("taxRequest", taxRequest);
         redirectAttributes.addFlashAttribute("taxResult", result);
         redirectAttributes.addFlashAttribute("showResult", true);
-        
+
         return "redirect:/tax";
     }
 
     @PostMapping("/save")
-    public String saveTaxRecord(@ModelAttribute("taxRequest") TaxRequestDTO taxRequest, RedirectAttributes redirectAttributes) {
-        
+    public String saveTaxRecord(@ModelAttribute("taxRequest") TaxRequestDTO taxRequest,
+            RedirectAttributes redirectAttributes) {
+
         // Recalculate to ensure data integrity before saving
         TaxResultDTO finalResult = calculationService.calculateTax(taxRequest);
         recordService.save(taxRequest, finalResult);
-        
-        redirectAttributes.addFlashAttribute("successMessage", "Tax calculation for year " + taxRequest.getTaxYear() + " has been saved.");
+
+        redirectAttributes.addFlashAttribute("successMessage",
+                "Tax calculation for year " + taxRequest.getTaxYear() + " has been saved.");
         return "redirect:/tax/list";
     }
 
@@ -66,6 +69,19 @@ public class TaxController {
     public String deleteAllRecords(RedirectAttributes redirectAttributes) {
         recordService.deleteAllForCurrentUser();
         redirectAttributes.addFlashAttribute("successMessage", "All tax records have been deleted.");
+        return "redirect:/tax/list";
+    }
+
+    @PostMapping("/delete-selected")
+    public String deleteSelected(
+            @org.springframework.web.bind.annotation.RequestParam(value = "selectedIds", required = false) java.util.List<Long> selectedIds,
+            RedirectAttributes redirectAttributes) {
+        if (selectedIds == null || selectedIds.isEmpty()) {
+            redirectAttributes.addFlashAttribute("errorMessage", "Please select at least one record to delete.");
+            return "redirect:/tax/list";
+        }
+        recordService.deleteByIds(selectedIds);
+        redirectAttributes.addFlashAttribute("successMessage", "Selected tax records have been deleted.");
         return "redirect:/tax/list";
     }
 }

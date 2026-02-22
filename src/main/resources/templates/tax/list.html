@@ -16,7 +16,7 @@
                     </a>
                     <form th:action="@{/tax/delete-all}" method="post" class="d-inline-block ms-2 mb-0">
                         <button type="submit" class="btn btn-outline-danger"
-                                onclick="return confirm('Delete all saved tax records?');">
+                            onclick="return confirm('Delete all saved tax records?');">
                             <i class="bi bi-trash me-2"></i>Delete All
                         </button>
                     </form>
@@ -27,44 +27,67 @@
 
             <div class="card shadow-sm border-0">
                 <div class="card-body">
-                    <table class="table table-hover">
-                        <thead class="table-light">
-                            <tr>
-                                <th>Tax Year</th>
-                                <th>รายได้ทั้งปี<br><small class="text-muted">Annual Income</small></th>
-                                <th>ค่าใช้จ่ายที่หักได้<br><small class="text-muted">Expense Deduction</small></th>
-                                <th>ค่าลดหย่อนรวม<br><small class="text-muted">Total Allowance</small></th>
-                                <th>เงินได้สุทธิ<br><small class="text-muted">Net Taxable Income</small></th>
-                                <th>จำนวนภาษีที่ต้องจ่าย<br><small class="text-muted">Tax Payable</small></th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr th:each="rec : ${records}">
-                                <td th:text="${rec.taxYear}"></td>
-                                <td
-                                    th:text="${#numbers.formatDecimal(rec.annualIncome, 1, 'COMMA', 2, 'POINT')} + ' THB'">
-                                </td>
-                                <td
-                                    th:text="${#numbers.formatDecimal(rec.expenseDeduction, 1, 'COMMA', 2, 'POINT')} + ' THB'">
-                                </td>
-                                <td
-                                    th:text="${#numbers.formatDecimal(rec.totalAllowance, 1, 'COMMA', 2, 'POINT')} + ' THB'">
-                                </td>
-                                <td class="fw-bold"
-                                    th:text="${#numbers.formatDecimal(rec.netIncome, 1, 'COMMA', 2, 'POINT')} + ' THB'">
-                                </td>
-                                <td class="text-danger fw-bold"
-                                    th:text="${#numbers.formatDecimal(rec.taxPayable, 1, 'COMMA', 2, 'POINT')} + ' THB'">
-                                </td>
-                            </tr>
-                            <tr th:if="${#lists.isEmpty(records)}">
-                                <td colspan="6" class="text-center text-muted py-4">No saved records yet.</td>
-                            </tr>
-                        </tbody>
-                    </table>
+                    <form id="taxListForm" th:action="@{/tax/delete-selected}" method="post">
+                        <div class="d-flex justify-content-between mb-3" th:if="${not #lists.isEmpty(records)}">
+                            <button type="submit" class="btn btn-sm btn-outline-danger"
+                                onclick="return confirm('Delete selected records?');">
+                                <i class="bi bi-trash me-2"></i>Delete Selected
+                            </button>
+                        </div>
+                        <div class="table-responsive">
+                            <table class="table table-hover">
+                                <thead class="table-light">
+                                    <tr>
+                                        <th><input type="checkbox" id="selectAllCheckbox"></th>
+                                        <th>Tax Year</th>
+                                        <th>รายได้ทั้งปี<br><small class="text-muted">Annual Income</small></th>
+                                        <th>ค่าใช้จ่ายที่หักได้<br><small class="text-muted">Expense Deduction</small>
+                                        </th>
+                                        <th>ค่าลดหย่อนรวม<br><small class="text-muted">Total Allowance</small></th>
+                                        <th>เงินได้สุทธิ<br><small class="text-muted">Net Taxable Income</small></th>
+                                        <th>จำนวนภาษีที่ต้องจ่าย<br><small class="text-muted">Tax Payable</small></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr th:each="rec : ${records}">
+                                        <td><input type="checkbox" name="selectedIds" th:value="${rec.id}"></td>
+                                        <td th:text="${rec.taxYear}"></td>
+                                        <td
+                                            th:text="${#numbers.formatDecimal(rec.annualIncome, 1, 'COMMA', 2, 'POINT')} + ' THB'">
+                                        </td>
+                                        <td
+                                            th:text="${#numbers.formatDecimal(rec.expenseDeduction, 1, 'COMMA', 2, 'POINT')} + ' THB'">
+                                        </td>
+                                        <td
+                                            th:text="${#numbers.formatDecimal(rec.totalAllowance, 1, 'COMMA', 2, 'POINT')} + ' THB'">
+                                        </td>
+                                        <td class="fw-bold"
+                                            th:text="${#numbers.formatDecimal(rec.netIncome, 1, 'COMMA', 2, 'POINT')} + ' THB'">
+                                        </td>
+                                        <td class="text-danger fw-bold"
+                                            th:text="${#numbers.formatDecimal(rec.taxPayable, 1, 'COMMA', 2, 'POINT')} + ' THB'">
+                                        </td>
+                                    </tr>
+                                    <tr th:if="${#lists.isEmpty(records)}">
+                                        <td colspan="7" class="text-center text-muted py-4">No saved records yet.</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </form>
                 </div>
             </div>
         </div>
+        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+        <script>
+            $('#selectAllCheckbox').click(function (event) {
+                if (this.checked) {
+                    $(':checkbox[name=selectedIds]').prop('checked', true);
+                } else {
+                    $(':checkbox[name=selectedIds]').prop('checked', false);
+                }
+            });
+        </script>
     </main>
 </body>
 
