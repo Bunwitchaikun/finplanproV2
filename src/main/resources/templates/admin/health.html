@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="th" xmlns:th="http://www.thymeleaf.org"
+    th:replace="~{layout :: layout(~{::title}, ~{::main}, ~{::scripts})}">
+
+<head>
+    <title>System Health</title>
+</head>
+
+<body>
+    <main role="main">
+        <div class="container-fluid">
+
+            <!-- Header -->
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <div>
+                    <nav aria-label="breadcrumb">
+                        <ol class="breadcrumb mb-1" style="font-size:0.8rem;">
+                            <li class="breadcrumb-item"><a th:href="@{/admin}" class="text-decoration-none">Admin</a></li>
+                            <li class="breadcrumb-item active">System Health</li>
+                        </ol>
+                    </nav>
+                    <h1 class="h3 mb-0" style="font-family:'Outfit','Prompt',sans-serif; font-weight:700; color:#1e293b;">
+                        <i class="bi bi-activity me-2" style="color:#10b981;"></i>Monitor System Health
+                    </h1>
+                </div>
+                <span class="text-muted" style="font-size:0.8rem;">
+                    <i class="bi bi-arrow-repeat me-1"></i>Auto-refresh ทุก 30 วินาที
+                </span>
+            </div>
+
+            <!-- Status Cards -->
+            <div class="row g-3 mb-4">
+                <!-- Database -->
+                <div class="col-md-3">
+                    <div class="card border-0 shadow-sm h-100" style="border-radius:14px;">
+                        <div class="card-body text-center p-4">
+                            <div th:if="${dbOk}">
+                                <i class="bi bi-database-check" style="font-size:2.5rem; color:#10b981;"></i>
+                                <h6 class="mt-2 mb-1 fw-semibold" style="color:#1e293b;">Database</h6>
+                                <span class="badge rounded-pill bg-success">Online</span>
+                            </div>
+                            <div th:unless="${dbOk}">
+                                <i class="bi bi-database-x" style="font-size:2.5rem; color:#ef4444;"></i>
+                                <h6 class="mt-2 mb-1 fw-semibold" style="color:#1e293b;">Database</h6>
+                                <span class="badge rounded-pill bg-danger">Error</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Application -->
+                <div class="col-md-3">
+                    <div class="card border-0 shadow-sm h-100" style="border-radius:14px;">
+                        <div class="card-body text-center p-4">
+                            <i class="bi bi-server" style="font-size:2.5rem; color:#6366f1;"></i>
+                            <h6 class="mt-2 mb-1 fw-semibold" style="color:#1e293b;">Application</h6>
+                            <span class="badge rounded-pill bg-success">Running</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Memory -->
+                <div class="col-md-3">
+                    <div class="card border-0 shadow-sm h-100" style="border-radius:14px;">
+                        <div class="card-body text-center p-4">
+                            <i class="bi bi-memory"
+                               th:style="${memPct < 70} ? 'font-size:2.5rem; color:#10b981;' :
+                                          (${memPct < 85} ? 'font-size:2.5rem; color:#f59e0b;' :
+                                           'font-size:2.5rem; color:#ef4444;')"></i>
+                            <h6 class="mt-2 mb-1 fw-semibold" style="color:#1e293b;">Memory</h6>
+                            <span th:text="${memPct} + '%'" class="fw-bold"
+                                  th:style="${memPct < 70} ? 'color:#10b981;' :
+                                             (${memPct < 85} ? 'color:#f59e0b;' :
+                                              'color:#ef4444;')"></span>
+                            <div class="progress mt-2" style="height:6px; border-radius:3px;">
+                                <div class="progress-bar"
+                                     th:class="${memPct < 70} ? 'progress-bar bg-success' :
+                                               (${memPct < 85} ? 'progress-bar bg-warning' :
+                                                'progress-bar bg-danger')"
+                                     th:style="'width:' + ${memPct} + '%'"></div>
+                            </div>
+                            <p class="text-muted mt-1 mb-0" style="font-size:0.75rem;"
+                               th:text="${usedMem} + ' / ' + ${maxMem}"></p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Users -->
+                <div class="col-md-3">
+                    <div class="card border-0 shadow-sm h-100" style="border-radius:14px;">
+                        <div class="card-body text-center p-4">
+                            <i class="bi bi-people" style="font-size:2.5rem; color:#0ea5e9;"></i>
+                            <h6 class="mt-2 mb-1 fw-semibold" style="color:#1e293b;">Total Users</h6>
+                            <span class="fw-bold" style="font-size:1.4rem; color:#1e293b;"
+                                  th:text="${healthData['Total Users']}">0</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- System Info Table -->
+            <div class="card border-0 shadow-sm" style="border-radius:14px;">
+                <div class="card-header bg-white border-0 py-3" style="border-radius:14px 14px 0 0;">
+                    <h6 class="mb-0 fw-semibold" style="color:#1e293b;">
+                        <i class="bi bi-info-circle me-2" style="color:#6366f1;"></i>System Information
+                    </h6>
+                </div>
+                <div class="card-body p-0">
+                    <table class="table mb-0" style="font-size:0.85rem;">
+                        <tbody>
+                            <tr th:each="entry : ${healthData}">
+                                <td class="ps-4 py-3 text-muted fw-medium"
+                                    style="width:220px; border-color:#f1f5f9;"
+                                    th:text="${entry.key}"></td>
+                                <td class="py-3 fw-medium"
+                                    style="border-color:#f1f5f9; color:#1e293b;"
+                                    th:text="${entry.value}"></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+    <scripts>
+        <script th:inline="javascript">
+            setTimeout(() => location.reload(), 30000);
+        </script>
+    </scripts>
+</body>
+</html>

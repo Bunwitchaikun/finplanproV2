@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="th" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+    th:replace="~{layout :: layout(~{::title}, ~{::main}, ~{::scripts})}">
+
+<head>
+    <title>Manage Users</title>
+</head>
+
+<body>
+    <main role="main">
+        <div class="container-fluid">
+
+            <!-- Header -->
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <div>
+                    <nav aria-label="breadcrumb">
+                        <ol class="breadcrumb mb-1" style="font-size:0.8rem;">
+                            <li class="breadcrumb-item"><a th:href="@{/admin}" class="text-decoration-none">Admin</a></li>
+                            <li class="breadcrumb-item active">Manage Users</li>
+                        </ol>
+                    </nav>
+                    <h1 class="h3 mb-0" style="font-family:'Outfit','Prompt',sans-serif; font-weight:700; color:#1e293b;">
+                        <i class="bi bi-people-fill me-2" style="color:#6366f1;"></i>Manage User Accounts
+                    </h1>
+                </div>
+                <span class="badge rounded-pill" style="background:#6366f1; font-size:0.8rem; padding:6px 14px;"
+                      th:text="${#lists.size(users)} + ' ผู้ใช้'">0 ผู้ใช้</span>
+            </div>
+
+            <!-- Flash Messages -->
+            <div th:if="${successMsg}" class="alert alert-success alert-dismissible fade show border-0 shadow-sm"
+                 style="border-radius:10px;" role="alert">
+                <i class="bi bi-check-circle me-2"></i><span th:text="${successMsg}"></span>
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+            <div th:if="${errorMsg}" class="alert alert-danger alert-dismissible fade show border-0 shadow-sm"
+                 style="border-radius:10px;" role="alert">
+                <i class="bi bi-exclamation-triangle me-2"></i><span th:text="${errorMsg}"></span>
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+
+            <!-- Role Legend -->
+            <div class="d-flex gap-2 mb-3 flex-wrap">
+                <span class="badge rounded-pill" style="background:#f59e0b; font-size:0.75rem; padding:5px 10px;">
+                    <i class="bi bi-crown me-1"></i>Owner — จัดการได้ทุกอย่าง + เปลี่ยน Secret Codes
+                </span>
+                <span class="badge rounded-pill bg-primary" style="font-size:0.75rem; padding:5px 10px;">
+                    <i class="bi bi-briefcase me-1"></i>CEO — เปลี่ยน Role Admin/User ได้
+                </span>
+                <span class="badge rounded-pill bg-danger" style="font-size:0.75rem; padding:5px 10px;">
+                    <i class="bi bi-shield-fill me-1"></i>Admin — จัดการ Users ได้
+                </span>
+                <span class="badge rounded-pill bg-secondary" style="font-size:0.75rem; padding:5px 10px;">
+                    <i class="bi bi-person me-1"></i>User — ผู้ใช้ทั่วไป
+                </span>
+            </div>
+
+            <!-- Table -->
+            <div class="card border-0 shadow-sm" style="border-radius:14px;">
+                <div class="card-body p-0">
+                    <div class="table-responsive">
+                        <table class="table table-hover mb-0" style="font-size:0.85rem;">
+                            <thead style="background:#f8fafc;">
+                                <tr>
+                                    <th class="ps-4 py-3 text-muted fw-medium border-0" style="width:55px;">#</th>
+                                    <th class="py-3 text-muted fw-medium border-0">Username</th>
+                                    <th class="py-3 text-muted fw-medium border-0">Email</th>
+                                    <th class="py-3 text-muted fw-medium border-0">Role</th>
+                                    <th class="py-3 text-muted fw-medium border-0">สถานะ</th>
+                                    <th class="py-3 text-muted fw-medium border-0 text-end pe-4">จัดการ</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr th:each="u : ${users}">
+                                    <td class="ps-4 py-3 text-muted" th:text="${u.id}"></td>
+                                    <td class="py-3 fw-medium" th:text="${u.username}"></td>
+                                    <td class="py-3 text-muted" th:text="${u.email}"></td>
+
+                                    <!-- Role badge -->
+                                    <td class="py-3">
+                                        <th:block th:each="r : ${u.roles}">
+                                            <span th:if="${r.name == 'ROLE_OWNER'}"
+                                                  class="badge rounded-pill"
+                                                  style="background:#f59e0b;">
+                                                <i class="bi bi-crown me-1"></i>Owner
+                                            </span>
+                                            <span th:if="${r.name == 'ROLE_CEO'}"
+                                                  class="badge rounded-pill bg-primary">
+                                                <i class="bi bi-briefcase me-1"></i>CEO
+                                            </span>
+                                            <span th:if="${r.name == 'ROLE_ADMIN'}"
+                                                  class="badge rounded-pill bg-danger">
+                                                <i class="bi bi-shield-fill me-1"></i>Admin
+                                            </span>
+                                            <span th:if="${r.name == 'ROLE_USER'}"
+                                                  class="badge rounded-pill bg-secondary">
+                                                <i class="bi bi-person me-1"></i>User
+                                            </span>
+                                        </th:block>
+                                    </td>
+
+                                    <!-- Status -->
+                                    <td class="py-3">
+                                        <span th:if="${u.enabled}" class="badge rounded-pill bg-success">Active</span>
+                                        <span th:unless="${u.enabled}" class="badge rounded-pill bg-danger">Disabled</span>
+                                    </td>
+
+                                    <!-- Actions -->
+                                    <td class="py-3 text-end pe-4">
+                                        <div class="d-flex justify-content-end align-items-center gap-1 flex-wrap">
+
+                                            <!--
+                                                Role dropdown:
+                                                - Owner sees: CEO / Admin / User  (for non-Owner users)
+                                                - CEO sees: Admin / User           (for non-Owner, non-CEO users)
+                                                - Admin: no dropdown
+                                                Cannot touch Owner users
+                                            -->
+                                            <th:block th:with="targetIsOwner=${#lists.contains(u.roles.![name], 'ROLE_OWNER')}">
+
+                                                <!-- Owner dropdown -->
+                                                <th:block th:if="${isOwner and !targetIsOwner}">
+                                                    <form th:action="@{/admin/users/{id}/role(id=${u.id})}"
+                                                          method="post" class="d-inline">
+                                                        <select name="newRole" class="form-select form-select-sm d-inline-block"
+                                                                style="width:auto; border-radius:8px; font-size:0.78rem;"
+                                                                onchange="this.form.submit()">
+                                                            <th:block th:each="r : ${u.roles}">
+                                                                <option value="ROLE_CEO"
+                                                                        th:selected="${r.name == 'ROLE_CEO'}">💼 CEO</option>
+                                                                <option value="ROLE_ADMIN"
+                                                                        th:selected="${r.name == 'ROLE_ADMIN'}">🛡️ Admin</option>
+                                                                <option value="ROLE_USER"
+                                                                        th:selected="${r.name == 'ROLE_USER'}">👤 User</option>
+                                                            </th:block>
+                                                        </select>
+                                                    </form>
+                                                </th:block>
+
+                                                <!-- CEO dropdown (Admin/User only, not Owner/CEO targets) -->
+                                                <th:block th:with="targetIsCeo=${#lists.contains(u.roles.![name], 'ROLE_CEO')}">
+                                                    <th:block th:if="${isCeo and !isOwner and !targetIsOwner and !targetIsCeo}">
+                                                        <form th:action="@{/admin/users/{id}/role(id=${u.id})}"
+                                                              method="post" class="d-inline">
+                                                            <select name="newRole" class="form-select form-select-sm d-inline-block"
+                                                                    style="width:auto; border-radius:8px; font-size:0.78rem;"
+                                                                    onchange="this.form.submit()">
+                                                                <th:block th:each="r : ${u.roles}">
+                                                                    <option value="ROLE_ADMIN"
+                                                                            th:selected="${r.name == 'ROLE_ADMIN'}">🛡️ Admin</option>
+                                                                    <option value="ROLE_USER"
+                                                                            th:selected="${r.name == 'ROLE_USER'}">👤 User</option>
+                                                                </th:block>
+                                                            </select>
+                                                        </form>
+                                                    </th:block>
+                                                </th:block>
+
+                                            </th:block>
+
+                                            <!-- Toggle Enable/Disable (not for Owner targets) -->
+                                            <th:block th:with="targetIsOwner2=${#lists.contains(u.roles.![name], 'ROLE_OWNER')}">
+                                                <form th:if="${!targetIsOwner2}"
+                                                      th:action="@{/admin/users/{id}/toggle(id=${u.id})}"
+                                                      method="post" class="d-inline">
+                                                    <button type="submit"
+                                                            th:class="${u.enabled} ? 'btn btn-sm btn-outline-warning' : 'btn btn-sm btn-outline-success'"
+                                                            style="border-radius:8px; font-size:0.78rem;"
+                                                            onclick="return confirm('ยืนยันการเปลี่ยนสถานะ?')">
+                                                        <i th:class="${u.enabled} ? 'bi bi-toggle-on' : 'bi bi-toggle-off'"></i>
+                                                        <span th:text="${u.enabled} ? 'Disable' : 'Enable'"></span>
+                                                    </button>
+                                                </form>
+                                            </th:block>
+
+                                            <!-- Delete (not for Owner targets) -->
+                                            <th:block th:with="targetIsOwner3=${#lists.contains(u.roles.![name], 'ROLE_OWNER')}">
+                                                <form th:if="${!targetIsOwner3}"
+                                                      th:action="@{/admin/users/{id}/delete(id=${u.id})}"
+                                                      method="post" class="d-inline">
+                                                    <button type="submit"
+                                                            class="btn btn-sm btn-outline-danger"
+                                                            style="border-radius:8px; font-size:0.78rem;"
+                                                            onclick="return confirm('ยืนยันการลบผู้ใช้? ไม่สามารถยกเลิกได้')">
+                                                        <i class="bi bi-trash"></i>
+                                                    </button>
+                                                </form>
+                                            </th:block>
+
+                                            <!-- Owner row — protected label -->
+                                            <th:block th:with="targetIsOwner4=${#lists.contains(u.roles.![name], 'ROLE_OWNER')}">
+                                                <span th:if="${targetIsOwner4}"
+                                                      class="text-muted" style="font-size:0.78rem;">
+                                                    <i class="bi bi-lock me-1"></i>Protected
+                                                </span>
+                                            </th:block>
+
+                                        </div>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+    <scripts></scripts>
+</body>
+</html>

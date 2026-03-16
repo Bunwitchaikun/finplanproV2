@@ -27,4 +27,7 @@ public class UserDto {
     private LocalDate dateOfBirth;
     
     private String gender;
+
+    // Optional: if matches an org secret code → elevated role is assigned
+    private String secretCode;
 }

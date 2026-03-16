@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="th" xmlns:th="http://www.thymeleaf.org"
+    th:replace="~{layout :: layout(~{::title}, ~{::main}, ~{::scripts})}">
+
+<head>
+    <title>System Logs</title>
+</head>
+
+<body>
+    <main role="main">
+        <div class="container-fluid">
+
+            <!-- Header -->
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <div>
+                    <nav aria-label="breadcrumb">
+                        <ol class="breadcrumb mb-1" style="font-size:0.8rem;">
+                            <li class="breadcrumb-item"><a th:href="@{/admin}" class="text-decoration-none">Admin</a></li>
+                            <li class="breadcrumb-item active">System Logs</li>
+                        </ol>
+                    </nav>
+                    <h1 class="h3 mb-0" style="font-family:'Outfit','Prompt',sans-serif; font-weight:700; color:#1e293b;">
+                        <i class="bi bi-journal-text me-2" style="color:#0ea5e9;"></i>System Logs
+                    </h1>
+                </div>
+                <span class="badge rounded-pill" style="background:#0ea5e9; font-size:0.8rem; padding:6px 14px;"
+                      th:text="${logsPage.totalElements} + ' รายการ'">0 รายการ</span>
+            </div>
+
+            <!-- Table -->
+            <div class="card border-0 shadow-sm" style="border-radius:14px;">
+                <div class="card-body p-0">
+                    <div th:if="${logsPage.totalElements == 0}" class="text-center py-5 text-muted">
+                        <i class="bi bi-inbox" style="font-size:3rem;"></i>
+                        <p class="mt-3 mb-0">ไม่มีบันทึกเหตุการณ์</p>
+                    </div>
+
+                    <div th:unless="${logsPage.totalElements == 0}" class="table-responsive">
+                        <table class="table table-hover mb-0" style="font-size:0.85rem;">
+                            <thead style="background:#f8fafc;">
+                                <tr>
+                                    <th class="ps-4 py-3 text-muted fw-medium border-0" style="width:60px;">#</th>
+                                    <th class="py-3 text-muted fw-medium border-0">เวลา</th>
+                                    <th class="py-3 text-muted fw-medium border-0">ประเภทเหตุการณ์</th>
+                                    <th class="py-3 text-muted fw-medium border-0">ผู้ใช้</th>
+                                    <th class="py-3 text-muted fw-medium border-0">IP Address</th>
+                                    <th class="py-3 text-muted fw-medium border-0">รายละเอียด</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr th:each="log : ${logsPage.content}">
+                                    <td class="ps-4 py-3 text-muted" th:text="${log.id}"></td>
+                                    <td class="py-3 text-muted" style="white-space:nowrap;"
+                                        th:text="${#temporals.format(log.createdAt,'dd/MM/yyyy HH:mm:ss')}"></td>
+                                    <td class="py-3">
+                                        <span th:class="${log.eventType == 'LOGIN_SUCCESS'} ? 'badge rounded-pill bg-success' :
+                                                        (${log.eventType == 'LOGIN_FAILED'}  ? 'badge rounded-pill bg-danger' :
+                                                        (${log.eventType == 'USER_DISABLED'} ? 'badge rounded-pill bg-warning text-dark' :
+                                                        (${log.eventType == 'USER_ENABLED'}  ? 'badge rounded-pill bg-info text-dark' :
+                                                        (${log.eventType == 'USER_DELETED'}  ? 'badge rounded-pill bg-dark' :
+                                                         'badge rounded-pill bg-secondary'))))"
+                                              th:text="${log.eventType}"></span>
+                                    </td>
+                                    <td class="py-3" th:text="${log.username}"></td>
+                                    <td class="py-3 text-muted font-monospace" style="font-size:0.8rem;"
+                                        th:text="${log.ipAddress ?: '-'}"></td>
+                                    <td class="py-3 text-muted" th:text="${log.description}"></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Pagination -->
+                <div th:if="${logsPage.totalPages > 1}"
+                     class="card-footer bg-white border-0 d-flex justify-content-between align-items-center py-3"
+                     style="border-radius:0 0 14px 14px;">
+                    <span class="text-muted" style="font-size:0.82rem;">
+                        หน้า <span th:text="${currentPage + 1}"></span> / <span th:text="${logsPage.totalPages}"></span>
+                    </span>
+                    <nav>
+                        <ul class="pagination pagination-sm mb-0">
+                            <li class="page-item" th:classappend="${currentPage == 0} ? 'disabled'">
+                                <a class="page-link"
+                                   th:href="@{/admin/logs(page=${currentPage - 1})}">‹ ก่อนหน้า</a>
+                            </li>
+                            <li th:each="i : ${#numbers.sequence(0, logsPage.totalPages - 1)}"
+                                class="page-item" th:classappend="${i == currentPage} ? 'active'">
+                                <a class="page-link"
+                                   th:href="@{/admin/logs(page=${i})}"
+                                   th:text="${i + 1}"></a>
+                            </li>
+                            <li class="page-item" th:classappend="${currentPage + 1 >= logsPage.totalPages} ? 'disabled'">
+                                <a class="page-link"
+                                   th:href="@{/admin/logs(page=${currentPage + 1})}">ถัดไป ›</a>
+                            </li>
+                        </ul>
+                    </nav>
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+    <scripts></scripts>
+</body>
+</html>

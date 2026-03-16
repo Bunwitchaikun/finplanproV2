@@ -27,6 +27,9 @@ public class User {
     @ToString.Exclude
     private UserProfile userProfile;
 
+    @Column(nullable = false)
+    private boolean enabled = true;
+
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
             name = "user_roles",

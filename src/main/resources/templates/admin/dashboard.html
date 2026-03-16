@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="th" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+    th:replace="~{layout :: layout(~{::title}, ~{::main}, ~{::scripts})}">
+
+<head>
+    <title>Admin Dashboard</title>
+</head>
+
+<body>
+    <main role="main">
+        <div class="container-fluid">
+
+            <!-- Header -->
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <div>
+                    <h1 class="h3 mb-0"
+                        style="font-family:'Outfit','Prompt',sans-serif; font-weight:700; color:#1e293b;">
+                        <i class="bi bi-shield-lock me-2" style="color:#6366f1;"></i>Admin Dashboard
+                    </h1>
+                    <p class="text-muted mb-0" style="font-size:0.85rem;">จัดการระบบและตรวจสอบการทำงาน</p>
+                </div>
+                <!-- Current user role badge -->
+                <div>
+                    <span sec:authorize="hasRole('OWNER')"
+                          class="badge rounded-pill me-1"
+                          style="background:#f59e0b; font-size:0.8rem; padding:6px 14px;">
+                        <i class="bi bi-crown me-1"></i>Owner
+                    </span>
+                    <span sec:authorize="hasRole('CEO') and !hasRole('OWNER')"
+                          class="badge rounded-pill bg-primary me-1"
+                          style="font-size:0.8rem; padding:6px 14px;">
+                        <i class="bi bi-briefcase me-1"></i>CEO
+                    </span>
+                    <span sec:authorize="hasRole('ADMIN') and !hasRole('CEO')"
+                          class="badge rounded-pill bg-danger me-1"
+                          style="font-size:0.8rem; padding:6px 14px;">
+                        <i class="bi bi-shield-fill me-1"></i>Admin
+                    </span>
+                </div>
+            </div>
+
+            <!-- Summary Cards -->
+            <div class="row g-3 mb-4">
+                <div class="col-md-4">
+                    <a th:href="@{/admin/users}" class="text-decoration-none">
+                        <div class="card border-0 shadow-sm h-100"
+                             style="border-radius:14px; background:linear-gradient(135deg,#6366f1,#818cf8);">
+                            <div class="card-body text-white p-4">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <div>
+                                        <p class="mb-1 opacity-75" style="font-size:0.8rem;">Total Users</p>
+                                        <h2 class="mb-0 fw-bold" th:text="${totalUsers}">0</h2>
+                                    </div>
+                                    <i class="bi bi-people-fill" style="font-size:2.5rem; opacity:0.4;"></i>
+                                </div>
+                                <p class="mt-2 mb-0 opacity-75" style="font-size:0.75rem;">
+                                    <i class="bi bi-arrow-right-circle me-1"></i>จัดการบัญชีผู้ใช้
+                                </p>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+
+                <div class="col-md-4">
+                    <a th:href="@{/admin/logs}" class="text-decoration-none">
+                        <div class="card border-0 shadow-sm h-100"
+                             style="border-radius:14px; background:linear-gradient(135deg,#0ea5e9,#38bdf8);">
+                            <div class="card-body text-white p-4">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <div>
+                                        <p class="mb-1 opacity-75" style="font-size:0.8rem;">System Logs</p>
+                                        <h2 class="mb-0 fw-bold" th:text="${totalLogs}">0</h2>
+                                    </div>
+                                    <i class="bi bi-journal-text" style="font-size:2.5rem; opacity:0.4;"></i>
+                                </div>
+                                <p class="mt-2 mb-0 opacity-75" style="font-size:0.75rem;">
+                                    <i class="bi bi-arrow-right-circle me-1"></i>ดู System Logs
+                                </p>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+
+                <div class="col-md-4">
+                    <a th:href="@{/admin/health}" class="text-decoration-none">
+                        <div class="card border-0 shadow-sm h-100"
+                             th:style="${dbOk}
+                                ? 'border-radius:14px; background:linear-gradient(135deg,#10b981,#34d399);'
+                                : 'border-radius:14px; background:linear-gradient(135deg,#ef4444,#f87171);'">
+                            <div class="card-body text-white p-4">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <div>
+                                        <p class="mb-1 opacity-75" style="font-size:0.8rem;">Database</p>
+                                        <h2 class="mb-0 fw-bold" th:text="${dbStatus}">Online</h2>
+                                    </div>
+                                    <i class="bi bi-database-check" style="font-size:2.5rem; opacity:0.4;"></i>
+                                </div>
+                                <p class="mt-2 mb-0 opacity-75" style="font-size:0.75rem;">
+                                    <i class="bi bi-arrow-right-circle me-1"></i>ตรวจสอบ System Health
+                                </p>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+            </div>
+
+            <!-- Secret Code Management — Owner only -->
+            <div sec:authorize="hasRole('OWNER')" class="card border-0 shadow-sm mb-4"
+                 style="border-radius:14px; border-left:4px solid #f59e0b !important;">
+                <div class="card-header bg-white border-0 py-3" style="border-radius:14px 14px 0 0;">
+                    <h6 class="mb-0 fw-semibold" style="color:#1e293b;">
+                        <i class="bi bi-key-fill me-2" style="color:#f59e0b;"></i>
+                        Secret Code Management
+                        <span class="badge rounded-pill ms-2"
+                              style="background:#f59e0b; font-size:0.7rem;">Owner Only</span>
+                    </h6>
+                    <p class="text-muted mb-0 mt-1" style="font-size:0.78rem;">
+                        รหัสเหล่านี้ใช้ตอนสมัครสมาชิกเพื่อกำหนด Role — เก็บไว้เป็นความลับ
+                    </p>
+                </div>
+                <div class="card-body">
+                    <div th:if="${successMsg}" class="alert alert-success border-0 py-2 mb-3"
+                         style="border-radius:8px; font-size:0.85rem;">
+                        <i class="bi bi-check-circle me-2"></i><span th:text="${successMsg}"></span>
+                    </div>
+                    <form th:action="@{/admin/settings/codes}" method="post">
+                        <div class="row g-3">
+                            <div class="col-md-4">
+                                <label class="form-label fw-medium" style="font-size:0.85rem; color:#1e293b;">
+                                    <i class="bi bi-crown me-1" style="color:#f59e0b;"></i>Owner Code
+                                </label>
+                                <div class="input-group">
+                                    <input type="password" class="form-control" id="ownerCodeInput"
+                                           name="ownerCode"
+                                           th:value="${settings.ownerCode}"
+                                           style="border-radius:8px 0 0 8px; font-size:0.85rem;">
+                                    <button type="button" class="btn btn-outline-secondary"
+                                            style="border-radius:0 8px 8px 0; font-size:0.8rem;"
+                                            onclick="toggleVisibility('ownerCodeInput', this)">
+                                        <i class="bi bi-eye"></i>
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label fw-medium" style="font-size:0.85rem; color:#1e293b;">
+                                    <i class="bi bi-briefcase me-1" style="color:#6366f1;"></i>CEO Code
+                                </label>
+                                <div class="input-group">
+                                    <input type="password" class="form-control" id="ceoCodeInput"
+                                           name="ceoCode"
+                                           th:value="${settings.ceoCode}"
+                                           style="border-radius:8px 0 0 8px; font-size:0.85rem;">
+                                    <button type="button" class="btn btn-outline-secondary"
+                                            style="border-radius:0 8px 8px 0; font-size:0.8rem;"
+                                            onclick="toggleVisibility('ceoCodeInput', this)">
+                                        <i class="bi bi-eye"></i>
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label fw-medium" style="font-size:0.85rem; color:#1e293b;">
+                                    <i class="bi bi-shield-fill me-1" style="color:#ef4444;"></i>Admin Code
+                                </label>
+                                <div class="input-group">
+                                    <input type="password" class="form-control" id="adminCodeInput"
+                                           name="adminCode"
+                                           th:value="${settings.adminCode}"
+                                           style="border-radius:8px 0 0 8px; font-size:0.85rem;">
+                                    <button type="button" class="btn btn-outline-secondary"
+                                            style="border-radius:0 8px 8px 0; font-size:0.8rem;"
+                                            onclick="toggleVisibility('adminCodeInput', this)">
+                                        <i class="bi bi-eye"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="mt-3">
+                            <button type="submit" class="btn btn-warning btn-sm px-4"
+                                    style="border-radius:8px; font-weight:600;"
+                                    onclick="return confirm('ยืนยันการเปลี่ยน Secret Codes?')">
+                                <i class="bi bi-save me-1"></i>บันทึก Secret Codes
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Recent Logs -->
+            <div class="card border-0 shadow-sm" style="border-radius:14px;">
+                <div class="card-header bg-white border-0 d-flex justify-content-between align-items-center py-3"
+                     style="border-radius:14px 14px 0 0;">
+                    <h6 class="mb-0 fw-semibold" style="color:#1e293b;">
+                        <i class="bi bi-clock-history me-2" style="color:#6366f1;"></i>เหตุการณ์ล่าสุด
+                    </h6>
+                    <a th:href="@{/admin/logs}" class="btn btn-sm btn-outline-secondary"
+                       style="border-radius:8px;">
+                        ดูทั้งหมด <i class="bi bi-arrow-right ms-1"></i>
+                    </a>
+                </div>
+                <div class="card-body p-0">
+                    <div th:if="${#lists.isEmpty(recentLogs)}" class="text-center py-5 text-muted">
+                        <i class="bi bi-inbox" style="font-size:2rem;"></i>
+                        <p class="mt-2 mb-0">ไม่มีบันทึกเหตุการณ์</p>
+                    </div>
+                    <div th:unless="${#lists.isEmpty(recentLogs)}" class="table-responsive">
+                        <table class="table table-hover mb-0" style="font-size:0.85rem;">
+                            <thead style="background:#f8fafc;">
+                                <tr>
+                                    <th class="ps-4 py-3 text-muted fw-medium border-0">เวลา</th>
+                                    <th class="py-3 text-muted fw-medium border-0">ประเภท</th>
+                                    <th class="py-3 text-muted fw-medium border-0">ผู้ใช้</th>
+                                    <th class="py-3 text-muted fw-medium border-0">รายละเอียด</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr th:each="log : ${recentLogs}">
+                                    <td class="ps-4 py-3 text-muted"
+                                        th:text="${#temporals.format(log.createdAt,'dd/MM HH:mm')}"></td>
+                                    <td class="py-3">
+                                        <span th:class="${log.eventType == 'LOGIN_SUCCESS'} ? 'badge rounded-pill bg-success' :
+                                                        (${log.eventType == 'LOGIN_FAILED'}  ? 'badge rounded-pill bg-danger' :
+                                                        (${log.eventType == 'USER_DISABLED'} ? 'badge rounded-pill bg-warning text-dark' :
+                                                        (${log.eventType == 'USER_ENABLED'}  ? 'badge rounded-pill bg-info text-dark' :
+                                                        (${log.eventType == 'ROLE_CHANGED'}  ? 'badge rounded-pill bg-primary' :
+                                                        (${log.eventType == 'CODE_UPDATED'}  ? 'badge rounded-pill' + ' text-dark' :
+                                                         'badge rounded-pill bg-secondary')))))"
+                                              th:style="${log.eventType == 'CODE_UPDATED'} ? 'background:#f59e0b;' : ''"
+                                              th:text="${log.eventType}"></span>
+                                    </td>
+                                    <td class="py-3" th:text="${log.username}"></td>
+                                    <td class="py-3 text-muted" th:text="${log.description}"></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+    <scripts>
+        <script>
+            function toggleVisibility(inputId, btn) {
+                const input = document.getElementById(inputId);
+                const icon = btn.querySelector('i');
+                if (input.type === 'password') {
+                    input.type = 'text';
+                    icon.className = 'bi bi-eye-slash';
+                } else {
+                    input.type = 'password';
+                    icon.className = 'bi bi-eye';
+                }
+            }
+        </script>
+    </scripts>
+</body>
+</html>
