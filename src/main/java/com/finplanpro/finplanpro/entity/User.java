@@ -27,6 +27,9 @@ public class User {
     @ToString.Exclude
     private UserProfile userProfile;
 
+    @Column(name = "google_id")
+    private String googleId;
+
     @Column(nullable = false)
     private boolean enabled = true;
 

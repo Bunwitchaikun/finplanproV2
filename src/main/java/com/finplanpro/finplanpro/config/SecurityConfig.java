@@ -1,5 +1,6 @@
 package com.finplanpro.finplanpro.config;
 
+import com.finplanpro.finplanpro.service.CustomOAuth2UserService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
@@ -30,12 +31,14 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http,
-                                           DaoAuthenticationProvider authenticationProvider) throws Exception {
+                                           DaoAuthenticationProvider authenticationProvider,
+                                           CustomOAuth2UserService customOAuth2UserService) throws Exception {
         http.authenticationProvider(authenticationProvider);
 
         http.csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers("/register/**", "/login/**").permitAll()
+                        .requestMatchers("/forgot-password/**", "/reset-password/**").permitAll()
                         .requestMatchers("/css/**", "/js/**", "/images/**").permitAll()
                         .requestMatchers("/admin/**").hasAnyRole("ADMIN", "CEO", "OWNER")
                         .anyRequest().authenticated()
@@ -46,6 +49,14 @@ public class SecurityConfig {
                         .defaultSuccessUrl("/dashboard", true)
                         .failureUrl("/login?error=true")
                         .permitAll()
+                )
+                .oauth2Login(oauth2 -> oauth2
+                        .loginPage("/login")
+                        .defaultSuccessUrl("/dashboard", true)
+                        .failureUrl("/login?error=true")
+                        .userInfoEndpoint(userInfo -> userInfo
+                                .userService(customOAuth2UserService)
+                        )
                 )
                 .logout(logout -> logout
                         .logoutRequestMatcher(new AntPathRequestMatcher("/logout"))

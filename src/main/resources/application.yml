@@ -16,6 +16,30 @@ spring:
         format_sql: true
     show-sql: true
 
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: bosstanasit2546@gmail.com
+    password: vlzy kuzf npfu bhgl
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+
+  security:
+    oauth2:
+      client:
+        registration:
+          google:
+            client-id: 649092656408-r4503okk8ghcecipn4embrhkd227hsso.apps.googleusercontent.com
+            client-secret: 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
+            scope: email, profile
+
+app:
+  base-url: http://localhost:8083
+
 flyway:
   enabled: true
   baseline-on-migrate: true
