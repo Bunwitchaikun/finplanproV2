@@ -126,6 +126,8 @@
                                                                 style="width:auto; border-radius:8px; font-size:0.78rem;"
                                                                 onchange="this.form.submit()">
                                                             <th:block th:each="r : ${u.roles}">
+                                                                <option value="ROLE_OWNER"
+                                                                        th:selected="${r.name == 'ROLE_OWNER'}">👑 Owner</option>
                                                                 <option value="ROLE_CEO"
                                                                         th:selected="${r.name == 'ROLE_CEO'}">💼 CEO</option>
                                                                 <option value="ROLE_ADMIN"

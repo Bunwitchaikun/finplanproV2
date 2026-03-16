@@ -20,6 +20,7 @@ import javax.sql.DataSource;
 import java.sql.Connection;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -171,8 +172,8 @@ public class AdminController {
             ra.addFlashAttribute("errorMsg", "เฉพาะ Owner เท่านั้นที่สามารถกำหนด Role CEO ได้");
             return "redirect:/admin/users";
         }
-        if (newRole.equals("ROLE_OWNER")) {
-            ra.addFlashAttribute("errorMsg", "ไม่สามารถกำหนด Role Owner ผ่าน UI ได้");
+        if (newRole.equals("ROLE_OWNER") && !actorIsOwner) {
+            ra.addFlashAttribute("errorMsg", "เฉพาะ Owner เท่านั้นที่สามารถกำหนด Role Owner ได้");
             return "redirect:/admin/users";
         }
 
@@ -184,7 +185,7 @@ public class AdminController {
 
             Role role = roleRepository.findByName(newRole);
             if (role != null) {
-                user.setRoles(Set.of(role));
+                user.setRoles(new HashSet<>(Set.of(role)));
                 userRepository.save(user);
                 systemLogRepository.save(new SystemLog(
                         "ROLE_CHANGED", auth.getName(),
