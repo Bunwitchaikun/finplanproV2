@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="th" xmlns:th="http://www.thymeleaf.org"
+    th:replace="~{layout :: layout(~{::title}, ~{::main}, ~{::scripts})}">
+
+<head>
+    <title>Edit User</title>
+</head>
+
+<body>
+    <main role="main">
+        <div class="container-fluid">
+
+            <!-- Header -->
+            <div class="mb-4">
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb mb-1" style="font-size:0.8rem;">
+                        <li class="breadcrumb-item"><a th:href="@{/admin}" class="text-decoration-none">Admin</a></li>
+                        <li class="breadcrumb-item"><a th:href="@{/admin/users}" class="text-decoration-none">Manage Users</a></li>
+                        <li class="breadcrumb-item active" th:text="${target.username}">User</li>
+                    </ol>
+                </nav>
+                <h1 class="h3 mb-0" style="font-family:'Outfit','Prompt',sans-serif; font-weight:700; color:#1e293b;">
+                    <i class="bi bi-person-gear me-2" style="color:#6366f1;"></i>แก้ไขข้อมูลผู้ใช้
+                </h1>
+            </div>
+
+            <div class="row justify-content-center">
+                <div class="col-md-6">
+                    <div class="card border-0 shadow-sm" style="border-radius:14px;">
+                        <div class="card-body p-4">
+
+                            <!-- User Info (read-only) -->
+                            <div class="mb-4 p-3 rounded" style="background:#f8fafc;">
+                                <div class="d-flex align-items-center gap-3">
+                                    <div>
+                                        <p class="mb-0 fw-semibold" style="color:#1e293b;" th:text="${target.username}"></p>
+                                        <small class="text-muted">ID: <span th:text="${target.id}"></span></small>
+                                    </div>
+                                    <div class="ms-auto">
+                                        <th:block th:each="r : ${target.roles}">
+                                            <span th:if="${r.name == 'ROLE_OWNER'}" class="badge rounded-pill" style="background:#f59e0b;"><i class="bi bi-crown me-1"></i>Owner</span>
+                                            <span th:if="${r.name == 'ROLE_CEO'}" class="badge rounded-pill bg-primary"><i class="bi bi-briefcase me-1"></i>CEO</span>
+                                            <span th:if="${r.name == 'ROLE_ADMIN'}" class="badge rounded-pill bg-danger"><i class="bi bi-shield-fill me-1"></i>Admin</span>
+                                            <span th:if="${r.name == 'ROLE_USER'}" class="badge rounded-pill bg-secondary"><i class="bi bi-person me-1"></i>User</span>
+                                        </th:block>
+                                        <span th:if="${target.enabled}" class="badge rounded-pill bg-success ms-1">Active</span>
+                                        <span th:unless="${target.enabled}" class="badge rounded-pill bg-danger ms-1">Disabled</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Edit Form -->
+                            <form th:action="@{/admin/users/{id}/edit(id=${target.id})}" method="post">
+
+                                <div class="mb-3">
+                                    <label class="form-label fw-medium" style="font-size:0.85rem; color:#1e293b;">
+                                        <i class="bi bi-person me-1" style="color:#6366f1;"></i>Username
+                                    </label>
+                                    <input type="text" class="form-control"
+                                           th:value="${target.username}" disabled
+                                           style="border-radius:8px; font-size:0.85rem; background:#f1f5f9;">
+                                </div>
+
+                                <div class="mb-3">
+                                    <label for="email" class="form-label fw-medium" style="font-size:0.85rem; color:#1e293b;">
+                                        <i class="bi bi-envelope me-1" style="color:#6366f1;"></i>Email
+                                    </label>
+                                    <input type="email" class="form-control" id="email" name="email"
+                                           th:value="${target.email}" required
+                                           style="border-radius:8px; font-size:0.85rem;">
+                                </div>
+
+                                <div class="mb-4">
+                                    <label for="newPassword" class="form-label fw-medium" style="font-size:0.85rem; color:#1e293b;">
+                                        <i class="bi bi-lock me-1" style="color:#6366f1;"></i>รหัสผ่านใหม่
+                                        <span class="text-muted fw-normal">(เว้นว่างถ้าไม่ต้องการเปลี่ยน)</span>
+                                    </label>
+                                    <div class="input-group">
+                                        <input type="password" class="form-control" id="newPassword" name="newPassword"
+                                               placeholder="กรอกรหัสผ่านใหม่เพื่อ Reset"
+                                               style="border-radius:8px 0 0 8px; font-size:0.85rem;">
+                                        <button type="button" class="btn btn-outline-secondary"
+                                                style="border-radius:0 8px 8px 0; font-size:0.8rem;"
+                                                onclick="togglePw()">
+                                            <i class="bi bi-eye" id="pwEyeIcon"></i>
+                                        </button>
+                                    </div>
+                                    <div class="form-text text-muted" style="font-size:0.78rem;">
+                                        รหัสผ่านเดิมถูกเข้ารหัสไว้ (BCrypt) — ไม่สามารถแสดงได้
+                                    </div>
+                                </div>
+
+                                <div class="d-flex gap-2">
+                                    <button type="submit" class="btn btn-primary px-4"
+                                            style="border-radius:8px; font-weight:600; font-size:0.85rem;"
+                                            onclick="return confirm('ยืนยันการแก้ไขข้อมูลผู้ใช้?')">
+                                        <i class="bi bi-save me-1"></i>บันทึก
+                                    </button>
+                                    <a th:href="@{/admin/users}" class="btn btn-outline-secondary px-4"
+                                       style="border-radius:8px; font-size:0.85rem;">
+                                        ยกเลิก
+                                    </a>
+                                </div>
+                            </form>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+    <scripts>
+        <script>
+            function togglePw() {
+                const input = document.getElementById('newPassword');
+                const icon = document.getElementById('pwEyeIcon');
+                if (input.type === 'password') {
+                    input.type = 'text';
+                    icon.className = 'bi bi-eye-slash';
+                } else {
+                    input.type = 'password';
+                    icon.className = 'bi bi-eye';
+                }
+            }
+        </script>
+    </scripts>
+</body>
+</html>

@@ -160,6 +160,13 @@
 
                                             </th:block>
 
+                                            <!-- Edit button -->
+                                            <a th:href="@{/admin/users/{id}/edit(id=${u.id})}"
+                                               class="btn btn-sm btn-outline-primary"
+                                               style="border-radius:8px; font-size:0.78rem;">
+                                                <i class="bi bi-pencil"></i>
+                                            </a>
+
                                             <!-- Toggle Enable/Disable (not for Owner targets) -->
                                             <th:block th:with="targetIsOwner2=${#lists.contains(u.roles.![name], 'ROLE_OWNER')}">
                                                 <form th:if="${!targetIsOwner2}"

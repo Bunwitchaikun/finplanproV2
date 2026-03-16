@@ -50,9 +50,14 @@
                         <input type="text" class="auth-input" id="username" name="username" required autofocus
                             placeholder="Username or Email">
                     </div>
-                    <div class="mb-3">
+                    <div class="mb-3" style="position:relative;">
                         <input type="password" class="auth-input" id="password" name="password" required
-                            placeholder="Password">
+                            placeholder="Password" style="padding-right:2.8rem;">
+                        <button type="button" onclick="toggleLoginPw()"
+                                style="position:absolute; right:12px; top:50%; transform:translateY(-50%);
+                                       background:none; border:none; cursor:pointer; color:#94a3b8; padding:0;">
+                            <i class="bi bi-eye" id="loginPwEye" style="font-size:1.1rem;"></i>
+                        </button>
                     </div>
 
                     <div class="form-check mb-4">
@@ -68,6 +73,19 @@
             </div>
         </div>
     </main>
+    <script>
+        function toggleLoginPw() {
+            const input = document.getElementById('password');
+            const icon = document.getElementById('loginPwEye');
+            if (input.type === 'password') {
+                input.type = 'text';
+                icon.className = 'bi bi-eye-slash';
+            } else {
+                input.type = 'password';
+                icon.className = 'bi bi-eye';
+            }
+        }
+    </script>
 </body>
 
 </html>

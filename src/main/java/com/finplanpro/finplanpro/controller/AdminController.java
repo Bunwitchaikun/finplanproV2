@@ -11,6 +11,7 @@ import com.finplanpro.finplanpro.repository.UserRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -35,17 +36,20 @@ public class AdminController {
     private final SystemLogRepository systemLogRepository;
     private final OrgSettingsRepository orgSettingsRepository;
     private final DataSource dataSource;
+    private final PasswordEncoder passwordEncoder;
 
     public AdminController(UserRepository userRepository,
                            RoleRepository roleRepository,
                            SystemLogRepository systemLogRepository,
                            OrgSettingsRepository orgSettingsRepository,
-                           DataSource dataSource) {
+                           DataSource dataSource,
+                           PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
         this.roleRepository = roleRepository;
         this.systemLogRepository = systemLogRepository;
         this.orgSettingsRepository = orgSettingsRepository;
         this.dataSource = dataSource;
+        this.passwordEncoder = passwordEncoder;
     }
 
     // ─── Admin Dashboard ─────────────────────────────────────────────────────
@@ -194,6 +198,39 @@ public class AdminController {
         });
 
         ra.addFlashAttribute("successMsg", "เปลี่ยน Role เรียบร้อยแล้ว");
+        return "redirect:/admin/users";
+    }
+
+    @GetMapping("/users/{id}/edit")
+    public String editUserForm(@PathVariable Long id, Model model, Authentication auth, RedirectAttributes ra) {
+        User target = userRepository.findById(id).orElse(null);
+        if (target == null) {
+            ra.addFlashAttribute("errorMsg", "ไม่พบผู้ใช้");
+            return "redirect:/admin/users";
+        }
+        model.addAttribute("activeMenu", "admin");
+        model.addAttribute("target", target);
+        return "admin/user-edit";
+    }
+
+    @PostMapping("/users/{id}/edit")
+    public String editUser(@PathVariable Long id,
+                           @RequestParam String email,
+                           @RequestParam(required = false) String newPassword,
+                           Authentication auth,
+                           RedirectAttributes ra) {
+        userRepository.findById(id).ifPresent(user -> {
+            String oldEmail = user.getEmail();
+            user.setEmail(email.isBlank() ? oldEmail : email);
+            if (newPassword != null && !newPassword.isBlank()) {
+                user.setPassword(passwordEncoder.encode(newPassword));
+            }
+            userRepository.save(user);
+            systemLogRepository.save(new SystemLog(
+                    "USER_EDITED", auth.getName(),
+                    "แก้ไขข้อมูล: " + oldEmail, null));
+        });
+        ra.addFlashAttribute("successMsg", "อัปเดตข้อมูลผู้ใช้เรียบร้อยแล้ว");
         return "redirect:/admin/users";
     }
 
