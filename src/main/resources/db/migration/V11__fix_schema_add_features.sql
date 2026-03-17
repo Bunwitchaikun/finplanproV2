@@ -9,7 +9,12 @@ BEGIN
         ALTER TABLE user_roles ADD CONSTRAINT user_roles_pkey PRIMARY KEY (id);
     END IF;
 END $$;
-ALTER TABLE user_roles ADD CONSTRAINT IF NOT EXISTS uq_user_role UNIQUE (user_id, role_id);
+DO $$
+BEGIN
+    IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'uq_user_role') THEN
+        ALTER TABLE user_roles ADD CONSTRAINT uq_user_role UNIQUE (user_id, role_id);
+    END IF;
+END $$;
 
 -- 2) Make password nullable (Google users have no password)
 ALTER TABLE users ALTER COLUMN password DROP NOT NULL;
