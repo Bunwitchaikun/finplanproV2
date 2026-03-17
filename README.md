@@ -20,35 +20,7 @@
 
 ---
 
-# 🛠 Tech Stack
 
-### **Backend**
-- Java 17
-- Spring Boot 3.5.x
-- Spring MVC
-- Spring Data JPA
-- Spring Security
-- Spring Validation
-- Actuator
-- Flyway Migration
-- Lombok
-
-### **Frontend**
-- Thymeleaf
-- HTML5 / CSS3 / JS
-- Bootstrap 5
-- Chart.js
-
-### **Database**
-- PostgreSQL 15
-- Docker + docker-compose
-- pgAdmin4
-
-### **Dev / Tools**
-- IntelliJ IDEA
-- Maven
-- Git + GitLab
-- Docker Desktop
 
 
 ## 🧱 Project Structure (High-level)
@@ -81,86 +53,278 @@ finplanpro/
 
 
 
-# 🧱 Installation & Setup
+===================================================
 
-## 1️⃣ Clone Repository  
+---
+
+# 🧱 Installation & Setup — FinPlanPro
+
+FinPlanPro คือเว็บแอปสำหรับวางแผนการเงินและเกษียณแบบครบวงจร
+สร้างด้วย **Spring Boot 3 + PostgreSQL + Docker Compose + Thymeleaf**
+พร้อมโครงสร้างตาม Milestone D1–D10
+
+---
+
+# 🛠 1. Tech Stack Requirements
+
+### **Backend**
+
+* Java **17**
+* Spring Boot **3.5.x**
+* Spring MVC
+* Spring Data JPA
+* Spring Security (Session-based)
+* Spring Validation
+* Flyway Migration
+* Lombok
+* Actuator
+
+### **Frontend**
+
+* Thymeleaf
+* HTML5 / CSS3 / JS
+* Bootstrap 5
+* Chart.js
+
+### **Database**
+
+* PostgreSQL **15**
+* Docker + docker-compose
+* pgAdmin4
+
+### **Development Tools**
+
+* IntelliJ IDEA / VS Code
+* Maven
+* Git + GitLab
+* Docker Desktop
+
+---
+
+# 📂 2. Clone Repository
+
 ```bash
-git clone https://gitlab.com/YOUR_REPO_HERE/finplanpro.git
-cd finplanpro
+git clone https://gitlab.com/bosstanasit2546-group/finplanpro-main-v2.git
+cd finplanpro-main-v2
+```
 
-2️⃣ Run PostgreSQL + pgAdmin (Docker)
+---
+
+# 🐳 3. Start PostgreSQL + pgAdmin (Docker)
+
+```bash
 docker-compose up -d
+```
 
-pgAdmin available at:
- ➡ http://localhost:5050
- Login:
-Email: admin@finplanpro.com
+ระบบจะสร้าง containers:
 
+| Service        | URL                                            | Description        |
+| -------------- | ---------------------------------------------- | ------------------ |
+| **PostgreSQL** | -                                              | DB ของระบบ         |
+| **pgAdmin4**   | [http://localhost:5050](http://localhost:5050) | UI บริหารจัดการ DB |
 
-Password: admin123
+### 🔑 pgAdmin Login
 
+| Field    | Value                                               |
+| -------- | --------------------------------------------------- |
+| Email    | [admin@finplanpro.com](mailto:admin@finplanpro.com) |
+| Password | admin123                                            |
 
-Database info:
-Host: finplanpro-db
+### 🗄 Database Connection
 
+| Field    | Value         |
+| -------- | ------------- |
+| Host     | finplanpro-db |
+| Port     | 5432          |
+| Database | finplanpro    |
+| Username | postgres      |
+| Password | postgres      |
 
-Port: 5432
+---
 
+# ⚙️ 4. Application Configuration
 
-DB: finplanpro
+ค่ามาตรฐานถูกตั้งไว้แล้วในไฟล์:
 
+```
+src/main/resources/application.yml
+```
 
-User: postgres
-
-
-Pass: postgres
-
-
-
-3️⃣ Configure application.yml
-(ไฟล์ในโปรเจกต์มีให้แล้ว)
+```yaml
 spring:
   datasource:
     url: jdbc:postgresql://finplanpro-db:5432/finplanpro
     username: postgres
     password: postgres
+```
 
+> ไม่ต้องแก้ไข หากใช้ Docker Compose ตาม repo
 
-4️⃣ Run Migration (Flyway)
-เพียงเปิด Spring Boot แล้ว Flyway จะ migrate อัตโนมัติ
+---
+
+# 🐦 5. Run Flyway Migration
+
+เมื่อรัน Spring Boot → Flyway จะ migrate อัตโนมัติ
+
+```bash
 mvn spring-boot:run
+```
 
-เมื่อสำเร็จ จะเห็น log:
+หากสำเร็จจะเห็น log:
+
+```
 Flyway - Successfully applied 1 migration
+```
 
+**Flyway V1** จะสร้างตาราง เช่น:
 
-5️⃣ Access Application
-http://localhost:8080
+* users
+* roles
+* user_roles
+* user_profiles
+* retirement_basic
+* retirement_advanced
+* assets
+* liabilities
+* insurance_policies
+* tax_records
+* net_worth_snapshots
 
+---
 
-🧬 Database Schema (ERD)
-Entity หลัก 10 กลุ่ม (ตาม D2–D8)
-[users] 1---* [user_profiles]
-[users] *---* [roles]
-[users] 1---* [retirement_basic]
-[users] 1---* [retirement_advanced]
-[users] 1---* [assets]
-[users] 1---* [liabilities]
-[users] 1---* [insurance_policies]
-[users] 1---* [tax_records]
-[users] 1---* [net_worth_snapshots]
+# 🚀 6. Start Application
 
-Flyway Version 1 ประกอบด้วย:
-users
+```bash
+mvn spring-boot:run
+```
 
+หรือกด **Run ▶** ใน IntelliJ IDEA
 
-roles
+---
 
+# 🌐 7. Access Web App
 
-user_roles
+```
+http://localhost:8083
+```
 
+---
 
-user_profiles
+# 🧬 8. Database Schema Overview
+
+ระบบ FinPlanPro แบ่งข้อมูลเป็น 6 กลุ่มหลัก:
+
+### 👤 Authentication
+
+* users
+* roles
+* user_roles
+* user_profiles
+
+### 🏦 Retirement Planning
+
+* retirement_basic
+* retirement_advanced (JSONB)
+
+### 💰 Assets & Liabilities
+
+* assets
+* liabilities
+* net_worth_snapshots
+
+### 🛡 Insurance
+
+* insurance_policies
+
+### 🧾 Tax
+
+* tax_records
+
+---
+
+# 📦 9. Features After Installation
+
+### 🔐 D2 — Authentication
+
+* Register / Login / Logout
+* Profile edit
+* Session-based security
+
+### 🧮 D3 — Retirement Basic
+
+* FV / Target / PMT
+* Validation
+* Save plan to DB
+
+### 🧠 D4 — Retirement Advanced (7 Steps)
+
+* Step-by-step wizard
+* Auto-save session
+* Summary + Chart.js
+
+### 💸 D5 — Assets & Liabilities
+
+* CRUD
+* Net Worth Calculation
+* Pie Chart
+
+### 🛡 D6 — Insurance
+
+* Add/Edit/Delete Policy
+* Annual Premium Summary
+* Visualization
+
+### 🧾 D7 — Tax
+
+* Thai tax bracket
+* Net income
+* Tax history
+
+### 📊 D8 — Dashboard
+
+* Summary Cards
+* Target vs Actual Graph
+* Quick Links
+
+---
+
+# ❗ 10. Common Issues & Fixes
+
+### ❌ Docker ไม่ขึ้น container
+
+* เปิด Docker Desktop
+* เช็ก WSL2 backend (Windows)
+
+### ❌ pgAdmin เข้าไม่ได้
+
+* ตรวจ email/password
+* รีสตาร์ท container
+
+### ❌ Migration ไม่ทำงาน
+
+```
+mvn clean
+rm -rf target/
+mvn spring-boot:run
+```
+
+---
+
+# 🎉 Installation Complete!
+
+ตอนนี้ระบบ **FinPlanPro พร้อมใช้งาน!**
+รองรับการพัฒนาแบบ Full-stack และ Milestone D1–D10 แบบครบถ้วน 🔥
+
+---
+
+ถ้าต้องการผมสามารถเขียนให้เพิ่มได้:
+
+✅ README.md ฉบับเต็ม
+✅ Deployment Guide (Render / Railway / Fly.io)
+✅ ERD Diagram แบบกราฟิก
+✅ Admin Account Auto-Seed
+
+===================================================
 
 
 
@@ -355,24 +519,155 @@ D9.9 Commit: Final update UX/UI
 
 🧪 D10 — Testing, CI/CD, Final Review
 Branch: feature/D10-testing
-D10.1 Unit Tests ≥ 70%
+D10.1 Unit Tests D2,D3,D5,D7 ≥ 70%
 D10.2 Integration Tests ≥ 20%
 D10.3 Security Tests (authentication)
 D10.4 API Tests (Postman Collection)
 D10.5 UI Tests (Selenium optional)
 D10.6 Performance checks (p95 < 300ms)
 D10.7 Project Cleanup
-D10.8 Final README
-D10.9 Final Merge to main
+D10.8 Final Readme and Merge to main
+D10.9 Deployed to gitlab CI/CD 
 
 
-🎉 ผลลัพธ์ที่ได้เมื่อทำครบ D1–D10
-✔️ ระบบ Spring Boot เต็มระบบ
- ✔️ ฟีเจอร์ทั้งหมดจาก Python Desktop ถูกแปลงเป็น Web App
- ✔️ Retirement Planner Basic + Advanced (Duolingo Style)
- ✔️ Dashboard พร้อมกราฟ
- ✔️ GitLab history สวยงามแบบ professional
- ✔️ README สมบูรณ์พร้อมโชว์อาจารย์
+🎉Deliverables
 
 
+
+✅ D1 – Project Setup & Environment
+ตั้งค่า Spring Boot Project, โครงสร้าง package, Thymeleaf layout, Docker, PostgreSQL, Flyway
+Health-check (/health), README ขั้นต้น, Git repo พร้อมใช้งาน
+
+
+✅ D2 – Authentication & User Profile
+Session-based Authentication ด้วย Spring Security
+Register / Login / Logout / Forgot Password (placeholder)
+User Profile CRUD (จาก CS311) – ผูกตาราง users – user_profiles
+
+
+✅ D3 – Retirement Planner (Basic)
+คำนวณแผนเกษียณแบบตรงไปตรงมา
+Input: อายุปัจจุบัน, อายุเกษียณ, ค่าใช้จ่ายต่อเดือน, inflation, อายุขัย, pre/post-retire return
+Output: ค่าใช้จ่ายต่อปีหลังเกษียณ, ทุนเกษียณที่ต้องมี, เงินที่ต้องลงทุนต่อเดือนตั้งแต่วันนี้
+
+
+✅ D4 – Retirement Planner (Advanced – 6 Steps)
+Flow แบบ Wizard: YOU → LIFE → WANT → EXPENSE → HAVES → DESIGN
+มี input เพื่อคาดการณ์ Life Expectancy
+รวมข้อมูล asset/benefit/expense เข้าด้วยกัน และจำลอง Scenario หลายแบบ
+
+
+
+✅ D5 – Assets & Liabilities Management
+เก็บข้อมูลทรัพย์สิน–หนี้สิน, คำนวณ Net Worth, แสดงรายการ & แก้ไข/ลบ
+มี visualization trend Net Worth แบบ time-series
+
+
+✅ D6 – Insurance Management
+จัดการกรมธรรม์ประกัน (ชีวิต/สุขภาพ/โรคร้ายแรง เป็นต้น)
+เก็บรายละเอียด coverage หลายประเภท และสรุปยอดทุนประกันรวม
+
+
+✅ D7 – Tax Calculator
+คำนวณภาษีเงินได้บุคคลธรรมดา จากรายได้–ค่าใช้จ่าย–ค่าลดหย่อนต่าง ๆ
+แสดง Net Income, Tax Payable, Breakdown การคำนวณให้ผู้ใช้เข้าใจ
+
+
+✅ D8 – Dashboard & Main Overview
+Home Dashboard แสดง cards & charts สรุป
+Net Worth, Retirement Gap, Insurance Summary, Tax Summary
+Charts เช่น Net Worth 12 เดือน, Retirement Gap mini chart
+
+
+✅ D9 – Visualization & Reporting
+สร้าง Dashboard และรายงาน แผนการเงินสำคัญ
+รายงาน Net Worth และ Retirement Summary
+
+
+
+✅ D10 – Testing, CI/CD, Final Review
+D10.1 Unit Tests D2,D3,D5,D7 ≥ 70%
+D10.2 Integration Tests ≥ 20%
+D10.3 Security Tests (authentication)
+D10.4 API Tests (Postman Collection)
+D10.5 UI Tests (Selenium optional)
+D10.6 Performance checks (p95 < 300ms)
+D10.7 Project Cleanup
+D10.8 Final Readme and Merge to main
+D10.9 Deployed to gitlab CI/CD
+
+
+
+📈 📈 คู่มือการใช้งาน📈 📈 
+
+✅ D1-A1 — การวางโครงสร้างโปรเจค ( Project Setup & Environment)
+
+หลังจากที่ทีมพัฒนา Clone โปรเจคลงในเครื่อง เมื่อรันคำสั่ง docker-compose up และ mvn spring-boot:run ระบบต้องสามารถสตาร์ทได้ทันทีโดยไม่มี error Spring Boot ต้องเชื่อมต่อ ผ่าน Docker-compose  ได้สำเร็จ และ Flyway ต้องสร้างตารางทั้งหมดอัตโนมัติ
+
+โครงสร้างโปรเจคต้องเป็นระเบียบตามมาตรฐาน รันได้เหมือนกันทุกเครื่องโดยไม่ต้องตั้งค่าเพิ่ม และเว็บต้องเปิดได้ที่ http://localhost:8083 โดยไม่มีปัญหาใดๆ
+
+✅ D2-A1 — ระบบจัดการข้อมูลส่วนตัว (Authentication & User Profile)
+
+การลงทะเบียน: ผู้ใช้ใหม่สามารถกรอกข้อมูล (Username, Email, Password, ชื่อ, นามสกุล) ในหน้า /register เพื่อสร้างบัญชีใหม่ได้สำเร็จ จากนั้นระบบจะนำผู้ใช้ไปยังหน้า /login พร้อมแสดงข้อความ "ลงทะเบียนสำเร็จ กรุณาเข้าสู่ระบบ"
+
+การเข้าสู่ระบบ (สำเร็จ): ผู้ใช้ที่มีบัญชีแล้ว สามารถกรอก Username และ Password ที่ถูกต้องในหน้า /login เพื่อเข้าสู่ระบบได้สำเร็จ จากนั้นระบบจะนำผู้ใช้ไปยังหน้า /dashboard และต้องแสดงชื่อผู้ใช้บนแถบเมนู (Navbar)
+
+การเข้าสู่ระบบ (ไม่สำเร็จ): หากผู้ใช้กรอก Username หรือ Password ที่ไม่ถูกต้องในหน้า /login ระบบจะต้องแสดงข้อความแจ้งเตือน "ชื่อผู้ใช้หรือรหัสผ่านไม่ถูกต้อง" และยังคงอยู่ที่หน้าเดิม
+
+การออกจากระบบ: ผู้ใช้ที่ล็อกอินอยู่ สามารถคลิกปุ่ม "Logout" เพื่อออกจากระบบได้สำเร็จ จากนั้นระบบจะนำผู้ใช้กลับไปยังหน้า /login พร้อมแสดงข้อความ "คุณออกจากระบบแล้ว"
+
+การแสดงผลโปรไฟล์: ผู้ใช้ที่ล็อกอินแล้ว เมื่อเข้าสู่หน้า /profile จะต้องเห็นฟอร์มที่แสดงข้อมูลส่วนตัวของตนเอง (ชื่อ, นามสกุล, วันเกิด, เพศ) ที่เคยกรอกไว้ โดยที่ช่อง "Username" และ "Email" จะต้องแสดงข้อมูลแต่ไม่สามารถแก้ไขได้
+
+การแก้ไขโปรไฟล์: ผู้ใช้สามารถแก้ไขข้อมูลในหน้า /profile (เช่น เปลี่ยนนามสกุล) และเมื่อกดปุ่ม "Save Changes" ข้อมูลใหม่จะต้องถูกบันทึก และหน้าเว็บต้องแสดงข้อความ "อัปเดตโปรไฟล์สำเร็จ"
+
+✅ D3-A1 — ระบบวางแผนเกษียณ (พื้นฐาน)
+
+การคำนวณและบันทึกแผน: ผู้ใช้สามารถกรอกข้อมูลในฟอร์ม "สร้างแผนใหม่" ในหน้า /retirement/basic ได้ครบถ้วน เมื่อกดปุ่ม "คำนวณและบันทึกแผน" ระบบจะต้องแสดงผลการคำนวณที่ถูกต้อง (เช่น เงินก้อนที่ต้องมี, เงินลงทุนรายเดือน) และแผนนั้นจะต้องถูกบันทึกลงในตาราง "แผนที่บันทึกไว้"
+
+การแสดงผลแผนที่บันทึกไว้: ในหน้า /retirement/basic ตาราง "แผนที่บันทึกไว้" จะต้องแสดงรายการแผนทั้งหมดของผู้ใช้ โดยมีคอลัมน์ข้อมูลครบถ้วนตามลำดับดังนี้: "ชื่อแผน", "ค่าใช้จ่ายต่อเดือน ที่ตั้งเป้าไว้ (บาท)", "เงินก้อนที่ต้องมี (บาท)", "เงินที่ต้องลงทุนรายเดือนตั้งแต่วันนี้", "ระยะเวลาในการหาเงิน (ปี)", และ "ผลตอบแทนก่อนเกษียณ (%)"
+
+การจัดการข้อมูลผิดพลาด: หากผู้ใช้กรอกข้อมูลที่ไม่ถูกต้อง (เช่น อายุเกษียณน้อยกว่าอายุปัจจุบัน) ระบบจะต้องไม่ทำการคำนวณ และต้องแสดงข้อความแจ้งเตือนข้อผิดพลาดใต้ช่องข้อมูลนั้นๆ
+
+
+
+✅ D4-A1— ระบบวางแผนเกษียณ (ขั้นสูง)
+
+การทำงานแบบทีละขั้นตอน: ผู้ใช้สามารถกรอกข้อมูลในแต่ละขั้นตอน (Step 1 ถึง 6) ของหน้า /retirement/advanced และกด "Next" เพื่อไปยังขั้นตอนถัดไปได้อย่างราบรื่น โดยข้อมูลที่กรอกในขั้นตอนก่อนหน้าจะต้องถูกส่งต่อไปยังขั้นตอนถัดไป
+
+การคำนวณค่าใช้จ่าย (Step 4): ในขั้นตอนที่ 4 (EXPENSE) ผู้ใช้สามารถกรอก "ค่าใช้จ่ายพื้นฐาน" และ "ค่าใช้จ่ายพิเศษ" พร้อมระบุอัตราเงินเฟ้อของแต่ละรายการได้ และระบบจะต้องคำนวณ "รวมค่าใช้จ่ายเกษียณ (หลังปรับเงินเฟ้อ)" โดยใช้วิธีมูลค่าอนาคต (Future Value) ได้อย่างถูกต้อง
+
+การเชื่อมต่อข้อมูลสินทรัพย์ (Step 5): ในขั้นตอนที่ 5 (HAVES) หากผู้ใช้มีข้อมูลสินทรัพย์ในระบบบริหารสินทรัพย์และหนี้สิน (D5) อยู่แล้ว ส่วนของ "ทุนเกษียณที่คุณมี (ปัจจุบัน)" จะต้องดึงข้อมูลล่าสุดจาก D5 มาแสดงโดยอัตโนมัติ
+
+การวิเคราะห์ส่วนต่าง (Step 6): ในขั้นตอนที่ 6 (DESIGN) ระบบจะต้องแสดง "เป้าหมายเงินเก็บสุทธิ (Funding Gap)" ซึ่งเป็นผลต่างระหว่างค่าใช้จ่ายและทุนเกษียณทั้งหมด และต้องแสดง "เงินลงทุนต่อเดือน" ที่แนะนำใน 3 สถานการณ์ (แย่, ปานกลาง, ดีเยี่ยม)
+
+✅ D5-A1 — ระบบบริหารสินทรัพย์และหนี้สิน
+
+การบันทึกข้อมูลความมั่งคั่ง: ผู้ใช้สามารถเข้าสู่หน้า /assets เพื่อกรอกมูลค่าของสินทรัพย์และหนี้สินประเภทต่างๆ เมื่อกดปุ่ม "บันทึก Snapshot" ระบบจะต้องคำนวณและบันทึก "รวมสินทรัพย์", "รวมหนี้สิน", และ "ความมั่งคั่งสุทธิ" ณ วันนั้นได้สำเร็จ
+
+การแสดงผลข้อมูลย้อนหลัง: ผู้ใช้สามารถเข้าสู่หน้า /assets/list เพื่อดูรายการ Snapshot ทั้งหมดที่เคยบันทึกไว้ โดยต้องแสดงวันที่และมูลค่าความมั่งคั่งสุทธิของแต่ละรายการ
+
+✅ D6-A1 — ระบบจัดการกรมธรรม์
+
+การเพิ่มกรมธรรม์: ผู้ใช้สามารถเข้าสู่หน้า /insurance เพื่อกรอก "เลขกรมธรรม์" และรายละเอียดความคุ้มครองต่างๆ เมื่อกด "บันทึก" กรมธรรม์ใหม่จะต้องถูกบันทึก และข้อมูลในส่วน "สรุปความคุ้มครองรวม" จะต้องอัปเดตทันที
+
+✅ D7-A1 — ระบบคำนวณภาษีไทย
+
+การคำนวณภาษี: ผู้ใช้สามารถเข้าสู่หน้า /tax เพื่อกรอก "รายได้ต่อเดือน" และเลือกค่าลดหย่อนต่างๆ เมื่อกด "คำนวณภาษี" ระบบจะต้องแสดง "เงินได้สุทธิ" และ "ภาษีที่ต้องจ่ายต่อปี" ที่คำนวณตามหลักเกณฑ์ของกรมสรรพากรได้อย่างถูกต้อง รวมถึงมีการจำกัดเพดานของค่าลดหย่อนแต่ละประเภท (เช่น กองทุนเพื่อการเกษียณรวมกันไม่เกิน 500,000 บาท)
+
+✅ D8-A1— แดชบอร์ดและภาพรวมหลัก
+
+การแสดงผลการ์ดสรุป: เมื่อผู้ใช้ที่ล็อกอินแล้วเข้าสู่หน้า /dashboard การ์ดสรุปผลทั้ง 4 ใบจะต้องแสดงข้อมูลล่าสุดที่ถูกต้องจากฟังก์ชันต่างๆ (Net Worth จาก D5, Retirement Goal จาก D4/D3, Insurance Overview จาก D6, Latest Tax จาก D7)
+
+การแสดงผลกราฟ Net Worth Trend: ในหน้า /dashboard กราฟ "Net Worth Trend" จะต้องแสดงผลเป็นกราฟเส้นที่มี 3 เส้น คือ "Net Worth", "Total Assets", และ "Total Liabilities" พร้อมคำอธิบาย (Legend) ที่ชัดเจน โดยแกน X ต้องแสดงเดือนและปีของข้อมูลตามลำดับเวลา
+
+✅ D9-A1 การแสดงผลกราฟิก 
+
+การแสดงผลบนอุปกรณ์ต่างๆ (Responsive Design): เว็บแอปพลิเคชันจะต้องแสดงผลได้อย่างถูกต้องและสวยงามบนอุปกรณ์ PC Desktop, Tablet ไม่มีความบิดเบี้ยวของภาพ
+
+
+✅ D10-A1— คุณภาพโดยรวมและกระบวนการทดสอบ
+
+ความเสถียรของโค้ด (Regression Testing): เมื่อมีการรันชุดการทดสอบอัตโนมัติทั้งหมด (mvn test) Test Case ที่มีอยู่ทั้งหมดจะต้องผ่าน เพื่อรับประกันว่าการแก้ไขโค้ดใหม่ไม่ได้ทำให้ฟังก์ชันเดิมเสียหาย
+
+ประสิทธิภาพการโหลดหน้าเว็บ: หน้า /dashboard จะต้องโหลดและแสดงผลเสร็จสิ้นภายในเวลาที่ยอมรับได้ (ตามเกณฑ์ p95 < 300ms สำหรับการทดสอบฝั่ง Server)
 

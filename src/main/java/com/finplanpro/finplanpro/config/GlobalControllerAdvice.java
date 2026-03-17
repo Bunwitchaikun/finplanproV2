@@ -23,6 +23,10 @@ public class GlobalControllerAdvice {
                 authentication.getPrincipal().equals("anonymousUser")) {
             return null;
         }
-        return userProfileService.findByUser();
+        try {
+            return userProfileService.findByUser();
+        } catch (Exception e) {
+            return null;
+        }
     }
 }

@@ -9,38 +9,44 @@ import java.math.RoundingMode;
 @Service
 public class BasicCalculatorService {
 
+    private static final int FINAL_SCALE = 2;
+    private static final RoundingMode ROUNDING_MODE = RoundingMode.HALF_UP;
+
     public BigDecimal calculateTotalRetirementFund(RetirementBasic retirementBasic) {
         int yearsToRetirement = retirementBasic.getRetireAge() - retirementBasic.getCurrentAge();
-        
-        BigDecimal inflationRate = BigDecimal.valueOf(retirementBasic.getInflationRate() / 100);
-        
-        // Calculate future monthly expense
-        BigDecimal futureMonthlyExpense = retirementBasic.getMonthlyExpense()
-                .multiply(BigDecimal.ONE.add(inflationRate).pow(yearsToRetirement));
-
         int retirementYears = retirementBasic.getLifeExpectancy() - retirementBasic.getRetireAge();
-        BigDecimal postRetireReturnRate = BigDecimal.valueOf(retirementBasic.getPostRetireReturn() / 100);
-        
-        // Using Present Value of an Annuity formula for more accuracy
-        // Real rate of return after inflation
-        BigDecimal realReturnRate = (BigDecimal.ONE.add(postRetireReturnRate))
-                                    .divide(BigDecimal.ONE.add(inflationRate), 16, RoundingMode.HALF_UP)
-                                    .subtract(BigDecimal.ONE);
 
-        BigDecimal totalRetirementFund;
-        if (realReturnRate.compareTo(BigDecimal.ZERO) == 0) {
-            totalRetirementFund = futureMonthlyExpense.multiply(BigDecimal.valueOf(retirementYears * 12L));
-        } else {
-            // PV = PMT * [1 - (1 + r)^-n] / r
-            BigDecimal n = BigDecimal.valueOf(retirementYears * 12);
-            BigDecimal r = realReturnRate.divide(BigDecimal.valueOf(12), 16, RoundingMode.HALF_UP); // monthly real return
-            
-            BigDecimal pvFactorNumerator = BigDecimal.ONE.subtract(BigDecimal.ONE.add(r).pow(-n.intValue()));
-            BigDecimal pvFactor = pvFactorNumerator.divide(r, 16, RoundingMode.HALF_UP);
-            
-            totalRetirementFund = futureMonthlyExpense.multiply(pvFactor);
+        if (yearsToRetirement < 0 || retirementYears <= 0) {
+            return BigDecimal.ZERO;
         }
 
-        return totalRetirementFund.setScale(2, RoundingMode.HALF_UP);
+        double inflationRate = retirementBasic.getInflationRate() / 100.0;
+        double postRetireReturnRate = retirementBasic.getPostRetireReturn() / 100.0;
+        BigDecimal monthlyExpense = retirementBasic.getMonthlyExpense();
+
+        // 1. คำนวณค่าใช้จ่ายรายปี ณ วันเกษียณ (ปรับด้วยเงินเฟ้อ)
+        // ใช้ Math.pow() เพื่อความแม่นยำที่ใกล้เคียงกับเครื่องคิดเลขการเงิน
+        double futureValueFactor = Math.pow(1 + inflationRate, yearsToRetirement);
+        BigDecimal annualExpenseAtRetirement = monthlyExpense
+                .multiply(BigDecimal.valueOf(12))
+                .multiply(BigDecimal.valueOf(futureValueFactor));
+
+        // 2. คำนวณอัตราผลตอบแทนที่แท้จริงต่อปี
+        double realReturnRate = ((1 + postRetireReturnRate) / (1 + inflationRate)) - 1;
+
+        BigDecimal totalRetirementFund;
+
+        // 3. คำนวณเงินก้อนที่ต้องมี
+        // กรณีที่ผลตอบแทนที่แท้จริงเป็น 0
+        if (Math.abs(realReturnRate) < 1e-9) {
+            totalRetirementFund = annualExpenseAtRetirement.multiply(BigDecimal.valueOf(retirementYears));
+        } else {
+            // คำนวณด้วยสูตร Present Value of an Annuity
+            // PV = PMT * [1 - (1 + r)^-n] / r
+            double pvFactor = (1 - Math.pow(1 + realReturnRate, -retirementYears)) / realReturnRate;
+            totalRetirementFund = annualExpenseAtRetirement.multiply(BigDecimal.valueOf(pvFactor));
+        }
+
+        return totalRetirementFund.setScale(FINAL_SCALE, ROUNDING_MODE);
     }
 }

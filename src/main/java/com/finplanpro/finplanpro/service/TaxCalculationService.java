@@ -18,6 +18,7 @@ public class TaxCalculationService {
         BigDecimal annualIncome = BigDecimal.valueOf(monthlyIncomeValue).multiply(BigDecimal.valueOf(12));
 
         BigDecimal expenseDeduction;
+        // ... (ส่วนนี้ถูกต้องแล้ว)
         switch (dto.getIncomeType()) {
             case "เงินได้จากเงินเดือน โบนัส ค่าล่วงเวลา (Salary)":
             case "เงินได้จากค่านายหน้า รับจ้างทำงาน (Commision)":
@@ -38,10 +39,11 @@ public class TaxCalculationService {
         }
         BigDecimal totalExpenseDeduction = expenseDeduction.add(BigDecimal.valueOf(customExpenseValue));
 
+        // --- เริ่มการคำนวณค่าลดหย่อน ---
         BigDecimal totalAllowance = BigDecimal.ZERO;
         totalAllowance = totalAllowance.add(new BigDecimal("60000")); // personal
         if (dto.isSpouse()) {
-            totalAllowance = totalAllowance.add(new BigDecimal("60000")); // spouse
+            totalAllowance = totalAllowance.add(new BigDecimal("60000"));
         }
         totalAllowance = totalAllowance.add(new BigDecimal("30000").multiply(BigDecimal.valueOf(dto.getChildren())));
         if (dto.getChildbirth() > 0) {
@@ -54,27 +56,42 @@ public class TaxCalculationService {
         if (dto.isHealthInsuranceParents()) {
             totalAllowance = totalAllowance.add(new BigDecimal("15000"));
         }
+
+        // ประกันชีวิต + ประกันสุขภาพตนเอง (รวมกันไม่เกิน 100,000)
+        BigDecimal lifeAndHealthInsurance = BigDecimal.ZERO;
         if (dto.isLifeInsurance()) {
-            totalAllowance = totalAllowance.add(new BigDecimal("100000"));
+            lifeAndHealthInsurance = lifeAndHealthInsurance.add(new BigDecimal("100000")); // สมมติว่าจ่ายเต็ม
         }
         if (dto.isHealthInsuranceSelf()) {
-            totalAllowance = totalAllowance.add(new BigDecimal("25000"));
+            lifeAndHealthInsurance = lifeAndHealthInsurance.add(new BigDecimal("25000")); // สมมติว่าจ่ายเต็ม
         }
+        totalAllowance = totalAllowance.add(lifeAndHealthInsurance.min(new BigDecimal("100000")));
+
+        if (dto.isSocialSecurity()) {
+            totalAllowance = totalAllowance.add(new BigDecimal("9000")); // ประกันสังคม (ไม่ใช่ กอช.)
+        }
+
+        // --- แก้ไข Logic การรวมยอดลดหย่อนกองทุน ---
+        BigDecimal retirementFundDeduction = BigDecimal.ZERO;
         if (dto.isPension()) {
-            totalAllowance = totalAllowance.add(annualIncome.multiply(new BigDecimal("0.15")).min(new BigDecimal("200000")));
+            // ประกันบำนาญ (ไม่เกิน 200,000 และไม่เกิน 15% ของเงินได้)
+            retirementFundDeduction = retirementFundDeduction.add(annualIncome.multiply(new BigDecimal("0.15")).min(new BigDecimal("200000")));
         }
         if (dto.isProvidentFund()) {
-            totalAllowance = totalAllowance.add(annualIncome.multiply(new BigDecimal("0.15")).min(new BigDecimal("500000")));
+            // กองทุนสำรองเลี้ยงชีพ/กบข./สงเคราะห์ครู
+            retirementFundDeduction = retirementFundDeduction.add(annualIncome.multiply(new BigDecimal("0.15")).min(new BigDecimal("500000")));
         }
         if (dto.isRmf()) {
-            totalAllowance = totalAllowance.add(annualIncome.multiply(new BigDecimal("0.3")).min(new BigDecimal("500000")));
+            // RMF (ไม่เกิน 30% ของเงินได้)
+            retirementFundDeduction = retirementFundDeduction.add(annualIncome.multiply(new BigDecimal("0.3")));
         }
         if (dto.isSsf()) {
-            totalAllowance = totalAllowance.add(annualIncome.multiply(new BigDecimal("0.3")).min(new BigDecimal("200000")));
+            // SSF (ไม่เกิน 30% ของเงินได้ และไม่เกิน 200,000)
+            retirementFundDeduction = retirementFundDeduction.add(annualIncome.multiply(new BigDecimal("0.3")).min(new BigDecimal("200000")));
         }
-        if (dto.isSocialSecurity()) {
-            totalAllowance = totalAllowance.add(new BigDecimal("13200"));
-        }
+        // จำกัดเพดานรวมของกองทุนทั้งหมดที่ 500,000 บาท
+        totalAllowance = totalAllowance.add(retirementFundDeduction.min(new BigDecimal("500000")));
+        // --- สิ้นสุดการแก้ไข ---
 
         BigDecimal netIncome = annualIncome.subtract(totalAllowance).subtract(totalExpenseDeduction);
         if (netIncome.compareTo(BigDecimal.ZERO) < 0) {
@@ -87,6 +104,7 @@ public class TaxCalculationService {
     }
 
     private BigDecimal calculateProgressiveTax(BigDecimal netIncome) {
+        // ... (ส่วนนี้ถูกต้องแล้ว)
         if (netIncome.compareTo(BigDecimal.ZERO) <= 0) {
             return BigDecimal.ZERO;
         }
