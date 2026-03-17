@@ -19,6 +19,14 @@ public class UserService {
     @Autowired private UserRoleRepository userRoleRepository;
     @Autowired private PasswordEncoder passwordEncoder;
 
+    public User findUserByEmail(String email) {
+        return userRepository.findByEmail(email).orElse(null);
+    }
+
+    public User findUserByUsername(String username) {
+        return userRepository.findByUsername(username).orElse(null);
+    }
+
     @Transactional
     public void registerUser(String username, String email, String rawPassword, String inviteCode) {
         if (userRepository.existsByUsername(username)) {
