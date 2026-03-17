@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" th:replace="~{layout :: layout(~{::title}, ~{::main}, ~{})}">
+
+<head>
+    <title>แผนการเกษียณที่บันทึกไว้</title>
+</head>
+
+<body>
+    <main role="main">
+        <div class="container-fluid">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h1 class="h3">💼 แผนการเกษียณที่บันทึกไว้</h1>
+                <a th:href="@{/retirement/advanced/start}" class="btn btn-primary">
+                    <i class="bi bi-plus-lg me-2"></i>สร้างแผนใหม่
+                </a>
+            </div>
+
+            <div th:if="${successMessage}" class="alert alert-success" th:text="${successMessage}"></div>
+            <div th:if="${errorMessage}" class="alert alert-danger" th:text="${errorMessage}"></div>
+
+            <div class="card shadow-sm border-0">
+                <div class="card-body">
+                    <form id="listForm" th:action="@{/retirement/advanced/delete-selected}" method="post">
+                        <div class="d-flex justify-content-between mb-3" th:if="${not #lists.isEmpty(plans)}">
+                            <button type="submit" class="btn btn-sm btn-outline-danger">
+                                <i class="bi bi-trash me-2"></i>ลบแผนที่เลือก
+                            </button>
+                            <form th:action="@{/retirement/advanced/delete/all}" method="post" class="d-inline">
+                                <button type="submit" class="btn btn-sm btn-danger">
+                                    <i class="bi bi-trash3-fill me-2"></i>ลบทั้งหมด
+                                </button>
+                            </form>
+                        </div>
+                        <div class="table-responsive">
+                            <table class="table table-hover">
+                                <thead class="table-light">
+                                    <tr>
+                                        <th><input type="checkbox" id="selectAllCheckbox"></th>
+                                        <th>ชื่อแผน</th>
+                                        <th>อายุปัจจุบัน</th>
+                                        <th>อายุเกษียณ</th>
+                                        <th>อายุคาดว่าจะมีชีวิต</th>
+                                        <th class="text-end">เงินที่ต้องการ</th>
+                                        <th class="text-end">เงินที่ยังขาด</th>
+                                        <th class="text-center">การจัดการ</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr th:each="plan : ${plans}">
+                                        <td><input type="checkbox" name="selectedIds" th:value="${plan.id}"
+                                                form="listForm"></td>
+                                        <td>
+                                            <strong
+                                                th:text="${plan.planName != null and !plan.planName.isEmpty() ? plan.planName : 'ไม่มีชื่อ'}"></strong>
+                                        </td>
+                                        <td
+                                            th:text="${plan.dateOfBirth != null ? T(java.time.Period).between(plan.dateOfBirth, T(java.time.LocalDate).now()).getYears() + ' ปี' : '-'}">
+                                        </td>
+                                        <td th:text="${plan.retireAge != null ? plan.retireAge + ' ปี' : '-'}"></td>
+                                        <td
+                                            th:text="${plan.lifeExpectancy != null ? plan.lifeExpectancy + ' ปี' : '-'}">
+                                        </td>
+                                        <td class="text-end">
+                                            <span class="text-info"
+                                                th:text="${plan.totalFundsNeeded != null ? '฿' + #numbers.formatDecimal(plan.totalFundsNeeded, 0, 'COMMA', 2, 'POINT') : '-'}"></span>
+                                        </td>
+                                        <td class="text-end">
+                                            <strong class="text-danger"
+                                                th:text="${plan.fundGap != null ? '฿' + #numbers.formatDecimal(plan.fundGap, 0, 'COMMA', 2, 'POINT') : '-'}"></strong>
+                                        </td>
+                                        <td class="text-center">
+                                            <a th:href="@{/retirement/advanced/edit/{id}(id=${plan.id})}"
+                                                class="btn btn-sm btn-outline-primary">
+                                                <i class="bi bi-pencil me-1"></i>แก้ไข
+                                            </a>
+                                        </td>
+                                    </tr>
+                                    <tr th:if="${#lists.isEmpty(plans)}">
+                                        <td colspan="8" class="text-center text-muted py-4">
+                                            ยังไม่มีแผนการเกษียณที่บันทึกไว้ สร้างแผนแรกของคุณเลย!
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+        <script>
+            $('#selectAllCheckbox').click(function (event) {
+                if (this.checked) {
+                    $(':checkbox[name=selectedIds]').prop('checked', true);
+                } else {
+                    $(':checkbox[name=selectedIds]').prop('checked', false);
+                }
+            });
+        </script>
+    </main>
+</body>
+
+</html>

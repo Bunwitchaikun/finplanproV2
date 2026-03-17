@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{public-layout :: layout(~{::title}, ~{::main})}">
+<head>
+    <title>Registration Successful</title>
+</head>
+<body>
+<main role="main">
+    <div class="auth-card card shadow-lg p-4 p-md-5">
+        <div class="card-body text-center">
+            <h2 class="mb-4 fw-bold">Join FinPlanPro</h2>
+            <p class="text-muted mb-4">Create your account to get started</p>
+
+            <div class="alert alert-success" role="alert">
+                <h4 class="alert-heading"><i class="bi bi-check-circle-fill me-2"></i>You've successfully registered!</h4>
+                <p>You can now log in with your new account.</p>
+                <hr>
+                <p class="mb-0">
+                    <a th:href="@{/login}" class="btn btn-primary">Please login here</a>
+                </p>
+            </div>
+        </div>
+    </div>
+</main>
+</body>
+</html>

@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{layout :: layout(~{::title}, ~{::main})}">
+<head>
+    <title>Advanced Retirement - Summary</title>
+</head>
+<body>
+<main role="main">
+    <div class="container py-4">
+        <h2 class="mb-4">สรุปแผนเกษียณ (แผน <span th:text="${summary.planId}"></span>)</h2>
+        <dl class="row">
+            <dt class="col-sm-4">เป้าหมายเงินก้อน</dt>
+            <dd class="col-sm-8" th:text="${summary.targetFund}">-</dd>
+            <dt class="col-sm-4">เงินลงทุนรายเดือนที่ต้องการ</dt>
+            <dd class="col-sm-8" th:text="${summary.monthlyInvestmentRequired}">-</dd>
+            <dt class="col-sm-4">อายุขัยที่ใช้คำนวณ</dt>
+            <dd class="col-sm-8" th:text="${summary.finalLifeExpectancy}">-</dd>
+        </dl>
+        <a th:href="@{'/retirement/advanced/' + ${summary.planId} + '/step/1'}" class="btn btn-secondary">แก้ไข</a>
+    </div>
+</main>
+</body>
+</html>

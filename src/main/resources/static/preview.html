@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FinPlanPro — Dashboard Preview</title>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Prompt:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <link href="css/style.css" rel="stylesheet">
+</head>
+
+<body>
+    <div class="main-content">
+        <!-- Sidebar — Blue Gradient -->
+        <div class="sidebar-container">
+            <a href="#" class="sidebar-brand text-decoration-none">
+                <i class="bi bi-bank" style="font-size: 1.5rem; color: rgba(255,255,255,0.9);"></i>
+                <span>FinPlanPro</span>
+            </a>
+            <ul class="nav nav-pills flex-column mb-auto">
+                <li class="nav-item"><a href="#" class="nav-link active"><i
+                            class="bi bi-house-door me-2"></i>Dashboard</a></li>
+                <li class="nav-item"><a href="#" class="nav-link"><i class="bi bi-wallet2 me-2"></i>Assets</a></li>
+                <li class="nav-item"><a href="#" class="nav-link"><i class="bi bi-shield-check me-2"></i>Insurance</a>
+                </li>
+                <li class="nav-item"><a href="#" class="nav-link"><i class="bi bi-sunrise me-2"></i>Retirement
+                        (Basic)</a></li>
+                <li class="nav-item"><a href="#" class="nav-link"><i class="bi bi-gem me-2"></i>Retirement
+                        (Advanced)</a></li>
+                <li class="nav-item"><a href="#" class="nav-link"><i class="bi bi-file-earmark-text me-2"></i>Tax</a>
+                </li>
+                <li class="nav-item"><a href="#" class="nav-link"><i class="bi bi-person-circle me-2"></i>Profile</a>
+                </li>
+            </ul>
+            <div class="mt-auto pt-3" style="border-top: 1px solid rgba(255,255,255,0.12);">
+                <div class="d-flex align-items-center mb-2">
+                    <img src="https://github.com/mdo.png" alt="" width="36" height="36" class="rounded-circle me-2">
+                    <strong style="color: rgba(255,255,255,0.9); font-size: 0.875rem;">Natchapon</strong>
+                </div>
+                <div class="ps-1">
+                    <a href="#" class="text-decoration-none d-flex align-items-center gap-1"
+                        style="color: rgba(255,255,255,0.5); font-size: 0.8125rem;">
+                        <i class="bi bi-box-arrow-left"></i> Sign out
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Content -->
+        <div class="content-wrapper">
+            <main role="main">
+                <div class="container-fluid">
+                    <!-- Header -->
+                    <div class="d-flex justify-content-between align-items-center mb-4">
+                        <h1 class="h3 mb-0">ภาพรวมการวางแผนการเงินแบบครบวงจร</h1>
+                        <div class="d-flex align-items-center gap-2">
+                            <span class="text-secondary">Welcome back,</span>
+                            <strong style="color: var(--accent-blue);">Natchapon!</strong>
+                            <img src="https://github.com/mdo.png" alt="" width="34" height="34"
+                                class="rounded-circle ms-1" style="border: 2px solid var(--border-color);">
+                        </div>
+                    </div>
+
+                    <!-- ====== Summary Cards ====== -->
+                    <div class="row g-3 mb-4">
+                        <!-- Net Worth -->
+                        <div class="col-md-6 col-lg-3">
+                            <div class="card h-100 stat-card">
+                                <div class="card-body">
+                                    <div class="d-flex justify-content-between align-items-start mb-2">
+                                        <div class="d-flex align-items-center gap-2">
+                                            <div class="dashboard-icon-wrap blue"><i class="bi bi-graph-up-arrow"></i>
+                                            </div>
+                                            <span
+                                                style="font-weight: 500; color: var(--text-secondary); font-size: 0.8125rem;">Net
+                                                Worth</span>
+                                        </div>
+                                        <i class="bi bi-arrow-up-right"
+                                            style="color: var(--accent-blue); font-size: 1rem;"></i>
+                                    </div>
+                                    <h3 class="mb-2" style="font-weight: 700; letter-spacing: -0.02em;">฿1,540,000.00
+                                    </h3>
+                                    <div class="d-flex justify-content-between" style="font-size: 0.75rem;">
+                                        <span class="text-secondary">Assets</span>
+                                        <span style="font-weight: 600;">฿ 2,000,000.00</span>
+                                    </div>
+                                    <div class="d-flex justify-content-between" style="font-size: 0.75rem;">
+                                        <span class="text-secondary">Liabilities</span>
+                                        <span style="font-weight: 600;">฿ 460,000.00</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Retirement Goal / Gap -->
+                        <div class="col-md-6 col-lg-3">
+                            <div class="card h-100 stat-card">
+                                <div class="card-body">
+                                    <div class="d-flex justify-content-between align-items-start mb-2">
+                                        <div class="d-flex align-items-center gap-2">
+                                            <div class="dashboard-icon-wrap purple"><i class="bi bi-bullseye"></i></div>
+                                            <span
+                                                style="font-weight: 500; color: var(--text-secondary); font-size: 0.8125rem;">Retirement
+                                                Goal / Gap</span>
+                                        </div>
+                                        <i class="bi bi-flag" style="color: #6366f1; font-size: 1rem;"></i>
+                                    </div>
+                                    <h3 class="mb-2" style="font-weight: 700; letter-spacing: -0.02em;">฿3,500,000.00
+                                    </h3>
+                                    <div class="d-flex justify-content-between mb-1" style="font-size: 0.75rem;">
+                                        <span class="text-secondary">Progress 44% to Target</span>
+                                        <span style="font-weight: 600;">฿1,960,000.00</span>
+                                    </div>
+                                    <div class="progress" style="height: 6px;">
+                                        <div class="progress-bar" style="width: 44%;"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Insurance Overview -->
+                        <div class="col-md-6 col-lg-3">
+                            <div class="card h-100 stat-card">
+                                <div class="card-body">
+                                    <div class="d-flex justify-content-between align-items-start mb-2">
+                                        <div class="d-flex align-items-center gap-2">
+                                            <div class="dashboard-icon-wrap green"><i class="bi bi-shield-check"></i>
+                                            </div>
+                                            <span
+                                                style="font-weight: 500; color: var(--text-secondary); font-size: 0.8125rem;">Insurance
+                                                Overview</span>
+                                        </div>
+                                        <i class="bi bi-arrow-up-right"
+                                            style="color: var(--accent-green); font-size: 1rem;"></i>
+                                    </div>
+                                    <h3 class="mb-2" style="font-weight: 700; letter-spacing: -0.02em;">
+                                        ฿350,000.00 <small class="text-secondary"
+                                            style="font-size: 0.6875rem; font-weight: 400;"> / year</small>
+                                    </h3>
+                                    <div class="d-flex justify-content-between" style="font-size: 0.75rem;">
+                                        <span class="text-secondary">Life</span>
+                                        <span style="font-weight: 600;">฿ 2,000,000.00</span>
+                                    </div>
+                                    <div class="d-flex justify-content-between" style="font-size: 0.75rem;">
+                                        <span class="text-secondary">Health</span>
+                                        <span style="font-weight: 600;">฿ 1,000,000.00</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Latest Tax -->
+                        <div class="col-md-6 col-lg-3">
+                            <div class="card h-100 stat-card">
+                                <div class="card-body">
+                                    <div class="d-flex justify-content-between align-items-start mb-2">
+                                        <div class="d-flex align-items-center gap-2">
+                                            <div class="dashboard-icon-wrap orange"><i class="bi bi-receipt"></i></div>
+                                            <span
+                                                style="font-weight: 500; color: var(--text-secondary); font-size: 0.8125rem;">Latest
+                                                Tax</span>
+                                        </div>
+                                    </div>
+                                    <h3 class="mb-2" style="font-weight: 700; letter-spacing: -0.02em;">฿84,000 <small
+                                            class="text-secondary"
+                                            style="font-size: 0.6875rem; font-weight: 400;">(ปี2024)</small></h3>
+                                    <div class="d-flex justify-content-between" style="font-size: 0.75rem;">
+                                        <span class="text-secondary">Net Income</span>
+                                        <span style="font-weight: 600;">฿ 920,000.00</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- ====== Charts Row ====== -->
+                    <div class="row g-3 mb-4">
+                        <div class="col-lg-8">
+                            <div class="card h-100">
+                                <div class="card-header d-flex justify-content-between align-items-center">
+                                    <h5 class="card-title mb-0" style="font-size: 0.9375rem; font-weight: 600;">Net
+                                        Worth Trend (12 months)</h5>
+                                    <div class="d-flex gap-2 align-items-center">
+                                        <i class="bi bi-graph-up text-secondary" style="font-size: 1rem;"></i>
+                                    </div>
+                                </div>
+                                <div class="card-body">
+                                    <div style="height: 340px;"><canvas id="netWorthChart"></canvas></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-4">
+                            <div class="card h-100">
+                                <div class="card-header">
+                                    <h5 class="card-title mb-0" style="font-size: 0.9375rem; font-weight: 600;">
+                                        Insurance Coverage</h5>
+                                </div>
+                                <div class="card-body d-flex flex-column">
+                                    <div class="mb-3">
+                                        <div class="d-flex justify-content-between mb-1" style="font-size: 0.8125rem;">
+                                            <span class="text-secondary">Life</span>
+                                            <span style="font-weight: 600;">฿ 2,000,000</span>
+                                        </div>
+                                        <div class="d-flex justify-content-between mb-1" style="font-size: 0.8125rem;">
+                                            <span class="text-secondary">Health</span>
+                                            <span style="font-weight: 600;">฿1,000,000</span>
+                                        </div>
+                                        <div class="d-flex justify-content-between mb-1" style="font-size: 0.8125rem;">
+                                            <span class="text-secondary">Critical Illness</span>
+                                            <span style="font-weight: 600;">฿ 500,000</span>
+                                        </div>
+                                    </div>
+                                    <div class="flex-grow-1 d-flex align-items-center justify-content-center">
+                                        <div style="max-width: 220px; width: 100%;"><canvas
+                                                id="insuranceChart"></canvas></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- ====== Quick Actions ====== -->
+                    <div class="card mb-4">
+                        <div class="card-body py-3">
+                            <div class="d-flex justify-content-between align-items-center mb-3">
+                                <h5 class="mb-0" style="font-size: 0.9375rem; font-weight: 600;">Quick Actions</h5>
+                                <div class="d-flex gap-2 text-secondary">
+                                    <i class="bi bi-list" style="font-size: 1rem;"></i>
+                                    <i class="bi bi-sliders" style="font-size: 1rem;"></i>
+                                </div>
+                            </div>
+                            <div class="d-flex flex-wrap gap-2">
+                                <a href="#" class="btn btn-outline-primary"><i class="bi bi-plus-circle me-1"></i> Add
+                                    Snapshot</a>
+                                <a href="#" class="btn btn-outline-primary"><i class="bi bi-sunrise me-1"></i> New
+                                    Plan</a>
+                                <a href="#" class="btn btn-outline-primary"><i class="bi bi-shield-plus me-1"></i> Add
+                                    Policy</a>
+                                <a href="#" class="btn btn-outline-primary"><i class="bi bi-calculator me-1"></i>
+                                    Calculate Tax</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        Chart.defaults.color = '#64748b';
+        Chart.defaults.borderColor = 'rgba(0,0,0,0.05)';
+        Chart.defaults.font.family = 'Inter, Prompt, sans-serif';
+
+        // Net Worth Chart
+        const ctx1 = document.getElementById('netWorthChart').getContext('2d');
+        const gradient = ctx1.createLinearGradient(0, 0, 0, 340);
+        gradient.addColorStop(0, 'rgba(59, 130, 246, 0.12)');
+        gradient.addColorStop(1, 'rgba(59, 130, 246, 0.0)');
+
+        new Chart(ctx1, {
+            type: 'line',
+            data: {
+                labels: ['May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec', 'Jan', 'Feb', 'Mar', 'Apr'],
+                datasets: [{
+                    label: 'Net Worth',
+                    data: [600000, 650000, 700000, 720000, 750000, 850000, 900000, 960000, 1100000, 1250000, 1400000, 1540000],
+                    borderColor: '#3b82f6',
+                    backgroundColor: gradient,
+                    fill: true,
+                    tension: 0.4,
+                    borderWidth: 2,
+                    pointBackgroundColor: '#3b82f6',
+                    pointRadius: 3
+                }, {
+                    label: 'Total Assets',
+                    data: [1000000, 1050000, 1100000, 1120000, 1200000, 1350000, 1400000, 1500000, 1600000, 1700000, 1850000, 2000000],
+                    borderColor: '#22c55e',
+                    fill: false,
+                    tension: 0.4,
+                    borderWidth: 2,
+                    pointRadius: 2
+                }, {
+                    label: 'Total Liabilities',
+                    data: [400000, 400000, 400000, 400000, 450000, 500000, 500000, 540000, 500000, 450000, 450000, 460000],
+                    borderColor: '#ef4444',
+                    fill: false,
+                    tension: 0.4,
+                    borderWidth: 2,
+                    pointRadius: 2
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        display: true,
+                        position: 'bottom',
+                        labels: { usePointStyle: true, boxWidth: 6, padding: 16, font: { size: 11 } }
+                    }
+                },
+                scales: {
+                    y: {
+                        grid: { color: 'rgba(0,0,0,0.04)' },
+                        ticks: {
+                            callback: function (v) {
+                                if (v >= 1000000) return '฿' + (v / 1000000).toFixed(1) + 'M';
+                                return '฿' + (v / 1000).toFixed(0) + 'K';
+                            },
+                            font: { size: 10 }
+                        }
+                    },
+                    x: { grid: { display: false }, ticks: { font: { size: 10 } } }
+                }
+            }
+        });
+
+        // Insurance Doughnut
+        new Chart(document.getElementById('insuranceChart'), {
+            type: 'doughnut',
+            data: {
+                labels: ['Life', 'Health', 'Critical Illness', 'Accident'],
+                datasets: [{
+                    data: [2000000, 1000000, 500000, 500000],
+                    backgroundColor: ['#3b82f6', '#22c55e', '#f59e0b', '#ef4444'],
+                    borderWidth: 0
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: {
+                        position: 'bottom',
+                        labels: { usePointStyle: true, boxWidth: 6, padding: 10, font: { size: 10 } }
+                    }
+                },
+                cutout: '72%'
+            }
+        });
+    </script>
+</body>
+
+</html>
