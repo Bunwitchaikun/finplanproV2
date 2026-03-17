@@ -12,7 +12,6 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.access.expression.DefaultWebSecurityExpressionHandler;
 
 @Configuration
 @EnableWebSecurity
@@ -34,13 +33,6 @@ public class SecurityConfig {
         return RoleHierarchyImpl.fromHierarchy(
                 "ROLE_OWNER > ROLE_CEO\nROLE_CEO > ROLE_ADMIN\nROLE_ADMIN > ROLE_USER"
         );
-    }
-
-    @Bean
-    public DefaultWebSecurityExpressionHandler webSecurityExpressionHandler() {
-        DefaultWebSecurityExpressionHandler handler = new DefaultWebSecurityExpressionHandler();
-        handler.setRoleHierarchy(roleHierarchy());
-        return handler;
     }
 
     @Bean
