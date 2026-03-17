@@ -67,9 +67,9 @@ public class TaxRecordServiceImpl implements TaxRecordService {
 
     private User getCurrentUser() {
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
-        User user = userRepository.findByEmail(username);
+        User user = userRepository.findByEmail(username).orElse(null);
         if (user == null) {
-            user = userRepository.findByUsername(username);
+            user = userRepository.findByUsername(username).orElse(null);
         }
         if (user == null) {
             throw new UsernameNotFoundException("User not found");
