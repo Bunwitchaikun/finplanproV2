@@ -1,41 +1,67 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org"
-      th:replace="~{layout :: layout(~{::title}, ~{::main})}">
-<head>
-    <title>Register</title>
-</head>
+<html lang="th" xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{public-layout :: layout(~{::title}, ~{::main})}">
+<head><title>Register — FinPlanPro</title></head>
 <body>
-<main role="main">
-    <div class="container mt-5">
-        <div class="row justify-content-center">
-            <div class="col-md-6">
-                <div class="card">
-                    <div class="card-header">
-                        <h3 class="text-center">Register</h3>
-                    </div>
-                    <div class="card-body">
-                        <form th:action="@{/register}" method="post">
-                            <div class="mb-3">
-                                <label for="username" class="form-label">Username</label>
-                                <input type="text" class="form-control" id="username" name="username" required>
-                            </div>
-                            <div class="mb-3">
-                                <label for="email" class="form-label">Email</label>
-                                <input type="email" class="form-control" id="email" name="email" required>
-                            </div>
-                            <div class="mb-3">
-                                <label for="password" class="form-label">Password</label>
-                                <input type="password" class="form-control" id="password" name="password" required>
-                            </div>
-                            <div class="d-grid">
-                                <button type="submit" class="btn btn-primary">Register</button>
-                            </div>
-                        </form>
-                    </div>
-                </div>
+<main>
+    <div class="auth-card-modern">
+        <div class="auth-image-side">
+            <div>
+                <h3 class="fw-bold"><i class="bi bi-bank me-2"></i>FinPlanPro</h3>
+            </div>
+            <div>
+                <h2 class="mb-3">Start Your Financial Journey Today</h2>
             </div>
         </div>
+
+        <div class="auth-form-side">
+            <h2 class="auth-title">Create Account</h2>
+            <p class="auth-subtitle">Already have an account? <a th:href="@{/login}" class="auth-link">Login</a></p>
+
+            <div th:if="${errorMsg}" class="alert alert-danger py-2 mb-3"
+                 style="background:rgba(220,53,69,0.15);border-color:rgba(220,53,69,0.3);color:#f88;">
+                <i class="bi bi-exclamation-triangle-fill me-2"></i><span th:text="${errorMsg}"></span>
+            </div>
+
+            <form th:action="@{/register}" method="post">
+                <div class="mb-3">
+                    <input type="text" class="auth-input" name="username" required autofocus placeholder="Username">
+                </div>
+                <div class="mb-3">
+                    <input type="email" class="auth-input" name="email" required placeholder="Email">
+                </div>
+                <div class="mb-3" style="position:relative;">
+                    <input type="password" class="auth-input" id="password" name="password" required
+                           placeholder="Password" style="padding-right:2.8rem;">
+                    <button type="button" id="togglePassword"
+                            style="position:absolute;right:0.9rem;top:50%;transform:translateY(-50%);background:none;border:none;cursor:pointer;color:#aaa;padding:0;">
+                        <i class="bi bi-eye" id="eyeIcon" style="font-size:1.1rem;"></i>
+                    </button>
+                </div>
+                <div class="mb-4">
+                    <input type="text" class="auth-input" name="inviteCode"
+                           placeholder="Invite Code (optional — for Admin/CEO/Owner)">
+                    <small style="color:#888;font-size:0.78rem;margin-top:0.3rem;display:block;">
+                        Leave blank for regular user account
+                    </small>
+                </div>
+                <button type="submit" class="auth-btn">Create Account</button>
+            </form>
+        </div>
     </div>
+
+    <script>
+        const toggleBtn = document.getElementById('togglePassword');
+        const pwInput   = document.getElementById('password');
+        const eyeIcon   = document.getElementById('eyeIcon');
+        if (toggleBtn) {
+            toggleBtn.addEventListener('click', function () {
+                const show = pwInput.type === 'password';
+                pwInput.type = show ? 'text' : 'password';
+                eyeIcon.className = show ? 'bi bi-eye-slash' : 'bi bi-eye';
+            });
+        }
+    </script>
 </main>
 </body>
 </html>

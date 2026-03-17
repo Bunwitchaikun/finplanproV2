@@ -1,38 +1,44 @@
 package com.finplanpro.finplanpro.entity;
 
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
+import jakarta.validation.constraints.Email;
+import lombok.*;
 
+import java.util.HashSet;
 import java.util.Set;
 
-@Getter
-@Setter
 @Entity
 @Table(name = "users")
+@Getter @Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(nullable = false, unique = true, length = 150)
     private String username;
 
+    @Column(length = 255)
     private String password;
 
+    @Email
+    @Column(nullable = false, unique = true, length = 255)
     private String email;
 
-    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
-    @ToString.Exclude
-    private UserProfile userProfile;
+    @Column(name = "google_id")
+    private String googleId;
 
-    @ManyToMany(fetch = FetchType.EAGER)
-    @JoinTable(
-            name = "user_roles",
-            joinColumns = @JoinColumn(name = "user_id"),
-            inverseJoinColumns = @JoinColumn(name = "role_id")
-    )
-    @ToString.Exclude
-    private Set<Role> roles;
+    @Column(nullable = false)
+    private boolean enabled = true;
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @Builder.Default
+    private Set<UserRole> roles = new HashSet<>();
+
+    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
+    private UserProfile profile;
 }

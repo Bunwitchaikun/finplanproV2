@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="th" xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{layout :: layout(~{::title}, ~{::main})}">
+<head><title>Admin Dashboard — FinPlanPro</title></head>
+<body>
+<main>
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h4 style="color:#fff;font-weight:700;margin:0;"><i class="bi bi-shield-lock me-2" style="color:#7c6ff7;"></i>Admin Dashboard</h4>
+            <p style="color:#aaa;margin:0;font-size:0.88rem;">System overview and management</p>
+        </div>
+        <a th:href="@{/dashboard}" class="btn btn-sm" style="background:rgba(255,255,255,0.06);color:#aaa;border-radius:8px;border:1px solid rgba(255,255,255,0.1);">
+            <i class="bi bi-arrow-left me-1"></i>Back to Dashboard
+        </a>
+    </div>
+
+    <div class="row g-3 mb-4">
+        <div class="col-md-4">
+            <div class="card p-4 text-center" style="border-radius:14px;background:linear-gradient(135deg,rgba(124,111,247,0.2),rgba(94,158,232,0.1));">
+                <i class="bi bi-people-fill mb-2" style="font-size:2rem;color:#7c6ff7;"></i>
+                <h2 style="color:#fff;font-weight:700;margin:0;" th:text="${totalUsers}">0</h2>
+                <small style="color:#aaa;">Total Users</small>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card p-4 text-center" style="border-radius:14px;background:linear-gradient(135deg,rgba(74,184,199,0.2),rgba(94,158,232,0.1));">
+                <i class="bi bi-database-check mb-2" style="font-size:2rem;color:#4ab8c7;"></i>
+                <h2 style="color:#fff;font-weight:700;margin:0;" th:text="${dbStatus}">Online</h2>
+                <small style="color:#aaa;">Database Status</small>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card p-4 text-center" style="border-radius:14px;background:linear-gradient(135deg,rgba(25,135,84,0.2),rgba(74,184,199,0.1));">
+                <i class="bi bi-check-circle-fill mb-2" style="font-size:2rem;color:#4ade80;"></i>
+                <h2 style="color:#fff;font-weight:700;margin:0;">Online</h2>
+                <small style="color:#aaa;">System Status</small>
+            </div>
+        </div>
+    </div>
+
+    <div class="card p-4" style="border-radius:14px;">
+        <h6 style="color:#fff;font-weight:600;margin-bottom:1rem;"><i class="bi bi-gear me-2" style="color:#7c6ff7;"></i>Quick Actions</h6>
+        <div class="d-flex gap-2 flex-wrap">
+            <a th:href="@{/admin/users}" class="btn" style="background:#7c6ff7;color:#fff;border-radius:8px;">
+                <i class="bi bi-people me-1"></i>Manage Users
+            </a>
+        </div>
+    </div>
+</main>
+</body>
+</html>

@@ -19,8 +19,38 @@ spring:
         format_sql: false
     show-sql: false
 
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: ${MAIL_USERNAME}
+    password: ${MAIL_PASSWORD}
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+
+  security:
+    oauth2:
+      client:
+        registration:
+          google:
+            client-id: ${GOOGLE_CLIENT_ID}
+            client-secret: ${GOOGLE_CLIENT_SECRET}
+            scope: email, profile
+
+app:
+  base-url: ${APP_BASE_URL:http://localhost:8083}
+
 flyway:
   enabled: true
   baseline-on-migrate: true
   locations: classpath:db/migration
   clean-on-validation-error: false
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health

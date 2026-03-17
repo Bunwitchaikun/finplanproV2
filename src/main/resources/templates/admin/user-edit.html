@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="th" xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{layout :: layout(~{::title}, ~{::main})}">
+<head><title>Edit User — FinPlanPro</title></head>
+<body>
+<main>
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h4 style="color:#fff;font-weight:700;margin:0;">
+                <i class="bi bi-pencil-square me-2" style="color:#7c6ff7;"></i>
+                Edit User: <span th:text="${user.username}" style="color:#7c6ff7;"></span>
+            </h4>
+            <nav style="font-size:0.82rem;color:#888;margin-top:2px;">
+                <a th:href="@{/admin/dashboard}" style="color:#888;text-decoration:none;">Admin</a>
+                <span class="mx-1">›</span>
+                <a th:href="@{/admin/users}" style="color:#888;text-decoration:none;">Users</a>
+                <span class="mx-1">›</span>
+                <span th:text="${user.username}" style="color:#aaa;"></span>
+            </nav>
+        </div>
+        <a th:href="@{/admin/users}" class="btn btn-sm" style="background:rgba(255,255,255,0.06);color:#aaa;border-radius:8px;border:1px solid rgba(255,255,255,0.1);">
+            <i class="bi bi-arrow-left me-1"></i>Back
+        </a>
+    </div>
+
+    <div class="card p-4" style="border-radius:14px;max-width:520px;">
+        <form th:action="@{/admin/users/{id}/edit(id=${user.id})}" method="post">
+            <div class="mb-3">
+                <label style="color:#aaa;font-size:0.88rem;margin-bottom:0.4rem;display:block;">Username (read-only)</label>
+                <input type="text" class="form-control" th:value="${user.username}" disabled
+                       style="background:#1a1d27;border-color:rgba(255,255,255,0.08);color:#777;border-radius:10px;">
+            </div>
+            <div class="mb-3">
+                <label style="color:#aaa;font-size:0.88rem;margin-bottom:0.4rem;display:block;">Email</label>
+                <input type="email" name="email" class="form-control" th:value="${user.email}" required
+                       style="background:#23263a;border-color:rgba(255,255,255,0.15);color:#fff;border-radius:10px;">
+            </div>
+            <div class="mb-4">
+                <label style="color:#aaa;font-size:0.88rem;margin-bottom:0.4rem;display:block;">New Password <span style="color:#666;">(leave blank to keep current)</span></label>
+                <div style="position:relative;">
+                    <input type="password" name="newPassword" id="newPassword" class="form-control"
+                           placeholder="Enter new password to change"
+                           style="background:#23263a;border-color:rgba(255,255,255,0.15);color:#fff;border-radius:10px;padding-right:2.8rem;">
+                    <button type="button" id="togglePw"
+                            style="position:absolute;right:0.9rem;top:50%;transform:translateY(-50%);background:none;border:none;cursor:pointer;color:#aaa;padding:0;">
+                        <i class="bi bi-eye" id="eyeIcon" style="font-size:1.1rem;"></i>
+                    </button>
+                </div>
+            </div>
+            <div class="d-flex gap-2">
+                <button type="submit" class="btn" style="background:#7c6ff7;color:#fff;border-radius:10px;padding:0.6rem 1.5rem;font-weight:600;">
+                    <i class="bi bi-check-lg me-1"></i>Save Changes
+                </button>
+                <a th:href="@{/admin/users}" class="btn" style="background:rgba(255,255,255,0.06);color:#aaa;border-radius:10px;padding:0.6rem 1.5rem;border:1px solid rgba(255,255,255,0.1);">
+                    Cancel
+                </a>
+            </div>
+        </form>
+    </div>
+
+    <script>
+        document.getElementById('togglePw').addEventListener('click', function() {
+            const inp = document.getElementById('newPassword');
+            const icon = document.getElementById('eyeIcon');
+            const show = inp.type === 'password';
+            inp.type = show ? 'text' : 'password';
+            icon.className = show ? 'bi bi-eye-slash' : 'bi bi-eye';
+        });
+    </script>
+</main>
+</body>
+</html>
