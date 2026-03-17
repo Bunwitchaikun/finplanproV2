@@ -97,14 +97,16 @@ public class RetirementBasicServiceImpl implements RetirementBasicService {
                 .multiply(BigDecimal.valueOf(inflationFactor));
         BigDecimal annualExpenseAtRetirement = retirementMonthlyExpense.multiply(BigDecimal.valueOf(12));
 
-        double realReturnRate = ((1 + postReturn) / (1 + inflationRate)) - 1;
+        // Monthly annuity-due (matches JS formula): PV = adjMonthlyExpense * ((1-(1+r)^-n)/r) * (1+r)
+        double rPostMonthly = postReturn / 12.0;
+        int nPostMonths = yearsInRetirement * 12;
 
         BigDecimal totalFundsNeeded;
-        if (Math.abs(realReturnRate) < 1e-9) {
-            totalFundsNeeded = annualExpenseAtRetirement.multiply(BigDecimal.valueOf(yearsInRetirement));
+        if (Math.abs(rPostMonthly) < 1e-9) {
+            totalFundsNeeded = retirementMonthlyExpense.multiply(BigDecimal.valueOf(nPostMonths));
         } else {
-            double pvFactor = (1 - Math.pow(1 + realReturnRate, -yearsInRetirement)) / realReturnRate;
-            totalFundsNeeded = annualExpenseAtRetirement.multiply(BigDecimal.valueOf(pvFactor));
+            double pvFactor = (1 - Math.pow(1 + rPostMonthly, -nPostMonths)) / rPostMonthly * (1 + rPostMonthly);
+            totalFundsNeeded = retirementMonthlyExpense.multiply(BigDecimal.valueOf(pvFactor));
         }
 
         int monthsToRetirement = yearsToRetirement * 12;

@@ -1,195 +1,811 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org" th:replace="~{layout :: layout(~{::title}, ~{::main}, ~{})}">
+<html lang="th" xmlns:th="http://www.thymeleaf.org" th:replace="~{layout :: layout(~{::title}, ~{::main}, ~{})}">
 
 <head>
-    <title>Retirement Basic</title>
+    <title>Basic Retirement Planner</title>
 </head>
 
 <body>
     <main role="main">
-        <div class="container-fluid">
+        <style>
+            /* ── Override dashboard constraints to allow scroll ── */
+            body,
+            .main-content {
+                height: auto !important;
+                overflow: visible !important;
+            }
+
+            .content-wrapper {
+                height: auto !important;
+                overflow-y: auto !important;
+            }
+
+            /* ── Page wrapper ── */
+            .rp-wrap {
+                padding: 0.2rem 2.25rem 2.25rem 2.6rem;
+                max-width: none;
+            }
+
+            /* ── Typography ── */
+            .rp-h1 {
+                font-size: 2.55rem;
+                font-weight: 800;
+                color: #1e293b;
+                letter-spacing: -.5px;
+            }
+
+            .rp-desc {
+                color: #64748b;
+                font-size: 1.28rem;
+                margin-top: .2rem;
+            }
+
+            .sl-label {
+                font-size: 1.02rem;
+                font-weight: 700;
+                text-transform: uppercase;
+                color: #94a3b8;
+                letter-spacing: .05em;
+            }
+
+            /* ── Cards ── */
+            .rp-card {
+                background: rgba(255, 255, 255, .88);
+                backdrop-filter: blur(8px);
+                border-radius: 24px;
+                border: none;
+                box-shadow: 0 6px 28px rgba(0, 0, 0, .08);
+                padding: 1.5rem 1.8rem;
+            }
+
+            .rp-card-title {
+                font-size: 1.43rem;
+                font-weight: 700;
+                color: #1e293b;
+                display: flex;
+                align-items: center;
+                gap: .5rem;
+                margin-bottom: 1.05rem;
+            }
+
+            /* ── Result cards ── */
+            .rp-fv {
+                background: linear-gradient(135deg, #1e3a8a 0%, #2563eb 55%, #0ea5e9 100%);
+                border-radius: 24px;
+                padding: 1.5rem 1.65rem;
+                color: #fff;
+                box-shadow: 0 8px 24px rgba(37, 99, 235, .28);
+            }
+
+            .rp-monthly {
+                background: #fff;
+                border: 1.5px solid rgba(37, 99, 235, .14);
+                border-radius: 24px;
+                padding: 1.5rem 1.65rem;
+                box-shadow: 0 6px 24px rgba(0, 0, 0, .07);
+            }
+
+            .res-tag {
+                font-size: 1.02rem;
+                font-weight: 700;
+                text-transform: uppercase;
+                letter-spacing: .05em;
+                opacity: .8;
+                display: flex;
+                align-items: center;
+                gap: .35rem;
+                margin-bottom: .6rem;
+            }
+
+            .res-value {
+                font-size: 2.63rem;
+                font-weight: 900;
+                line-height: 1.1;
+                letter-spacing: -.5px;
+            }
+
+            .res-sub {
+                font-size: 1.08rem;
+                opacity: .72;
+                margin-top: .45rem;
+            }
+
+            .mon-tag {
+                font-size: 1.02rem;
+                font-weight: 700;
+                text-transform: uppercase;
+                letter-spacing: .05em;
+                color: #2563eb;
+                display: flex;
+                align-items: center;
+                gap: .35rem;
+                margin-bottom: .6rem;
+            }
+
+            .mon-value {
+                font-size: 2.63rem;
+                font-weight: 900;
+                line-height: 1.1;
+                color: #1e293b;
+                letter-spacing: -.5px;
+            }
+
+            .mon-sub {
+                font-size: 1.08rem;
+                color: #64748b;
+                margin-top: .45rem;
+            }
+
+            .mon-sub strong {
+                color: #2563eb;
+            }
+
+            /* ── Chart ── */
+            .chart-wrap {
+                height: 639px;
+                position: relative;
+            }
+
+            .chart-wrap canvas {
+                position: absolute;
+                inset: 0;
+                width: 100% !important;
+                height: 100% !important;
+            }
+
+            /* ── Slider inputs ── */
+            .sl-row {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                margin-bottom: .68rem;
+            }
+
+            .num-in {
+                height: 42px;
+                width: 90px;
+                text-align: center;
+                border: 1.5px solid #e2e8f0;
+                border-radius: 10px;
+                padding: 0 .6rem;
+                font-size: 1.32rem;
+                font-weight: 700;
+                color: #2563eb;
+                outline: none;
+                background: #f8fafc;
+                -moz-appearance: textfield;
+            }
+
+            .num-in::-webkit-inner-spin-button,
+            .num-in::-webkit-outer-spin-button {
+                -webkit-appearance: none;
+            }
+
+            .num-in:focus {
+                border-color: #2563eb;
+                background: #fff;
+            }
+
+            .num-wrap {
+                position: relative;
+                display: inline-flex;
+                align-items: center;
+            }
+
+            .num-wrap .num-in-lg {
+                height: 54px;
+                width: 195px;
+                text-align: center;
+                border: 1.5px solid #e2e8f0;
+                border-radius: 12px;
+                padding: 0 .6rem;
+                font-size: 1.62rem;
+                font-weight: 900;
+                color: #2563eb;
+                outline: none;
+                background: #f8fafc;
+                -moz-appearance: textfield;
+            }
+
+            .num-wrap .num-in-lg::-webkit-inner-spin-button,
+            .num-wrap .num-in-lg::-webkit-outer-spin-button {
+                -webkit-appearance: none;
+            }
+
+            .num-wrap .num-in-lg:focus {
+                border-color: #2563eb;
+                background: #fff;
+            }
+
+            .num-wrap .unit-badge {
+                position: absolute;
+                right: .56rem;
+                font-size: 1.08rem;
+                font-weight: 700;
+                color: #94a3b8;
+                pointer-events: none;
+            }
+
+            .rp-slider {
+                -webkit-appearance: none;
+                appearance: none;
+                width: 100%;
+                height: 6px;
+                border-radius: 3px;
+                outline: none;
+                cursor: pointer;
+                background: #e2e8f0;
+            }
+
+            .rp-slider::-webkit-slider-thumb {
+                -webkit-appearance: none;
+                width: 21px;
+                height: 21px;
+                border-radius: 50%;
+                background: #fff;
+                border: 2.5px solid #2563eb;
+                cursor: pointer;
+                box-shadow: 0 2px 8px rgba(37, 99, 235, .3);
+            }
+
+            .sl-grp {
+                margin-bottom: 1.65rem;
+            }
+
+            .sl-divider {
+                border: none;
+                border-top: 1px solid #f1f5f9;
+                margin: 1.35rem 0;
+            }
+
+            /* ── Save button ── */
+            .btn-save {
+                background: linear-gradient(135deg, #2563eb, #06b6d4);
+                color: #fff;
+                border: none;
+                border-radius: 14px;
+                padding: .68rem 1.5rem;
+                font-weight: 700;
+                font-size: 1.32rem;
+                display: flex;
+                align-items: center;
+                gap: .5rem;
+                box-shadow: 0 4px 16px rgba(37, 99, 235, .28);
+                cursor: pointer;
+            }
+
+            .btn-save:hover {
+                opacity: .9;
+                color: #fff;
+            }
+
+            /* ── Plans sidebar ── */
+            .plan-item {
+                border-radius: 14px;
+                padding: .49rem .64rem;
+                cursor: pointer;
+                transition: all .15s;
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+            }
+
+            .plan-item:hover {
+                background: rgba(37, 99, 235, .06);
+            }
+
+            .plan-name {
+                font-size: 1.28rem;
+                font-weight: 700;
+                color: #1e293b;
+            }
+
+            .plan-sub {
+                font-size: 1.02rem;
+                color: #94a3b8;
+                margin-top: .1rem;
+            }
+
+            .plan-del {
+                opacity: 0;
+                background: none;
+                border: none;
+                color: #ef4444;
+                font-size: 1.28rem;
+                padding: .2rem .35rem;
+                border-radius: 8px;
+                cursor: pointer;
+                transition: opacity .15s;
+                flex-shrink: 0;
+            }
+
+            .plan-item:hover .plan-del {
+                opacity: 1;
+            }
+
+            /* ── Legend ── */
+            .rp-legend {
+                display: flex;
+                gap: .9rem;
+                flex-wrap: wrap;
+                margin-top: .64rem;
+                justify-content: center;
+            }
+
+            .leg-item {
+                display: flex;
+                align-items: center;
+                gap: .32rem;
+                font-size: 1.08rem;
+                color: #64748b;
+            }
+
+            .leg-dot {
+                width: 11px;
+                height: 11px;
+                border-radius: 50%;
+                flex-shrink: 0;
+            }
+        </style>
+
+        <div class="rp-wrap">
+
             <!-- Header -->
-            <div class="d-flex justify-content-between align-items-center mb-4">
-                <h1 class="h3">Retirement Planner ผู้ช่วยวางแผนเกษียณอย่างง่าย (พื้นฐาน)</h1>
+            <div class="d-flex justify-content-between align-items-start mb-4 flex-wrap gap-3">
+                <div>
+                    <div class="rp-h1">Basic Retirement Planner (ระบบวางแผนเกษียณเบื้องต้น)</div>
+                    <div class="rp-desc">เคยไหม? อยากวางแผนเกษียณ แต่ไม่รู้ว่าต้องมีเงินเท่าไหร่? ต้องเก็บเดือนละกี่บาท?
+                        ต้องเก็บนานแค่ไหน? และปลายทางฉันจะมีเงินเท่าไหร่กันนะ? ถ้าไม่รู้..เราพร้อมช่วยคุณ
+                        มาเริ่มวางแผนกันเลย !
+                    </div>
+                </div>
+                <button class="btn-save" data-bs-toggle="modal" data-bs-target="#saveModal">
+                    <i class="bi bi-bookmark-fill"></i> บันทึกแผน
+                </button>
             </div>
 
-            <!-- Success/Error Messages -->
-            <div th:if="${successMessage}" class="alert alert-success" th:text="${successMessage}"></div>
-            <div th:if="${errorMessage}" class="alert alert-danger" th:text="${errorMessage}"></div>
+            <!-- Flash messages -->
+            <div th:if="${successMessage}" class="alert alert-success py-2 small mb-3 rounded-3"
+                th:text="${successMessage}"></div>
+            <div th:if="${errorMessage}" class="alert alert-danger  py-2 small mb-3 rounded-3"
+                th:text="${errorMessage}"></div>
 
-            <!-- Form Card -->
-            <div class="card shadow-sm border-0 mb-4">
-                <div class="card-header bg-transparent">
-                    <h5 class="mb-0">สร้างแผนใหม่</h5>
-                </div>
-                <div class="card-body p-4">
-                    <form th:action="@{/retirement/basic}" th:object="${newPlan}" method="post">
-                        <div class="row g-3">
-                            <div class="col-md-12">
-                                <label for="planName" class="form-label">ชื่อแผน</label>
-                                <input type="text" class="form-control" id="planName" th:field="*{planName}" required
-                                    placeholder="เช่น แผนหลักของฉัน">
-                                <p th:if="${#fields.hasErrors('planName')}" class="text-danger mt-1"
-                                    th:errors="*{planName}"></p>
-                            </div>
-                            <div class="col-6">
-                                <label for="currentAge" class="form-label">อายุปัจจุบัน</label>
-                                <input type="number" class="form-control" id="currentAge" th:field="*{currentAge}"
-                                    required min="0" step="1" placeholder="เช่น 30">
-                                <p th:if="${#fields.hasErrors('currentAge')}" class="text-danger mt-1"
-                                    th:errors="*{currentAge}"></p>
-                            </div>
-                            <div class="col-6">
-                                <label for="retireAge" class="form-label">อายุที่ต้องการเกษียณ</label>
-                                <input type="number" class="form-control" id="retireAge" th:field="*{retireAge}"
-                                    required min="1" step="1" placeholder="เช่น 60">
-                                <p th:if="${#fields.hasErrors('retireAge')}" class="text-danger mt-1"
-                                    th:errors="*{retireAge}"></p>
-                            </div>
-                            <div class="col-6">
-                                <label for="monthlyExpense" class="form-label">ค่าใช้จ่ายรายเดือนปัจจุบัน (บาท)</label>
-                                <input type="number" step="10000" class="form-control" id="monthlyExpense"
-                                    th:field="*{monthlyExpense}" required min="0" placeholder="เช่น 30000">
-                                <p th:if="${#fields.hasErrors('monthlyExpense')}" class="text-danger mt-1"
-                                    th:errors="*{monthlyExpense}"></p>
-                            </div>
-                            <div class="col-6">
-                                <label for="lifeExpectancy" class="form-label">อายุขัยคาดการณ์</label>
-                                <input type="number" class="form-control" id="lifeExpectancy"
-                                    th:field="*{lifeExpectancy}" required min="1" step="1" placeholder="เช่น 90">
-                                <p th:if="${#fields.hasErrors('lifeExpectancy')}" class="text-danger mt-1"
-                                    th:errors="*{lifeExpectancy}"></p>
-                            </div>
-                            <div class="col-md-4">
-                                <label for="inflationRate" class="form-label">อัตราเงินเฟ้อ (%)</label>
-                                <input type="number" step="1" class="form-control" id="inflationRate"
-                                    th:field="*{inflationRate}" required min="0" placeholder="เช่น 3">
-                                <p th:if="${#fields.hasErrors('inflationRate')}" class="text-danger mt-1"
-                                    th:errors="*{inflationRate}"></p>
-                            </div>
-                            <div class="col-md-4">
-                                <label for="preRetireReturn" class="form-label">ผลตอบแทนก่อนเกษียณ (%)</label>
-                                <input type="number" step="1" class="form-control" id="preRetireReturn"
-                                    th:field="*{preRetireReturn}" required min="0" placeholder="เช่น 8">
-                                <p th:if="${#fields.hasErrors('preRetireReturn')}" class="text-danger mt-1"
-                                    th:errors="*{preRetireReturn}"></p>
-                            </div>
-                            <div class="col-md-4">
-                                <label for="postRetireReturn" class="form-label">ผลตอบแทนหลังเกษียณ (%)</label>
-                                <input type="number" step="1" class="form-control" id="postRetireReturn"
-                                    th:field="*{postRetireReturn}" required min="0" placeholder="เช่น 3">
-                                <p th:if="${#fields.hasErrors('postRetireReturn')}" class="text-danger mt-1"
-                                    th:errors="*{postRetireReturn}"></p>
-                            </div>
-                        </div>
-                        <hr class="my-4">
-                        <button type="submit" class="btn btn-primary">คำนวณและบันทึกแผน</button>
-                    </form>
-                </div>
-            </div>
+            <div class="row g-5">
 
-            <!-- Calculation Result -->
-            <div th:if="${calcResult}" class="card shadow-sm border-0 mb-4">
-                <div class="card-header bg-transparent">
-                    <h5 class="mb-0">ผลการคำนวณ (THB)</h5>
-                </div>
-                <div class="card-body">
-                    <div class="row row-cols-1 row-cols-md-2 g-3">
-                        <div class="col">
-                            <div class="p-3 bg-light rounded h-100">
-                                <p class="text-muted mb-1">ค่าใช้จ่ายต่อเดือน ที่ตั้งเป้าไว้</p>
-                                <h5 class="mb-0"
-                                    th:text="'฿' + ${#numbers.formatDecimal(calcResult.retirementMonthlyExpense, 0, 'COMMA', 2, 'POINT')}">
-                                    ฿0.00</h5>
+                <!-- LEFT: Input Controls (col-xl-4) -->
+                <div class="col-xl-4 col-lg-5">
+                    <div class="rp-card">
+                        <div class="rp-card-title">
+                            <i class="bi bi-calculator text-primary"></i> ปรับแต่งปัจจัยการเกษียณ
+                        </div>
+
+                        <!-- อายุปัจจุบัน + อายุเกษียณ -->
+                        <div class="row g-5">
+                            <div class="col-6">
+                                <div class="sl-grp">
+                                    <div class="sl-row">
+                                        <span class="sl-label">อายุปัจจุบัน</span>
+                                        <input type="number" id="currentAge" class="num-in" value="30" min="1" max="99">
+                                    </div>
+                                    <input type="range" id="sCurrentAge" class="rp-slider" min="1" max="99" value="30">
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <div class="sl-grp">
+                                    <div class="sl-row">
+                                        <span class="sl-label">อายุเกษียณ</span>
+                                        <input type="number" id="retireAge" class="num-in" value="60" min="2" max="100">
+                                    </div>
+                                    <input type="range" id="sRetireAge" class="rp-slider" min="2" max="100" value="60">
+                                </div>
                             </div>
                         </div>
-                        <div class="col">
-                            <div class="p-3 bg-light rounded h-100">
-                                <p class="text-muted mb-1">เงินที่ต้องลงทุนรายเดือนตั้งแต่วันนี้</p>
-                                <h5 class="mb-0"
-                                    th:text="'฿' + ${#numbers.formatDecimal(calcResult.requiredMonthlyInvestment, 0, 'COMMA', 2, 'POINT')}">
-                                    ฿0.00</h5>
+
+                        <!-- ค่าใช้จ่าย/เดือน -->
+                        <div class="sl-grp">
+                            <div class="sl-row">
+                                <span class="sl-label">ค่าใช้จ่าย/เดือน (บาท)</span>
+                                <div class="num-wrap">
+                                    <input type="number" id="monthlyExpense" class="num-in-lg" value="30000" min="0"
+                                        max="1000000" step="1000">
+                                    <span class="unit-badge">฿</span>
+                                </div>
+                            </div>
+                            <input type="range" id="sMonthlyExpense" class="rp-slider" min="0" max="500000" step="1000"
+                                value="30000">
+                        </div>
+
+                        <hr class="sl-divider">
+
+                        <!-- ผลตอบแทนก่อนเกษียณ -->
+                        <div class="sl-grp">
+                            <div class="sl-row">
+                                <span class="sl-label">ผลตอบแทนก่อนเกษียณ (%)</span>
+                                <div class="num-wrap">
+                                    <input type="number" id="preReturn" class="num-in" value="7" min="0" max="20"
+                                        step="0.1" style="color:#16a34a">
+                                    <span class="unit-badge">%</span>
+                                </div>
+                            </div>
+                            <input type="range" id="sPreReturn" class="rp-slider" min="0" max="15" step="0.1" value="7">
+                        </div>
+
+                        <!-- เงินเฟ้อ + อายุขัย -->
+                        <div class="row g-5">
+                            <div class="col-6">
+                                <div class="sl-grp mb-0">
+                                    <div class="sl-row">
+                                        <span class="sl-label">เงินเฟ้อ (%)</span>
+                                        <div class="num-wrap">
+                                            <input type="number" id="inflationRate" class="num-in" value="3" min="0"
+                                                max="10" step="0.1" style="color:#f97316; width:82px">
+                                            <span class="unit-badge">%</span>
+                                        </div>
+                                    </div>
+                                    <input type="range" id="sInflation" class="rp-slider" min="0" max="10" step="0.1"
+                                        value="3">
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <div class="sl-grp mb-0">
+                                    <div class="sl-row">
+                                        <span class="sl-label">อายุขัย (ปี)</span>
+                                        <input type="number" id="lifeExpectancy" class="num-in" value="85" min="61"
+                                            max="110" style="width:82px">
+                                    </div>
+                                    <input type="range" id="sLifeExp" class="rp-slider" min="61" max="110" value="85">
+                                </div>
                             </div>
                         </div>
-                        <div class="col">
-                            <div class="p-3 bg-light rounded h-100">
-                                <p class="text-muted mb-1">เงินก้อนที่ต้องมีวันเกษียณ</p>
-                                <h5 class="mb-0"
-                                    th:text="'฿' + ${#numbers.formatDecimal(calcResult.totalFundsNeeded, 0, 'COMMA', 2, 'POINT')}">
-                                    ฿0.00</h5>
+
+                    </div>
+
+                    <!-- Summary Card -->
+                    <div class="rp-card mt-4" id="summaryCard">
+                        <div class="rp-card-title" style="margin-bottom:.75rem">
+                            <i class="bi bi-lightbulb text-warning"></i> สรุปแผนของคุณ
+                        </div>
+                        <p id="summaryText" style="font-size:1.05rem;line-height:1.85;color:#334155;margin:0"></p>
+                    </div>
+
+                </div><!-- /col LEFT -->
+
+                <!-- MIDDLE: Results + Chart (col-xl-5) -->
+                <div class="col-xl-5 col-lg-7">
+
+                    <div class="row g-5 mb-5">
+                        <div class="col-6">
+                            <div class="rp-fv">
+                                <div class="res-tag"><i class="bi bi-bullseye"></i> เงินก้อนที่ต้องมี (FV)</div>
+                                <div class="res-value" id="dFV">0</div>
+                                <div class="res-sub" id="dFVSub">ครอบคลุมค่าใช้จ่าย 25 ปี</div>
                             </div>
                         </div>
-                        <div class="col">
-                            <div class="p-3 bg-light rounded h-100">
-                                <p class="text-muted mb-1">ระยะเวลาในการหาเงิน (ปี)</p>
-                                <h5 class="mb-0" th:text="${calcResult.yearsToRetirement}">0</h5>
-                            </div>
-                        </div>
-                        <div class="col">
-                            <div class="p-3 bg-light rounded h-100">
-                                <p class="text-muted mb-1">ค่าใช้จ่ายปีแรกหลังเกษียณ (ปรับเงินเฟ้อ)</p>
-                                <h5 class="mb-0"
-                                    th:text="'฿' + ${#numbers.formatDecimal(calcResult.annualExpenseAtRetirement, 0, 'COMMA', 2, 'POINT')}">
-                                    ฿0.00</h5>
+                        <div class="col-6">
+                            <div class="rp-monthly">
+                                <div class="mon-tag"><i class="bi bi-graph-up-arrow"></i> ลงทุนต่อเดือน</div>
+                                <div class="mon-value" id="dMonthly">0</div>
+                                <div class="mon-sub" id="dMonthlySub">ระยะเวลาออม <strong>30 ปี</strong></div>
                             </div>
                         </div>
                     </div>
+
+                    <div class="rp-card">
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <span class="rp-card-title mb-0">Wealth Projection Analysis</span>
+                            <i class="bi bi-graph-up text-muted"></i>
+                        </div>
+                        <div class="chart-wrap">
+                            <canvas id="wealthChart"></canvas>
+                        </div>
+                        <div class="rp-legend">
+                            <div class="leg-item">
+                                <div class="leg-dot" style="background:#2563eb"></div> มูลค่าพอร์ตรวม
+                            </div>
+                            <div class="leg-item">
+                                <div class="leg-dot" style="background:#94a3b8"></div> เงินต้นสะสม
+                            </div>
+                            <div class="leg-item">
+                                <div class="leg-dot" style="background:#06b6d4"></div> มูลค่าจริง (หลังหักเงินเฟ้อ)
+                            </div>
+                        </div>
+                    </div>
+
+                </div><!-- /col MIDDLE -->
+
+                <!-- RIGHT: Saved Plans (col-xl-3) -->
+                <div class="col-xl-3 col-lg-12">
+                    <div class="rp-card" style="padding:1.3rem 1.1rem">
+                        <div class="rp-card-title"><i class="bi bi-folder text-primary"></i> แผนที่บันทึกไว้</div>
+
+                        <div th:if="${#lists.isEmpty(userPlans)}" class="text-center py-4"
+                            style="color:#94a3b8;font-size:.8rem">
+                            <i class="bi bi-inbox d-block mb-2" style="font-size:1.8rem"></i>
+                            ยังไม่มีแผนที่บันทึกไว้
+                        </div>
+
+                        <div th:each="plan : ${userPlans}" class="plan-item"
+                            th:onclick="|loadPlan(${plan.currentAge},${plan.retireAge},${plan.monthlyExpense},${plan.inflationRate},${plan.lifeExpectancy},${plan.preRetireReturn})|">
+                            <div class="overflow-hidden me-2">
+                                <div class="plan-name text-truncate" th:text="${plan.planName}">Plan</div>
+                                <div class="plan-sub"
+                                    th:text="${#numbers.formatDecimal(plan.totalFundsNeeded,1,'COMMA',0,'POINT')}">
+                                    ฿0</div>
+                            </div>
+                            <form th:action="@{/retirement/basic/delete/{id}(id=${plan.id})}" method="post"
+                                onclick="event.stopPropagation()">
+                                <button type="submit" class="plan-del" title="ลบ">
+                                    <i class="bi bi-trash3"></i>
+                                </button>
+                            </form>
+                        </div>
+
+                    </div>
+                </div><!-- /col RIGHT -->
+
+            </div>
+        </div><!-- /rp-wrap -->
+
+        <!-- Save Modal -->
+        <div class="modal fade" id="saveModal" tabindex="-1">
+            <div class="modal-dialog modal-dialog-centered" style="max-width:400px">
+                <div class="modal-content border-0" style="border-radius:20px">
+                    <div class="modal-header border-0 pb-0">
+                        <h5 class="modal-title fw-bold">บันทึกแผนเกษียณ</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                    </div>
+                    <form th:action="@{/retirement/basic}" method="post">
+                        <div class="modal-body pt-2">
+                            <label class="form-label small fw-semibold">ชื่อแผน</label>
+                            <input type="text" name="planName" class="form-control rounded-3"
+                                placeholder="เช่น แผนเกษียณในฝัน" required>
+                            <input type="hidden" name="currentAge" id="hCA">
+                            <input type="hidden" name="retireAge" id="hRA">
+                            <input type="hidden" name="monthlyExpense" id="hME">
+                            <input type="hidden" name="inflationRate" id="hIR">
+                            <input type="hidden" name="lifeExpectancy" id="hLE">
+                            <input type="hidden" name="preRetireReturn" id="hPR">
+                            <input type="hidden" name="postRetireReturn" value="4">
+                        </div>
+                        <div class="modal-footer border-0 pt-0">
+                            <button type="button" class="btn btn-outline-secondary rounded-3"
+                                data-bs-dismiss="modal">ยกเลิก</button>
+                            <button type="submit" class="btn-save" style="border-radius:12px">
+                                <i class="bi bi-bookmark-fill"></i> บันทึก
+                            </button>
+                        </div>
+                    </form>
                 </div>
             </div>
-
-            <!-- Saved Plans Table -->
-            <div class="card shadow-sm border-0">
-                <div class="card-header bg-transparent">
-                    <h5 class="mb-0">แผนที่บันทึกไว้</h5>
-                </div>
-                <div class="card-body">
-                    <table class="table table-hover">
-                        <thead>
-                            <tr>
-                                <th>ชื่อแผน</th>
-                                <th>ค่าใช้จ่ายต่อเดือน ที่ตั้งเป้าไว้ (บาท)</th>
-                                <th>เงินก้อนที่ต้องมี (บาท)</th>
-                                <th>เงินที่ต้องลงทุนรายเดือนตั้งแต่วันนี้</th>
-                                <th>ระยะเวลาในการหาเงิน (ปี)</th>
-                                <!-- เพิ่มคอลัมน์ใหม่ตรงนี้ -->
-                                <th>ผลตอบแทนก่อนเกษียณ (%)</th>
-                                <th class="text-end">จัดการ</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr th:each="plan : ${userPlans}">
-                                <td th:text="${plan.planName}">My Plan</td>
-                                <td
-                                    th:text="'฿' + ${#numbers.formatDecimal(plan.retirementMonthlyExpense, 0, 'COMMA', 2, 'POINT')}">
-                                    ฿0.00</td>
-                                <td
-                                    th:text="'฿' + ${#numbers.formatDecimal(plan.totalFundsNeeded, 0, 'COMMA', 2, 'POINT')}">
-                                    ฿0.00</td>
-                                <td
-                                    th:text="'฿' + ${#numbers.formatDecimal(plan.requiredMonthlyInvestment, 0, 'COMMA', 2, 'POINT')}">
-                                    ฿0.00</td>
-                                <td
-                                    th:text="${plan.yearsToRetirement != null ? plan.yearsToRetirement : plan.retireAge - plan.currentAge}">
-                                    0</td>
-                                <!-- แสดงข้อมูลในคอลัมน์ใหม่ตรงนี้ -->
-                                <td th:text="${#numbers.formatDecimal(plan.preRetireReturn, 1, 'COMMA', 2, 'POINT')}">
-                                    0.00</td>
-                                <td class="text-end">
-                                    <form th:action="@{/retirement/basic/delete/{id}(id=${plan.id})}" method="post"
-                                        onsubmit="return confirm('ต้องการลบแผนนี้หรือไม่?');" class="d-inline">
-                                        <button type="submit" class="btn btn-sm btn-outline-danger">ลบ</button>
-                                    </form>
-                                </td>
-                            </tr>
-                            <tr th:if="${#lists.isEmpty(userPlans)}">
-                                <td colspan="7" class="text-center text-muted">ยังไม่มีแผนที่บันทึก</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-
         </div>
+
+        <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+        <script>
+            function sync(inId, slId) {
+                const inp = document.getElementById(inId);
+                const sl = document.getElementById(slId);
+                if (!inp || !sl) return;
+                inp.addEventListener('input', () => { sl.value = inp.value; recalc(); });
+                sl.addEventListener('input', () => { inp.value = sl.value; recalc(); });
+            }
+            sync('currentAge', 'sCurrentAge');
+            sync('retireAge', 'sRetireAge');
+            sync('monthlyExpense', 'sMonthlyExpense');
+            sync('preReturn', 'sPreReturn');
+            sync('inflationRate', 'sInflation');
+            sync('lifeExpectancy', 'sLifeExp');
+
+            function fmt(n) {
+                return Math.round(n).toLocaleString('th-TH');
+            }
+            function fmtFull(n) {
+                return Math.round(n).toLocaleString('th-TH');
+            }
+            function hi(text) {
+                return `<span style="color:#2563eb">${text}</span>`;
+            }
+
+            // ── Crosshair plugin ─────────────────────────────────────────────────────────
+            const crosshairPlugin = {
+                id: 'crosshair',
+                afterDatasetsDraw(chart) {
+                    const { ctx, chartArea: { top, bottom }, tooltip } = chart;
+                    if (!tooltip || !tooltip._active || !tooltip._active.length) return;
+                    const x = tooltip._active[0].element.x;
+                    ctx.save();
+                    ctx.beginPath();
+                    ctx.moveTo(x, top);
+                    ctx.lineTo(x, bottom);
+                    ctx.lineWidth = 1.5;
+                    ctx.strokeStyle = 'rgba(37,99,235,0.25)';
+                    ctx.setLineDash([4, 4]);
+                    ctx.stroke();
+                    ctx.restore();
+                }
+            };
+
+            // ── Custom external tooltip ───────────────────────────────────────────────────
+            function customTooltip(context) {
+                let el = document.getElementById('chartTooltip');
+                if (!el) {
+                    el = document.createElement('div');
+                    el.id = 'chartTooltip';
+                    el.style.cssText = `
+      position:absolute; pointer-events:none; z-index:99;
+      background:#1e293b; color:#fff; border-radius:14px;
+      padding:20px 24px; min-width:320px;
+      box-shadow:0 8px 32px rgba(0,0,0,.22);
+      font-family:inherit; transition:opacity .1s;
+    `;
+                    document.getElementById('wealthChart').parentElement.style.position = 'relative';
+                    document.getElementById('wealthChart').parentElement.appendChild(el);
+                }
+
+                const { opacity, dataPoints } = context.tooltip;
+                if (!opacity || !dataPoints || !dataPoints.length) {
+                    el.style.opacity = '0';
+                    return;
+                }
+
+                const labels = ['มูลค่าพอร์ต', 'เงินต้นสะสม', 'มูลค่าจริง'];
+                const colors = ['#60a5fa', '#94a3b8', '#22d3ee'];
+                const age = dataPoints[0].label;
+
+                let html = `<div style="font-size:1.2rem;color:#fff;margin-bottom:12px;font-weight:600">อายุ ${age} ปี</div>`;
+                dataPoints.forEach((dp, i) => {
+                    const val = Math.round(dp.raw);
+                    const fmtVal = val.toLocaleString('th-TH');
+                    html += `
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:${i < 2 ? '10px' : '0'}">
+        <span style="width:13px;height:13px;border-radius:50%;background:${colors[i]};flex-shrink:0;display:inline-block"></span>
+        <span style="font-size:1.15rem;color:#cbd5e1;flex:1">${labels[i]}</span>
+        <span style="font-size:1.36rem;font-weight:700;color:#fff">${fmtVal}</span>
+      </div>`;
+                });
+                el.innerHTML = html;
+
+                const { offsetLeft: canvasX, offsetTop: canvasY } = context.chart.canvas;
+                const pos = context.tooltip;
+                let left = pos.caretX + 16;
+                if (left + 340 > context.chart.width) left = pos.caretX - 340 - 16;
+                el.style.left = left + 'px';
+                el.style.top = (pos.caretY - 20) + 'px';
+                el.style.opacity = '1';
+            }
+
+            const chart = new Chart(document.getElementById('wealthChart').getContext('2d'), {
+                type: 'line',
+                plugins: [crosshairPlugin],
+                data: {
+                    labels: [],
+                    datasets: [
+                        {
+                            data: [], borderColor: '#2563eb', backgroundColor: 'rgba(37,99,235,0.1)',
+                            borderWidth: 3, pointRadius: 0, pointHoverRadius: 6,
+                            pointHoverBackgroundColor: '#fff', pointHoverBorderColor: '#2563eb', pointHoverBorderWidth: 2.5,
+                            fill: true, tension: 0.4
+                        },
+                        {
+                            data: [], borderColor: '#94a3b8', borderWidth: 2, pointRadius: 0, pointHoverRadius: 5,
+                            pointHoverBackgroundColor: '#fff', pointHoverBorderColor: '#94a3b8', pointHoverBorderWidth: 2,
+                            borderDash: [5, 5], fill: false, tension: 0
+                        },
+                        {
+                            data: [], borderColor: '#06b6d4', backgroundColor: 'rgba(6,182,212,0.08)',
+                            borderWidth: 2, pointRadius: 0, pointHoverRadius: 5,
+                            pointHoverBackgroundColor: '#fff', pointHoverBorderColor: '#06b6d4', pointHoverBorderWidth: 2,
+                            fill: true, tension: 0.4
+                        },
+                    ]
+                },
+                options: {
+                    responsive: true, maintainAspectRatio: false,
+                    interaction: { mode: 'index', intersect: false },
+                    animation: { duration: 400, easing: 'easeInOutQuart' },
+                    plugins: {
+                        legend: { display: false },
+                        tooltip: { enabled: false, external: customTooltip }
+                    },
+                    scales: {
+                        x: { grid: { display: false }, ticks: { font: { size: 12 } } },
+                        y: {
+                            grid: { color: '#f1f5f9' },
+                            ticks: {
+                                font: { size: 12 },
+                                callback: v => v >= 1e6 ? '฿' + (v / 1e6).toFixed(1) + 'M' : '฿' + (v / 1e3).toFixed(0) + 'K'
+                            }
+                        }
+                    }
+                }
+            });
+
+            function recalc() {
+                const ca = +document.getElementById('currentAge').value || 30;
+                const ra = +document.getElementById('retireAge').value || 60;
+                const me = +document.getElementById('monthlyExpense').value || 30000;
+                const ir = +document.getElementById('inflationRate').value || 3;
+                const le = +document.getElementById('lifeExpectancy').value || 85;
+                const pr = +document.getElementById('preReturn').value || 7;
+                const post = 4;
+
+                if (ra <= ca) return;
+                const ytr = ra - ca;
+                const yin = le - ra;
+
+                const adjMe = me * Math.pow(1 + ir / 100, ytr);
+                const rPost = post / 100 / 12;
+                const nPost = yin * 12;
+                const fv = rPost > 0
+                    ? adjMe * ((1 - Math.pow(1 + rPost, -nPost)) / rPost) * (1 + rPost)
+                    : adjMe * nPost;
+
+                const rPre = pr / 100 / 12;
+                const nPre = ytr * 12;
+                const monthly = rPre > 0
+                    ? fv / ((Math.pow(1 + rPre, nPre) - 1) / rPre)
+                    : fv / nPre;
+
+                document.getElementById('dFV').textContent = fmt(fv);
+                document.getElementById('dMonthly').textContent = fmt(monthly);
+                document.getElementById('dFVSub').textContent = `ครอบคลุมค่าใช้จ่ายนาน ${yin} ปี`;
+                document.getElementById('dMonthlySub').innerHTML = `ระยะเวลาออม <strong>${ytr} ปี</strong>`;
+
+                document.getElementById('hCA').value = ca;
+                document.getElementById('hRA').value = ra;
+                document.getElementById('hME').value = me;
+                document.getElementById('hIR').value = ir;
+                document.getElementById('hLE').value = le;
+                document.getElementById('hPR').value = pr;
+
+                // Summary card
+                const totalPrincipal = monthly * ytr * 12;
+                const gain = fv - totalPrincipal;
+                document.getElementById('summaryText').innerHTML =
+                    `ตอนนี้คุณอายุ ${hi(ca + ' ปี')} มีเวลาออมเงินอีก ${hi(ytr + ' ปี')} ก่อนจะเกษียณตอนอายุ ${hi(ra + ' ปี')}<br><br>` +
+                    `⚠️ แต่..ระวังนะ! เงินเฟ้อ ${hi(ir + '%')} ทุกปี จะทำให้ของแพงขึ้นเรื่อยๆ ${hi(me.toLocaleString('th-TH') + ' บาท/เดือน')} วันนี้ ` +
+                    `พอถึงวันเกษียณคุณต้องใช้เงินถึง ${hi(fmtFull(adjMe) + ' บาท/เดือน')} ถึงจะซื้อของได้เท่าเดิม<br><br>` +
+                    `🎯 เพราะงั้นคุณต้องเก็บเงินก้อนใหญ่ให้ได้ ${hi(fmtFull(fv) + ' บาท')} เพื่อให้พออยู่ได้ ${hi(yin + ' ปี')} หลังเกษียณ<br><br>` +
+                    `💡 ต้องทำยังไง? แค่ออม ${hi(fmtFull(monthly) + ' บาท/เดือน')} ตั้งแต่วันนี้ โดยสะสมเงินต้นแค่ ${hi(fmtFull(totalPrincipal) + ' บาท')} ` +
+                    `แต่ดอกเบี้ยทบต้นจะช่วยเพิ่มเงินให้อีก ${hi(fmtFull(gain) + ' บาท')} โดยไม่ต้องทำอะไรเพิ่ม! 🚀`;
+
+                const labels = [], port = [], prin = [], real = [];
+                let bal = 0, pbal = 0;
+                for (let year = 0; year <= ytr; year++) {
+                    labels.push(ca + year);
+                    port.push(Math.round(bal));
+                    prin.push(Math.round(pbal));
+                    real.push(Math.round(bal / Math.pow(1 + ir / 100, year)));
+                    if (year < ytr) {
+                        for (let m = 0; m < 12; m++) {
+                            bal = (bal + monthly) * (1 + rPre);
+                            pbal += monthly;
+                        }
+                    }
+                }
+                chart.data.labels = labels;
+                chart.data.datasets[0].data = port;
+                chart.data.datasets[1].data = prin;
+                chart.data.datasets[2].data = real;
+                chart.update('none');
+            }
+
+            function loadPlan(ca, ra, me, ir, le, pr) {
+                const set = (id, slId, v) => {
+                    document.getElementById(id).value = v;
+                    const s = document.getElementById(slId);
+                    if (s) s.value = v;
+                };
+                set('currentAge', 'sCurrentAge', ca);
+                set('retireAge', 'sRetireAge', ra);
+                set('monthlyExpense', 'sMonthlyExpense', me);
+                set('inflationRate', 'sInflation', ir);
+                set('lifeExpectancy', 'sLifeExp', le);
+                set('preReturn', 'sPreReturn', pr);
+                recalc();
+            }
+
+            recalc();
+        </script>
     </main>
 </body>
 
