@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="th" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+      th:replace="~{layout :: layout(~{::title}, ~{::main})}">
+<head><title>Dashboard — FinPlanPro</title></head>
+<body>
+<main>
+    <div class="mb-4">
+        <h4 style="color:#fff;font-weight:700;">
+            Welcome, <span th:text="${username}" style="color:#7c6ff7;">User</span>
+        </h4>
+        <p style="color:#aaa;">Your personal finance & retirement planning hub.</p>
+    </div>
+
+    <div th:if="${isAdmin}" class="alert mb-4"
+         style="background:rgba(124,111,247,0.12);border:1px solid rgba(124,111,247,0.3);border-radius:12px;color:#c5beff;">
+        <i class="bi bi-shield-lock-fill me-2"></i>
+        You have admin access.
+        <a th:href="@{/admin/dashboard}" style="color:#7c6ff7;font-weight:600;margin-left:0.5rem;">Go to Admin Panel →</a>
+    </div>
+
+    <div class="row g-3">
+        <div class="col-md-4">
+            <div class="card h-100 p-3" style="border-radius:14px;">
+                <div class="d-flex align-items-center gap-3 mb-2">
+                    <div style="width:44px;height:44px;background:rgba(124,111,247,0.15);border-radius:10px;display:flex;align-items:center;justify-content:center;">
+                        <i class="bi bi-piggy-bank" style="font-size:1.4rem;color:#7c6ff7;"></i>
+                    </div>
+                    <h6 style="color:#aaa;margin:0;">Retirement Planner</h6>
+                </div>
+                <p style="color:#666;font-size:0.85rem;margin-bottom:0.8rem;">Calculate how much you need for retirement.</p>
+                <a href="#" class="btn btn-sm" style="background:rgba(124,111,247,0.2);color:#c5beff;border-radius:8px;">Open →</a>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card h-100 p-3" style="border-radius:14px;">
+                <div class="d-flex align-items-center gap-3 mb-2">
+                    <div style="width:44px;height:44px;background:rgba(94,158,232,0.15);border-radius:10px;display:flex;align-items:center;justify-content:center;">
+                        <i class="bi bi-graph-up-arrow" style="font-size:1.4rem;color:#5e9de8;"></i>
+                    </div>
+                    <h6 style="color:#aaa;margin:0;">Wealth Tracker</h6>
+                </div>
+                <p style="color:#666;font-size:0.85rem;margin-bottom:0.8rem;">Track and grow your net worth over time.</p>
+                <a href="#" class="btn btn-sm" style="background:rgba(94,158,232,0.2);color:#a8caef;border-radius:8px;">Open →</a>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card h-100 p-3" style="border-radius:14px;">
+                <div class="d-flex align-items-center gap-3 mb-2">
+                    <div style="width:44px;height:44px;background:rgba(74,184,199,0.15);border-radius:10px;display:flex;align-items:center;justify-content:center;">
+                        <i class="bi bi-shield-check" style="font-size:1.4rem;color:#4ab8c7;"></i>
+                    </div>
+                    <h6 style="color:#aaa;margin:0;">Insurance Planner</h6>
+                </div>
+                <p style="color:#666;font-size:0.85rem;margin-bottom:0.8rem;">Plan your insurance coverage needs.</p>
+                <a href="#" class="btn btn-sm" style="background:rgba(74,184,199,0.2);color:#a8dde5;border-radius:8px;">Open →</a>
+            </div>
+        </div>
+    </div>
+</main>
+</body>
+</html>

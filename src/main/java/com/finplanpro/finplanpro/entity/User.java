@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import lombok.*;
 
+import java.util.HashSet;
 import java.util.Set;
 
 @Entity
@@ -21,20 +22,23 @@ public class User {
     @Column(nullable = false, unique = true, length = 150)
     private String username;
 
-    @Column(nullable = false, length = 255)
+    @Column(length = 255)
     private String password;
 
     @Email
     @Column(nullable = false, unique = true, length = 255)
     private String email;
 
+    @Column(name = "google_id")
+    private String googleId;
+
     @Column(nullable = false)
     private boolean enabled = true;
 
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
-    private Set<UserRole> roles;
-
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @Builder.Default
+    private Set<UserRole> roles = new HashSet<>();
 
     @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
-    private UserRole profile;
+    private UserProfile profile;
 }

@@ -17,5 +17,6 @@ desktop.ini
 
 # Env
 .env
+.env.*
 *.key
 *.pem
