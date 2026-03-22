@@ -28,6 +28,9 @@ public class NetWorthSnapshot {
     @Column(nullable = false)
     private LocalDate snapshotDate;
 
+    @Column(name = "snapshot_time")
+    private String snapshotTime;
+
     @OneToMany(mappedBy = "snapshot", cascade = CascadeType.ALL, orphanRemoval = true)
     private java.util.List<NetWorthItem> items = new java.util.ArrayList<>();
 

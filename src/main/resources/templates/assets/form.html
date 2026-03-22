@@ -1,424 +1,2379 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org"
+<html lang="th" xmlns:th="http://www.thymeleaf.org"
     th:replace="~{layout :: layout(~{::title}, ~{::main}, ~{::scripts})}">
-
 <head>
-    <title>Net Worth Snapshot</title>
+    <title>Assets &amp; Liabilities</title>
 </head>
-
 <body>
-    <main role="main">
-        <div class="container-fluid">
-            <div class="d-flex justify-content-between align-items-center mb-4">
-                <h1 class="h3">Net Worth Snapshot</h1>
-                <a th:href="@{/assets/list}" class="btn btn-outline-primary">
-                    <i class="bi bi-list-ul"></i> View All Snapshots
-                </a>
-            </div>
+<main role="main">
+<style>
+/* ── Reset layout ───────────────────────────────────── */
+body,.main-content{height:auto!important;overflow:visible!important}
+.content-wrapper{height:auto!important;overflow-y:auto!important}
 
-            <div class="card shadow-sm border-0">
-                <div class="card-body p-4">
-                    <form th:action="@{/assets}" th:object="${snapshot}" method="post">
-                        <input type="hidden" th:field="*{id}" />
+/* ── Root tokens ────────────────────────────────────── */
+:root{
+  --blue:#2563eb;--blue-dark:#1e3a8a;--sky:#0ea5e9;
+  --green:#22c55e;--green-dk:#16a34a;--green-light:rgba(34,197,94,.09);
+  --red:#ef4444;--red-dk:#dc2626;--red-light:rgba(239,68,68,.08);
+  --slate1:#f8fafc;--slate2:#f1f5f9;--slate3:#e2e8f0;
+  --slate5:#64748b;--slate6:#475569;--slate7:#334155;--slate8:#1e293b;
+  --card-radius:16px;--card-bg:rgba(255,255,255,.96);
+  --card-shadow:0 2px 16px rgba(0,0,0,.07);
+}
 
-                        <div class="row mb-4">
-                            <div class="col-6">
-                                <label for="snapshotName" class="form-label">Snapshot Name</label>
-                                <input type="text" class="form-control" id="snapshotName" th:field="*{snapshotName}"
-                                    required>
-                            </div>
-                            <div class="col-6">
-                                <label for="snapshotDate" class="form-label">Date</label>
-                                <input type="date" class="form-control" id="snapshotDate" th:field="*{snapshotDate}"
-                                    required>
-                            </div>
-                        </div>
+/* ── Page wrapper ───────────────────────────────────── */
+.nw-page{padding:.8rem 1.6rem 3rem;max-width:none}
 
-                        <div class="row">
-                            <!-- LEFT COLUMN: Assets -->
-                            <div class="col-6 border-end">
-                                <h6 class="text-success mb-3">ทรัพย์สิน (Assets)</h6>
-                                <div id="assets-container">
-                                    <!-- Predefined Assets -->
-                                    <th:block th:if="${snapshot.items == null or snapshot.items.empty}">
-                                        <!-- 1. Cash -->
-                                        <div class="row g-2 align-items-center mb-2">
-                                            <div class="col-5 d-flex align-items-center">
-                                                <span class="text-primary fw-medium">เงินสด</span>
-                                                <input type="hidden" name="items[0].name" value="เงินสด">
-                                            </div>
-                                            <div class="col-7">
-                                                <input type="number" class="form-control form-control-sm"
-                                                    name="items[0].amount" placeholder="">
-                                                <input type="hidden" name="items[0].type" value="ASSET">
-                                            </div>
-                                        </div>
-                                        <!-- 2. Bonds -->
-                                        <div class="row g-2 align-items-center mb-2">
-                                            <div class="col-5 d-flex align-items-center">
-                                                <span class="text-primary fw-medium">ตราสารหนี้/พันธบัตร/หุ้นกู้</span>
-                                                <input type="hidden" name="items[1].name"
-                                                    value="ตราสารหนี้/พันธบัตร/หุ้นกู้">
-                                            </div>
-                                            <div class="col-7">
-                                                <input type="number" class="form-control form-control-sm"
-                                                    name="items[1].amount" placeholder="">
-                                                <input type="hidden" name="items[1].type" value="ASSET">
-                                            </div>
-                                        </div>
-                                        <!-- 3. RMF/LTF -->
-                                        <div class="row g-2 align-items-center mb-2">
-                                            <div class="col-5 d-flex align-items-center">
-                                                <span class="text-primary fw-medium">กองทุนสำรองเลี้ยงชีพ RMF/LTF</span>
-                                                <input type="hidden" name="items[2].name"
-                                                    value="กองทุนสำรองเลี้ยงชีพ RMF/LTF">
-                                            </div>
-                                            <div class="col-7">
-                                                <input type="number" class="form-control form-control-sm"
-                                                    name="items[2].amount" placeholder="">
-                                                <input type="hidden" name="items[2].type" value="ASSET">
-                                            </div>
-                                        </div>
-                                        <!-- 4. Equity Fund -->
-                                        <div class="row g-2 align-items-center mb-2">
-                                            <div class="col-5 d-flex align-items-center">
-                                                <span class="text-primary fw-medium">กองทุนหุ้น</span>
-                                                <input type="hidden" name="items[3].name" value="กองทุนหุ้น">
-                                            </div>
-                                            <div class="col-7">
-                                                <input type="number" class="form-control form-control-sm"
-                                                    name="items[3].amount" placeholder="">
-                                                <input type="hidden" name="items[3].type" value="ASSET">
-                                            </div>
-                                        </div>
-                                        <!-- 5. Individual Stocks -->
-                                        <div class="row g-2 align-items-center mb-2">
-                                            <div class="col-5 d-flex align-items-center">
-                                                <span class="text-primary fw-medium">หุ้นรายตัว</span>
-                                                <input type="hidden" name="items[4].name" value="หุ้นรายตัว">
-                                            </div>
-                                            <div class="col-7">
-                                                <input type="number" class="form-control form-control-sm"
-                                                    name="items[4].amount" placeholder="">
-                                                <input type="hidden" name="items[4].type" value="ASSET">
-                                            </div>
-                                        </div>
-                                        <!-- 6. Gold -->
-                                        <div class="row g-2 align-items-center mb-2">
-                                            <div class="col-5 d-flex align-items-center">
-                                                <span class="text-primary fw-medium">ทองคำ</span>
-                                                <input type="hidden" name="items[5].name" value="ทองคำ">
-                                            </div>
-                                            <div class="col-7">
-                                                <input type="number" class="form-control form-control-sm"
-                                                    name="items[5].amount" placeholder="">
-                                                <input type="hidden" name="items[5].type" value="ASSET">
-                                            </div>
-                                        </div>
-                                        <!-- 7. Bitcoin -->
-                                        <div class="row g-2 align-items-center mb-2">
-                                            <div class="col-5 d-flex align-items-center">
-                                                <span class="text-primary fw-medium">บิตคอย</span>
-                                                <input type="hidden" name="items[6].name" value="บิตคอย">
-                                            </div>
-                                            <div class="col-7">
-                                                <input type="number" class="form-control form-control-sm"
-                                                    name="items[6].amount" placeholder="">
-                                                <input type="hidden" name="items[6].type" value="ASSET">
-                                            </div>
-                                        </div>
-                                    </th:block>
+/* ── Header ─────────────────────────────────────────── */
+.nw-hdr{margin-bottom:1.25rem;gap:.6rem;flex-wrap:wrap}
+.nw-title{
+  font-size:1.7rem;font-weight:800;letter-spacing:-.5px;line-height:1.1;
+  background:linear-gradient(135deg,var(--blue-dark),var(--blue) 50%,var(--sky));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+}
+.nw-sub{font-size:.79rem;color:var(--slate5);margin-top:.2rem}
 
-                                    <th:block th:each="item, stat : ${snapshot.items}">
-                                        <div th:if="${item.type.name() == 'ASSET'}"
-                                            class="row g-2 align-items-center mb-2">
-                                            <div class="col-5 d-flex align-items-center">
-                                                <!-- Predefined Asset: Show Text -->
-                                                <th:block
-                                                    th:if="${item.name == 'เงินสด' or item.name == 'ตราสารหนี้/พันธบัตร/หุ้นกู้' or item.name == 'กองทุนสำรองเลี้ยงชีพ RMF/LTF' or item.name == 'กองทุนหุ้น' or item.name == 'หุ้นรายตัว' or item.name == 'ทองคำ' or item.name == 'บิตคอย'}">
-                                                    <span class="text-primary fw-medium" th:text="${item.name}"></span>
-                                                    <input type="hidden" th:field="*{items[__${stat.index}__].name}">
-                                                </th:block>
-                                                <!-- Custom Asset: Show Input -->
-                                                <th:block
-                                                    th:unless="${item.name == 'เงินสด' or item.name == 'ตราสารหนี้/พันธบัตร/หุ้นกู้' or item.name == 'กองทุนสำรองเลี้ยงชีพ RMF/LTF' or item.name == 'กองทุนหุ้น' or item.name == 'หุ้นรายตัว' or item.name == 'ทองคำ' or item.name == 'บิตคอย'}">
-                                                    <input type="text" class="form-control form-control-sm"
-                                                        th:field="*{items[__${stat.index}__].name}"
-                                                        placeholder="ชื่อรายการ">
-                                                </th:block>
-                                            </div>
-                                            <div class="col-7">
-                                                <input type="number" class="form-control form-control-sm"
-                                                    th:field="*{items[__${stat.index}__].amount}" placeholder="">
-                                                <input type="hidden" th:field="*{items[__${stat.index}__].type}">
-                                            </div>
-                                        </div>
-                                    </th:block>
-                                </div>
-                                <button type="button" id="add-asset-btn" class="btn btn-sm btn-outline-secondary mt-2">
-                                    <i class="bi bi-plus-lg"></i> ทรัพย์สินอื่นๆ
-                                </button>
+/* Auto snapshot toggle */
+.auto-snap-wrap{display:flex;align-items:center;gap:.5rem;
+  border:1.5px solid var(--slate3);border-radius:10px;padding:.34rem .75rem;
+  background:#fff;font-size:.82rem;font-weight:600;color:var(--slate6);white-space:nowrap}
+.auto-snap-wrap .form-check-input{cursor:pointer;width:2rem;height:1rem}
 
-                                <!-- Asset Total Output -->
-                                <div class="mt-4 p-3 bg-light rounded">
-                                    <div class="d-flex justify-content-between">
-                                        <span>รวมทรัพย์สิน:</span>
-                                        <strong class="text-success" id="totalAssetsDisplay"
-                                            th:text="${#numbers.formatDecimal(snapshot.totalAssets ?: 0, 1, 'COMMA', 2, 'POINT')}">0.00</strong>
-                                    </div>
-                                </div>
-                            </div>
+/* Save snapshot button */
+.nw-btn-save{
+  background:linear-gradient(135deg,var(--blue-dark),var(--blue) 55%,var(--sky));
+  color:#fff;border:none;border-radius:10px;padding:.4rem 1.1rem;
+  font-weight:700;font-size:.88rem;display:inline-flex;align-items:center;gap:.38rem;
+  box-shadow:0 4px 14px rgba(37,99,235,.28);cursor:pointer;white-space:nowrap;transition:opacity .15s}
+.nw-btn-save:hover{opacity:.9;color:#fff}
 
+/* ── Stat cards ─────────────────────────────────────── */
+.stat-card{border-radius:16px;padding:.9rem 1.05rem}
+.stat-blue{
+  background:linear-gradient(135deg,var(--blue-dark),var(--blue) 55%,var(--sky));
+  color:#fff;box-shadow:0 6px 20px rgba(37,99,235,.28)}
+.stat-green{background:var(--green-light);border:1.5px solid rgba(34,197,94,.22)}
+.stat-red  {background:var(--red-light);  border:1.5px solid rgba(239,68,68,.2)}
+.stat-red2 {background:rgba(239,68,68,.08);border:1.5px solid rgba(239,68,68,.2)}
+.stat-tag {font-size:.62rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;opacity:.8;margin-bottom:.2rem}
+.stat-val {font-size:1.38rem;font-weight:900;line-height:1.15}
+.stat-sub {font-size:.64rem;opacity:.68;margin-top:.15rem;line-height:1.4}
 
+/* ── Section cards ──────────────────────────────────── */
+.nw-card{
+  background:var(--card-bg);border-radius:var(--card-radius);
+  box-shadow:var(--card-shadow);padding:1rem 1.15rem;border:none}
+.sec-title{font-size:.93rem;font-weight:700;color:var(--slate8)}
 
-                            <!-- RIGHT COLUMN: Liabilities -->
-                            <div class="col-6">
-                                <h6 class="text-danger mb-3">หนี้สิน (Liabilities)</h6>
-                                <div id="liabilities-container">
-                                    <!-- Predefined Liabilities -->
-                                    <th:block th:if="${snapshot.items == null or snapshot.items.empty}">
-                                        <!-- 1. Credit Card -->
-                                        <div class="row g-2 align-items-center mb-2">
-                                            <div class="col-5 d-flex align-items-center">
-                                                <span class="text-danger fw-medium">บัตรเครดิต</span>
-                                                <input type="hidden" name="items[7].name" value="บัตรเครดิต">
-                                            </div>
-                                            <div class="col-7">
-                                                <input type="number" class="form-control form-control-sm"
-                                                    name="items[7].amount" placeholder="">
-                                                <input type="hidden" name="items[7].type" value="LIABILITY">
-                                            </div>
-                                        </div>
-                                        <!-- 2. Cash Card -->
-                                        <div class="row g-2 align-items-center mb-2">
-                                            <div class="col-5 d-flex align-items-center">
-                                                <span class="text-danger fw-medium">บัตรกดเงินสด</span>
-                                                <input type="hidden" name="items[8].name" value="บัตรกดเงินสด">
-                                            </div>
-                                            <div class="col-7">
-                                                <input type="number" class="form-control form-control-sm"
-                                                    name="items[8].amount" placeholder="">
-                                                <input type="hidden" name="items[8].type" value="LIABILITY">
-                                            </div>
-                                        </div>
-                                        <!-- 3. Personal Loan -->
-                                        <div class="row g-2 align-items-center mb-2">
-                                            <div class="col-5 d-flex align-items-center">
-                                                <span class="text-danger fw-medium">สินเชื่อส่วนบุคคล</span>
-                                                <input type="hidden" name="items[9].name" value="สินเชื่อส่วนบุคคล">
-                                            </div>
-                                            <div class="col-7">
-                                                <input type="number" class="form-control form-control-sm"
-                                                    name="items[9].amount" placeholder="">
-                                                <input type="hidden" name="items[9].type" value="LIABILITY">
-                                            </div>
-                                        </div>
-                                        <!-- 4. Installment -->
-                                        <div class="row g-2 align-items-center mb-2">
-                                            <div class="col-5 d-flex align-items-center">
-                                                <span class="text-danger fw-medium">ผ่อนสินค้า</span>
-                                                <input type="hidden" name="items[10].name" value="ผ่อนสินค้า">
-                                            </div>
-                                            <div class="col-7">
-                                                <input type="number" class="form-control form-control-sm"
-                                                    name="items[10].amount" placeholder="">
-                                                <input type="hidden" name="items[10].type" value="LIABILITY">
-                                            </div>
-                                        </div>
-                                        <!-- 5. Informal Debt -->
-                                        <div class="row g-2 align-items-center mb-2">
-                                            <div class="col-5 d-flex align-items-center">
-                                                <span class="text-danger fw-medium">หนี้นอกระบบ</span>
-                                                <input type="hidden" name="items[11].name" value="หนี้นอกระบบ">
-                                            </div>
-                                            <div class="col-7">
-                                                <input type="number" class="form-control form-control-sm"
-                                                    name="items[11].amount" placeholder="">
-                                                <input type="hidden" name="items[11].type" value="LIABILITY">
-                                            </div>
-                                        </div>
-                                        <!-- 6. Home Loan -->
-                                        <div class="row g-2 align-items-center mb-2">
-                                            <div class="col-5 d-flex align-items-center">
-                                                <span class="text-danger fw-medium">กู้ซื้อบ้าน</span>
-                                                <input type="hidden" name="items[12].name" value="กู้ซื้อบ้าน">
-                                            </div>
-                                            <div class="col-7">
-                                                <input type="number" class="form-control form-control-sm"
-                                                    name="items[12].amount" placeholder="">
-                                                <input type="hidden" name="items[12].type" value="LIABILITY">
-                                            </div>
-                                        </div>
-                                        <!-- 7. Car Loan -->
-                                        <div class="row g-2 align-items-center mb-2">
-                                            <div class="col-5 d-flex align-items-center">
-                                                <span class="text-danger fw-medium">กู้ซื้อรถ</span>
-                                                <input type="hidden" name="items[13].name" value="กู้ซื้อรถ">
-                                            </div>
-                                            <div class="col-7">
-                                                <input type="number" class="form-control form-control-sm"
-                                                    name="items[13].amount" placeholder="">
-                                                <input type="hidden" name="items[13].type" value="LIABILITY">
-                                            </div>
-                                        </div>
-                                    </th:block>
+/* ── Asset/Liability panel headers ─────────────────── */
+.panel-header-asset{
+  background:rgba(34,197,94,.07);border-radius:10px 10px 0 0;
+  padding:.55rem .8rem;margin:-1rem -1.15rem .75rem;
+  display:flex;justify-content:space-between;align-items:center}
+.panel-header-liab{
+  background:rgba(239,68,68,.06);border-radius:10px 10px 0 0;
+  padding:.55rem .8rem;margin:-1rem -1.15rem .75rem;
+  display:flex;justify-content:space-between;align-items:center}
+.panel-kiy-tip{
+  font-size:.71rem;font-style:italic;color:var(--slate5);
+  padding:.42rem .65rem;border-radius:8px;margin-bottom:.7rem;line-height:1.5;
+  background:rgba(248,250,252,.8);border:1px solid var(--slate2)}
+.panel-kiy-tip-asset{border-left:3px solid var(--green)}
+.panel-kiy-tip-liab {border-left:3px solid var(--red)}
 
-                                    <th:block th:each="item, stat : ${snapshot.items}">
-                                        <div th:if="${item.type.name() == 'LIABILITY'}"
-                                            class="row g-2 align-items-center mb-2">
-                                            <div class="col-5 d-flex align-items-center">
-                                                <!-- Predefined Liability: Show Text -->
-                                                <th:block
-                                                    th:if="${item.name == 'บัตรเครดิต' or item.name == 'บัตรกดเงินสด' or item.name == 'สินเชื่อส่วนบุคคล' or item.name == 'ผ่อนสินค้า' or item.name == 'หนี้นอกระบบ' or item.name == 'กู้ซื้อบ้าน' or item.name == 'กู้ซื้อรถ'}">
-                                                    <span class="text-danger fw-medium" th:text="${item.name}"></span>
-                                                    <input type="hidden" th:field="*{items[__${stat.index}__].name}">
-                                                </th:block>
-                                                <!-- Custom Liability: Show Input -->
-                                                <th:block
-                                                    th:unless="${item.name == 'บัตรเครดิต' or item.name == 'บัตรกดเงินสด' or item.name == 'สินเชื่อส่วนบุคคล' or item.name == 'ผ่อนสินค้า' or item.name == 'หนี้นอกระบบ' or item.name == 'กู้ซื้อบ้าน' or item.name == 'กู้ซื้อรถ'}">
-                                                    <input type="text" class="form-control form-control-sm"
-                                                        th:field="*{items[__${stat.index}__].name}"
-                                                        placeholder="ชื่อรายการ">
-                                                </th:block>
-                                            </div>
-                                            <div class="col-7">
-                                                <input type="number" class="form-control form-control-sm"
-                                                    th:field="*{items[__${stat.index}__].amount}" placeholder="">
-                                                <input type="hidden" th:field="*{items[__${stat.index}__].type}">
-                                            </div>
-                                        </div>
-                                    </th:block>
-                                </div>
-                                <button type="button" id="add-liability-btn"
-                                    class="btn btn-sm btn-outline-secondary mt-2">
-                                    <i class="bi bi-plus-lg"></i> หนี้สินอื่นๆ
-                                </button>
+/* Add-item buttons */
+.btn-add{
+  background:none;border:1.5px solid var(--slate3);border-radius:50%;
+  width:28px;height:28px;font-size:.95rem;font-weight:700;
+  display:inline-flex;align-items:center;justify-content:center;
+  cursor:pointer;transition:all .15s;padding:0}
+.btn-add-asset{color:var(--green-dk)}
+.btn-add-asset:hover{border-color:var(--green-dk);background:rgba(22,163,74,.08)}
+.btn-add-liab {color:var(--red-dk)}
+.btn-add-liab:hover{border-color:var(--red-dk);background:rgba(220,38,38,.06)}
 
-                                <!-- Liability Total Output -->
-                                <div class="mt-4 p-3 bg-light rounded">
-                                    <div class="d-flex justify-content-between">
-                                        <span>รวมหนี้สิน:</span>
-                                        <strong class="text-danger" id="totalLiabilitiesDisplay"
-                                            th:text="${#numbers.formatDecimal(snapshot.totalLiabilities ?: 0, 1, 'COMMA', 2, 'POINT')}">0.00</strong>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+/* ── Item tables ────────────────────────────────────── */
+.nw-tbl{width:100%;border-collapse:collapse}
+.nw-tbl thead th{
+  font-size:.6rem;font-weight:700;text-transform:uppercase;
+  letter-spacing:.06em;color:#94a3b8;padding:.3rem .42rem;
+  border-bottom:1.5px solid var(--slate2)}
+.nw-tbl tbody tr{border-bottom:1px solid var(--slate1);transition:background .1s}
+.nw-tbl tbody tr:hover{background:rgba(37,99,235,.025)}
+.nw-tbl tbody td{padding:.42rem .42rem;vertical-align:middle;font-size:.81rem}
+.item-name{font-weight:700;color:var(--slate8);font-size:.82rem}
+.item-cat {font-size:.66rem;color:#94a3b8;margin-top:.05rem}
 
-                        <!-- Summary Section -->
-                        <div class="row mt-4">
-                            <div class="col-12">
-                                <div class="card bg-light border-primary">
-                                    <div class="card-body">
-                                        <h5 class="card-title text-center text-primary">ความมั่งคั่งสุทธิ (Net Worth)
-                                        </h5>
-                                        <div class="row text-center mt-3">
-                                            <div class="col-12">
-                                                <h4 class="text-dark" id="netWorthDisplay"
-                                                    th:text="${#numbers.formatDecimal(snapshot.netWorth ?: 0, 1, 'COMMA', 2, 'POINT')}">
-                                                    0.00</h4>
-                                                <p class="text-muted mb-0 fst-italic">"เราจะมั่งคั่งมากแค่ไหน
-                                                    ขึ้นอยู่กับว่าเรากำลังสะสมอะไรอยู่"</p>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+/* action buttons */
+.item-acts{display:flex;gap:.2rem;justify-content:flex-end;opacity:0;transition:opacity .12s}
+tr:hover .item-acts{opacity:1}
+.act-btn{
+  background:none;border:none;width:24px;height:24px;border-radius:6px;
+  cursor:pointer;display:inline-flex;align-items:center;justify-content:center;
+  font-size:.76rem;transition:background .12s}
+.act-btn.edit{color:var(--blue)}.act-btn.edit:hover{background:rgba(37,99,235,.1)}
+.act-btn.del {color:var(--red)}.act-btn.del:hover {background:rgba(239,68,68,.1)}
 
-                        <div class="col-12 d-flex justify-content-between mt-5">
-                            <a th:href="@{/assets/list}" class="btn btn-secondary">Cancel</a>
-                            <div>
-                                <button type="button" onclick="calculateTotals()"
-                                    class="btn btn-info text-white me-2"><i class="bi bi-calculator"></i> คำนวณ
-                                    (Calculate)</button>
-                                <button type="submit" class="btn btn-primary">Save
-                                    Snapshot</button>
-                            </div>
-                        </div>
-                    </form>
-                </div>
-            </div>
+/* CF badges */
+.cf-badge{display:inline-block;padding:.1rem .4rem;border-radius:99px;font-size:.63rem;font-weight:700}
+.cf-pos {background:rgba(22,163,74,.12);color:var(--green-dk);font-weight:400}
+.cf-neg {background:rgba(220,38,38,.1); color:var(--red-dk)}
+.cf-zero{background:var(--slate2);color:var(--slate5)}
+
+/* Table footer totals */
+.total-row td{padding:.45rem .42rem;font-size:.8rem;font-weight:700;border-top:2px solid var(--slate2)}
+.total-label-asset{font-size:.7rem;font-weight:800;color:var(--green-dk);text-transform:uppercase;letter-spacing:.05em}
+.total-label-liab {font-size:.7rem;font-weight:800;color:var(--red-dk); text-transform:uppercase;letter-spacing:.05em}
+
+/* Empty state */
+.nw-empty{text-align:center;padding:1.3rem .5rem;color:#94a3b8;font-size:.78rem}
+.nw-empty i{font-size:1.6rem;display:block;margin-bottom:.4rem}
+
+/* ── Chart containers ───────────────────────────────── */
+.pie-wrap  {position:relative;height:240px;margin-top:.5rem}
+.trend-wrap{position:relative;height:220px}
+.cf-wrap   {position:relative;height:auto;min-height:120px}
+.pie-center{
+  position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);
+  pointer-events:none;text-align:center;line-height:1.3;max-width:90px}
+.pie-center .pc-name{font-size:.68rem;font-weight:600;color:var(--slate7)}
+.pie-center .pc-val {font-size:.9rem;font-weight:800;color:var(--slate8)}
+.pie-center .pc-pct {font-size:.65rem;color:var(--slate5)}
+
+/* ── Trend custom tooltip ───────────────────────────── */
+#trendTooltip{
+  position:absolute;pointer-events:none;display:none;z-index:999;
+  background:#fff;backdrop-filter:blur(8px);
+  border-radius:14px;box-shadow:0 8px 32px rgba(0,0,0,.14);
+  padding:.8rem 1rem;min-width:220px;max-width:280px;
+  border:1px solid var(--slate2);font-size:.75rem;color:var(--slate7)}
+#trendTooltip .tt-date{
+  font-weight:800;color:var(--slate8);margin-bottom:.55rem;font-size:.78rem;
+  display:flex;align-items:center;gap:.35rem}
+#trendTooltip .tt-block{margin-bottom:.45rem}
+#trendTooltip .tt-header{
+  display:flex;justify-content:space-between;align-items:center;
+  font-weight:800;font-size:.78rem;margin-bottom:.28rem}
+#trendTooltip .tt-header.asset{color:var(--green-dk)}
+#trendTooltip .tt-header.liab {color:var(--red-dk)}
+#trendTooltip .tt-item{
+  display:flex;justify-content:space-between;align-items:center;
+  gap:.5rem;padding:.1rem 0;border-bottom:1px solid #f1f5f9}
+#trendTooltip .tt-item:last-child{border-bottom:none}
+#trendTooltip .tt-item .it-name{color:var(--slate6);font-size:.72rem}
+#trendTooltip .tt-item .it-pct {font-size:.72rem;color:var(--slate5);font-weight:600}
+#trendTooltip .tt-nw{
+  margin-top:.5rem;padding-top:.45rem;border-top:2px solid var(--slate2);
+  display:flex;justify-content:space-between;align-items:center;font-size:.8rem}
+#trendTooltip .tt-nw .nw-label{font-weight:700;color:var(--slate7)}
+#trendTooltip .tt-nw .nw-val  {font-weight:800;color:var(--blue);font-size:.88rem}
+
+/* ── Snapshot History table ─────────────────────────── */
+.hist-tbl{width:100%;border-collapse:collapse;font-size:.8rem}
+.hist-tbl thead th{
+  font-size:.62rem;font-weight:700;text-transform:uppercase;letter-spacing:.05em;
+  color:#94a3b8;padding:.38rem .55rem;border-bottom:2px solid var(--slate2);
+  background:var(--slate1)}
+.hist-tbl tbody tr{border-bottom:1px solid var(--slate1);cursor:pointer;transition:background .12s}
+.hist-tbl tbody tr:hover{background:rgba(37,99,235,.03)}
+.hist-tbl tbody td{padding:.5rem .55rem;vertical-align:middle}
+.hist-date{font-weight:700;color:var(--slate8)}
+.hist-time{font-size:.66rem;color:#94a3b8;margin-top:.05rem}
+.diff-up  {font-size:.64rem;color:var(--green-dk);font-weight:700}
+.diff-dn  {font-size:.64rem;color:var(--red-dk);  font-weight:700}
+.hist-acts{display:flex;gap:.3rem;justify-content:center}
+.hist-act-btn{
+  background:none;border:none;width:28px;height:28px;border-radius:7px;
+  cursor:pointer;display:inline-flex;align-items:center;justify-content:center;
+  font-size:.82rem;transition:background .12s,opacity .15s;
+  opacity:0;pointer-events:none}
+.hist-tbl tbody tr:hover .hist-act-btn{opacity:1;pointer-events:auto}
+.hist-act-btn.edit{color:var(--blue)}.hist-act-btn.edit:hover{background:rgba(37,99,235,.1)}
+.hist-act-btn.del {color:var(--red)}.hist-act-btn.del:hover {background:rgba(239,68,68,.1)}
+
+/* Multi-select checkboxes */
+.hist-chk-cell{width:36px;text-align:center}
+.snap-row-chk,.hist-hdr-chk{cursor:pointer;accent-color:var(--blue);width:15px;height:15px}
+.hist-tbl tbody tr .snap-row-chk{opacity:0;transition:opacity .15s}
+.hist-tbl tbody tr:hover .snap-row-chk,
+.hist-tbl tbody tr.snap-selected .snap-row-chk{opacity:1}
+.hist-tbl tbody tr.snap-selected{background:rgba(37,99,235,.07)!important}
+
+/* Floating bulk-delete bar */
+#bulkBar{
+  position:fixed;bottom:1.6rem;left:50%;
+  transform:translateX(-50%) translateY(100px);
+  background:var(--slate8);color:#fff;border-radius:14px;
+  padding:.55rem 1rem .55rem 1.15rem;
+  display:flex;align-items:center;gap:.65rem;
+  font-size:.83rem;font-weight:600;
+  box-shadow:0 6px 30px rgba(0,0,0,.30);
+  transition:transform .22s cubic-bezier(.34,1.56,.64,1);
+  z-index:2000;white-space:nowrap}
+#bulkBar.show{transform:translateX(-50%) translateY(0)}
+#bulkBar .bulk-count{
+  background:rgba(255,255,255,.16);border-radius:8px;
+  padding:.13rem .5rem;font-size:.77rem}
+#bulkBar .bulk-del-btn{
+  background:var(--red);color:#fff;border:none;border-radius:9px;
+  padding:.33rem .82rem;font-size:.79rem;font-weight:700;
+  cursor:pointer;display:inline-flex;align-items:center;gap:.28rem;transition:opacity .15s}
+#bulkBar .bulk-del-btn:hover{opacity:.85}
+#bulkBar .bulk-cancel{
+  background:none;border:none;color:rgba(255,255,255,.55);
+  font-size:.8rem;cursor:pointer;padding:0 .2rem;transition:color .12s}
+#bulkBar .bulk-cancel:hover{color:#fff}
+
+/* ── Modals ─────────────────────────────────────────── */
+.nw-modal .modal-content{border-radius:18px;border:none;box-shadow:0 8px 40px rgba(0,0,0,.14)}
+.nw-modal .modal-header{border-bottom:1.5px solid var(--slate2);padding:.85rem 1.1rem}
+.nw-modal .modal-footer{border-top:1.5px solid var(--slate2);padding:.7rem 1.1rem;gap:.45rem}
+.nw-modal label{font-size:.78rem;font-weight:600;color:var(--slate6);margin-bottom:.18rem;display:block}
+.nw-modal .form-control,.nw-modal .form-select{
+  border:1.5px solid var(--slate3);border-radius:10px;font-size:.83rem;padding:.38rem .7rem}
+.nw-modal .form-control:focus,.nw-modal .form-select:focus{
+  border-color:var(--blue);box-shadow:0 0 0 3px rgba(37,99,235,.1)}
+.kiy-alert{border-radius:10px;padding:.55rem .75rem;font-size:.73rem;
+  margin-bottom:.75rem;line-height:1.55;display:none}
+.kiy-alert.show{display:block}
+.kiy-alert-asset{background:linear-gradient(135deg,#eff6ff,#f0fdf4);border:1px solid #bfdbfe;color:var(--slate7)}
+.kiy-alert-liab {background:linear-gradient(135deg,#fff1f2,#fef2f2);border:1px solid #fecaca;color:var(--slate7)}
+.cf-hint{font-size:.62rem;color:#94a3b8;margin-top:.22rem}
+
+/* Snapshot modal */
+.snap-modal .modal-content{border-radius:18px;border:none;box-shadow:0 8px 40px rgba(0,0,0,.15)}
+.snap-modal .modal-header{
+  border-bottom:1.5px solid var(--slate2);padding:.9rem 1.1rem;
+  background:linear-gradient(135deg,#eff6ff,#f0fdf4)}
+.snap-modal .modal-footer{border-top:1.5px solid var(--slate2);padding:.75rem 1.1rem;gap:.45rem}
+.snap-modal label{font-size:.78rem;font-weight:600;color:var(--slate6);margin-bottom:.18rem;display:block}
+.snap-modal .form-control,.snap-modal .form-select{
+  border:1.5px solid var(--slate3);border-radius:10px;font-size:.83rem;padding:.38rem .7rem}
+.snap-modal .form-control:focus{border-color:var(--blue);box-shadow:0 0 0 3px rgba(37,99,235,.1)}
+.nw-display-box{
+  background:var(--slate1);border:1.5px solid var(--slate2);border-radius:10px;
+  padding:.38rem .7rem;font-size:.9rem;font-weight:800;color:var(--blue)}
+.snap-modal-label{font-size:.78rem;font-weight:600;color:var(--slate6);margin-bottom:.18rem;display:block}
+#snapEditModal .form-control{border:1.5px solid var(--slate3);border-radius:10px;font-size:.83rem;padding:.38rem .7rem}
+#snapEditModal .form-control:focus{border-color:var(--blue);box-shadow:0 0 0 3px rgba(37,99,235,.1)}
+.esnap-section{font-size:.68rem;font-weight:700;letter-spacing:.04em;margin:.5rem 0 .25rem}
+.esnap-section.asset{color:var(--green-dk)}
+.esnap-section.liab{color:var(--red-dk)}
+.esnap-item{display:flex;justify-content:space-between;align-items:center;
+  padding:.2rem 0;font-size:.78rem;border-bottom:1px solid var(--slate2)}
+.esnap-item:last-child{border-bottom:none}
+.esnap-item .name{color:var(--slate7)}
+.esnap-item .amt-a{color:var(--green-dk);font-weight:700}
+.esnap-item .amt-l{color:var(--red-dk);font-weight:700}
+</style>
+
+<!-- ── Server data anchors ────────────────────────────── -->
+<div id="serverMeta" style="display:none"
+     th:data-snapshot-id="${snapshot.id}"
+     th:data-snapshot-name="${snapshot.snapshotName}"
+     th:data-snapshot-date="${snapshot.snapshotDate}"></div>
+
+<div id="serverItems" style="display:none">
+    <div th:each="item : ${snapshot.items}"
+         th:data-id="${item.id}"
+         th:data-name="${item.name}"
+         th:data-category="${item.category}"
+         th:data-amount="${item.amount}"
+         th:data-cash-flow="${item.monthlyCashFlow}"
+         th:data-type="${item.type}"></div>
+</div>
+
+<div id="snapshotHistory" style="display:none">
+    <div th:each="snap : ${userSnapshots}"
+         th:data-id="${snap.id}"
+         th:data-date="${snap.snapshotDate}"
+         th:data-time="${snap.snapshotTime}"
+         th:data-name="${snap.snapshotName}"
+         th:data-net-worth="${snap.netWorth}"
+         th:data-assets="${snap.totalAssets}"
+         th:data-liabilities="${snap.totalLiabilities}">
+        <span th:each="item : ${snap.items}"
+              th:data-item-id="${item.id}"
+              th:data-type="${item.type}"
+              th:data-name="${item.name}"
+              th:data-category="${item.category}"
+              th:data-amount="${item.amount}"
+              th:data-cash-flow="${item.monthlyCashFlow}"></span>
+    </div>
+</div>
+
+<!-- ── Retirement plans data anchor ──────────────────── -->
+<div id="retirementData" style="display:none">
+    <div th:each="plan : ${retirementPlans}"
+         th:data-id="${plan.id}"
+         th:data-name="${plan.planName}"
+         th:data-monthly-expense="${plan.monthlyExpense}"
+         th:data-total-needed="${plan.totalFundsNeeded}"
+         th:data-required-monthly="${plan.requiredMonthlyInvestment}"></div>
+</div>
+
+<!-- ── Flash messages ─────────────────────────────────── -->
+<div th:if="${successMessage}" class="alert alert-success py-2 small mb-2 rounded-3 mx-3 mt-2"
+     th:text="${successMessage}"></div>
+<div th:if="${errorMessage}" class="alert alert-danger py-2 small mb-2 rounded-3 mx-3 mt-2"
+     th:text="${errorMessage}"></div>
+
+<!-- ================================================================
+     FORM  (items serialised to hidden inputs before submit)
+     ================================================================ -->
+<form id="snapshotForm" method="post" th:action="@{/assets}">
+  <input type="hidden" id="hidSnapId"   name="id"           th:value="${snapshot.id}">
+  <input type="hidden" id="hidSnapDate" name="snapshotDate" th:value="${snapshot.snapshotDate}">
+  <input type="hidden" id="hidSnapTime" name="snapshotTime" th:value="${snapshot.snapshotTime}">
+  <input type="hidden" id="hidSnapName" name="snapshotName" th:value="${snapshot.snapshotName}">
+  <div id="itemsContainer"></div>
+
+<div class="nw-page">
+
+  <!-- ── Header ───────────────────────────────────────── -->
+  <div class="nw-hdr d-flex justify-content-between align-items-center">
+    <div>
+      <div class="nw-title"><i class="bi bi-wallet2 me-2" style="-webkit-text-fill-color:#2563eb"></i>Assets &amp; Liabilities</div>
+      <div class="nw-sub">จัดการทรัพย์สินและวิเคราะห์คุณภาพพอร์ตตามหลัก Robert Kiyosaki</div>
+    </div>
+    <div class="d-flex align-items-center gap-2 flex-wrap justify-content-end">
+      <!-- Auto Snapshot toggle -->
+      <div class="auto-snap-wrap">
+        <i class="bi bi-lightning-charge-fill text-warning" style="font-size:.85rem"></i>
+        <span>Auto Snapshot</span>
+        <div class="form-check form-switch mb-0">
+          <input class="form-check-input" type="checkbox" id="autoSnapToggle" role="switch">
         </div>
-    </main>
+      </div>
+      <!-- Save Snapshot button -->
+      <button type="button" class="nw-btn-save" onclick="openSnapModal()">
+        <i class="bi bi-arrow-counterclockwise"></i>Save Snapshot
+      </button>
+    </div>
+  </div>
 
-    <th:block th:fragment="scripts">
-        <script>
-            // Add Asset Item
-            document.getElementById('add-asset-btn').addEventListener('click', function () {
-                const container = document.getElementById('assets-container');
-                const index = container.querySelectorAll('.row').length;
-                const newRow = `
-                <div class="row g-2 align-items-center mb-2">
-                    <div class="col-5">
-                        <input type="text" class="form-control form-control-sm" name="items[${index}].name" placeholder="ชื่อรายการ">
-                    </div>
-                    <div class="col-7">
-                        <input type="number" class="form-control form-control-sm" name="items[${index}].amount" placeholder="">
-                        <input type="hidden" name="items[${index}].type" value="ASSET">
-                    </div>
-                </div>`;
-                container.insertAdjacentHTML('beforeend', newRow);
-            });
+  <!-- ── 4 Stat cards ──────────────────────────────────── -->
+  <div class="row g-3 mb-3">
+    <div class="col-6 col-md-3">
+      <div class="stat-card stat-blue h-100">
+        <div class="stat-tag">NET WORTH สุทธิ</div>
+        <div class="stat-val" id="sNetWorth">฿0</div>
+        <div class="stat-sub">ความมั่งคั่งสุทธิ = ทรัพย์สินรวม - หนี้สินรวม</div>
+      </div>
+    </div>
+    <div class="col-6 col-md-3">
+      <div class="stat-card stat-green h-100">
+        <div class="stat-tag" style="color:var(--green-dk)">TOTAL ASSETS (สร้างกระแสเงินสด)</div>
+        <div class="stat-val" id="sAssets" style="color:var(--green-dk)">฿0</div>
+        <div class="stat-sub" id="sAssetsCount" style="color:var(--green-dk)">จำนวน 0 รายการ</div>
+      </div>
+    </div>
+    <div class="col-6 col-md-3">
+      <div class="stat-card stat-red h-100">
+        <div class="stat-tag" style="color:var(--red-dk)">TOTAL LIABILITIES (ลดกระแสเงินสด)</div>
+        <div class="stat-val" id="sLiabs" style="color:var(--red-dk)">฿0</div>
+        <div class="stat-sub" id="sLiabsCount" style="color:var(--red-dk)">จำนวน 0 รายการ</div>
+      </div>
+    </div>
+    <div class="col-6 col-md-3">
+      <div class="stat-card stat-red2 h-100" id="cfStatCard">
+        <div class="stat-tag" style="color:var(--red-dk)">NET CASHFLOW/MONTH</div>
+        <div class="stat-val" id="sCashFlow" style="color:var(--red-dk)">฿0</div>
+        <div class="stat-sub" style="color:var(--red-dk)">สภาพคล่องรายเดือน</div>
+      </div>
+    </div>
+  </div>
 
-            // Add Liability Item
-            document.getElementById('add-liability-btn').addEventListener('click', function () {
-                const container = document.getElementById('liabilities-container');
-                const index = container.querySelectorAll('.row').length + 7; // offset for assets
-                const newRow = `
-                <div class="row g-2 align-items-center mb-2">
-                    <div class="col-5">
-                        <input type="text" class="form-control form-control-sm" name="items[${index}].name" placeholder="ชื่อรายการ">
-                    </div>
-                    <div class="col-7">
-                        <input type="number" class="form-control form-control-sm" name="items[${index}].amount" placeholder="">
-                        <input type="hidden" name="items[${index}].type" value="LIABILITY">
-                    </div>
-                </div>`;
-                container.insertAdjacentHTML('beforeend', newRow);
-            });
+  <!-- ── Assets + Liabilities tables ──────────────────── -->
+  <div class="row g-3 mb-3">
 
-            // Calculate Totals (client-side only, no save)
-            function calculateTotals() {
-                let totalAssets = 0;
-                let totalLiabilities = 0;
+    <!-- Assets panel -->
+    <div class="col-lg-6">
+      <div class="nw-card h-100">
+        <div class="panel-header-asset">
+          <span class="sec-title" style="color:var(--green-dk)">
+            <i class="bi bi-wallet2 me-1"></i>ทรัพย์สิน (Assets)
+          </span>
+          <button type="button" class="btn-add btn-add-asset" onclick="openDialog('ASSET')" title="เพิ่มทรัพย์สิน">
+            <i class="bi bi-plus-lg"></i>
+          </button>
+        </div>
+        <div class="panel-kiy-tip panel-kiy-tip-asset">
+          <i class="bi bi-info-circle me-1"></i>
+          <em>ทรัพย์สิน คือ รายการที่สร้างกระแสเงินสดบวก นำเงินเข้ากระเป๋าคุณ</em>
+        </div>
+        <div style="overflow-x:auto">
+          <table class="nw-tbl">
+            <thead><tr>
+              <th>รายการ</th>
+              <th class="text-end">มูลค่า (฿)</th>
+              <th class="text-end">Cashflow (฿)</th>
+              <th style="width:52px"></th>
+            </tr></thead>
+            <tbody id="aTbody">
+              <tr><td colspan="4"><div class="nw-empty"><i class="bi bi-inbox"></i>ยังไม่มีทรัพย์สิน</div></td></tr>
+            </tbody>
+            <tfoot><tr class="total-row">
+              <td><span class="total-label-asset">TOTAL CASH IN</span></td>
+              <td class="text-end" id="aTotalAmt" style="color:var(--green-dk)">฿0</td>
+              <td class="text-end" id="aTotalCF"  style="color:var(--green-dk);font-size:.8rem">฿0</td>
+              <td></td>
+            </tr></tfoot>
+          </table>
+        </div>
+      </div>
+    </div>
 
-                // Sum all asset amounts
-                document.querySelectorAll('input[name*="].amount"]').forEach(input => {
-                    const typeInput = input.parentElement.querySelector('input[name*="].type"]');
-                    if (typeInput && typeInput.value === 'ASSET') {
-                        totalAssets += parseFloat(input.value) || 0;
-                    } else if (typeInput && typeInput.value === 'LIABILITY') {
-                        totalLiabilities += parseFloat(input.value) || 0;
-                    }
+    <!-- Liabilities panel -->
+    <div class="col-lg-6">
+      <div class="nw-card h-100">
+        <div class="panel-header-liab">
+          <span class="sec-title" style="color:var(--red-dk)">
+            <i class="bi bi-credit-card me-1"></i>หนี้สิน (Liabilities)
+          </span>
+          <button type="button" class="btn-add btn-add-liab" onclick="openDialog('LIABILITY')" title="เพิ่มหนี้สิน">
+            <i class="bi bi-plus-lg"></i>
+          </button>
+        </div>
+        <div class="panel-kiy-tip panel-kiy-tip-liab">
+          <i class="bi bi-info-circle me-1"></i>
+          <em>หนี้สิน คือ รายการที่ดึงกระแสเงินสดออก นำเงินออกจากกระเป๋าคุณ</em>
+        </div>
+        <div style="overflow-x:auto">
+          <table class="nw-tbl">
+            <thead><tr>
+              <th>รายการ</th>
+              <th class="text-end">มูลค่า (฿)</th>
+              <th class="text-end">Cashflow (฿)</th>
+              <th style="width:52px"></th>
+            </tr></thead>
+            <tbody id="lTbody">
+              <tr><td colspan="4"><div class="nw-empty"><i class="bi bi-inbox"></i>ยังไม่มีหนี้สิน</div></td></tr>
+            </tbody>
+            <tfoot><tr class="total-row">
+              <td><span class="total-label-liab">TOTAL CASH OUT</span></td>
+              <td class="text-end" id="lTotalAmt" style="color:var(--red-dk)">฿0</td>
+              <td class="text-end" id="lTotalCF"  style="color:var(--red-dk);font-size:.8rem;font-weight:700">฿0</td>
+              <td></td>
+            </tr></tfoot>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── Wealth Trend Analysis (full-width) ────────────── -->
+  <div class="nw-card mb-3" style="position:relative">
+    <div class="sec-title mb-2">
+      <i class="bi bi-graph-up me-1"></i>Wealth Trend Analysis
+    </div>
+    <div class="trend-wrap" id="trendWrap"><canvas id="trendChart"></canvas></div>
+    <div class="nw-empty" id="trendEmpty" style="display:none">
+      <i class="bi bi-bar-chart"></i>บันทึก Snapshot อย่างน้อย 2 รายการเพื่อดูแนวโน้ม
+    </div>
+    <!-- Custom floating tooltip -->
+    <div id="trendTooltip"></div>
+  </div>
+
+  <!-- ── Pie charts row ────────────────────────────────── -->
+  <div class="row g-3 mb-3">
+    <div class="col-lg-6">
+      <div class="nw-card h-100">
+        <div class="sec-title mb-1">
+          <i class="bi bi-pie-chart me-1" style="color:var(--green-dk)"></i>สัดส่วนทรัพย์สิน (Assets Breakdown)
+        </div>
+        <div class="pie-wrap" id="aPieWrap" style="position:relative">
+          <canvas id="assetsPie"></canvas>
+          <div class="pie-center" id="aPieCenter"></div>
+        </div>
+        <div class="nw-empty" id="aPieEmpty" style="display:none">
+          <i class="bi bi-pie-chart"></i>ยังไม่มีข้อมูลทรัพย์สิน
+        </div>
+      </div>
+    </div>
+    <div class="col-lg-6">
+      <div class="nw-card h-100">
+        <div class="sec-title mb-1">
+          <i class="bi bi-pie-chart me-1" style="color:var(--red-dk)"></i>สัดส่วนหนี้สิน (Liabilities Breakdown)
+        </div>
+        <div class="pie-wrap" id="lPieWrap" style="position:relative">
+          <canvas id="liabsPie"></canvas>
+          <div class="pie-center" id="lPieCenter"></div>
+        </div>
+        <div class="nw-empty" id="lPieEmpty" style="display:none">
+          <i class="bi bi-pie-chart"></i>ยังไม่มีข้อมูลหนี้สิน
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── Monthly Cash Flow Analysis (full-width) ───────── -->
+  <div class="nw-card mb-3">
+    <div class="d-flex justify-content-between align-items-center mb-2">
+      <div class="sec-title">
+        <i class="bi bi-bar-chart-horizontal me-1"></i>วิเคราะห์กระแสเงินสด (Monthly Cash Flow Analysis)
+      </div>
+      <span class="badge rounded-pill px-3 py-2" id="cfBadge"
+            style="font-size:.75rem;font-weight:800;background:rgba(239,68,68,.1);color:var(--red-dk)">
+        NET CASH FLOW ฿0
+      </span>
+    </div>
+    <div class="cf-wrap" id="cfWrap"><canvas id="cfChart"></canvas></div>
+    <div class="nw-empty" id="cfEmpty" style="display:none">
+      <i class="bi bi-wind"></i>ยังไม่มีข้อมูลกระแสเงินสด<br>
+      <small>กรอกช่อง CF/เดือน ในแต่ละรายการ</small>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════════════════
+       ROW: Debt-to-Asset Gauge  +  Financial Freedom Bar
+       ══════════════════════════════════════════════════════ -->
+  <div class="row g-3 mb-3">
+
+    <!-- Debt-to-Asset Gauge -->
+    <div class="col-12 col-md-5">
+      <div class="nw-card h-100">
+        <div class="sec-title mb-1"><i class="bi bi-speedometer2 me-1"></i>ตรวจสุขภาพทางการเงิน</div>
+        <div style="font-size:.72rem;color:var(--slate5);margin-bottom:.7rem">สัดส่วนหนี้สินต่อทรัพย์สินรวม (Debt-to-Asset Ratio)</div>
+        <div style="position:relative;max-width:240px;margin:0 auto">
+          <canvas id="gaugeChart" height="130"></canvas>
+          <div id="gaugeCenter" style="position:absolute;bottom:0;left:50%;transform:translateX(-50%);text-align:center;line-height:1.2">
+            <div id="gaugeRatioPct" style="font-size:1.6rem;font-weight:900;color:var(--slate8)">0%</div>
+            <div id="gaugeLabel"    style="font-size:.7rem;font-weight:700;color:#94a3b8">HEALTHY</div>
+          </div>
+        </div>
+        <div style="display:flex;justify-content:space-evenly;margin-top:.6rem;font-size:.66rem;font-weight:700">
+          <span style="color:#22c55e">● ปลอดภัย &lt;30%</span>
+          <span style="color:#f59e0b">● ระวัง 30-60%</span>
+          <span style="color:#ef4444">● อันตราย &gt;60%</span>
+        </div>
+        <div id="gaugeTip" style="margin-top:.6rem;font-size:.72rem;padding:.4rem .65rem;border-radius:8px;background:var(--slate1);color:var(--slate6);text-align:center"></div>
+      </div>
+    </div>
+
+    <!-- Financial Freedom Progress Bar -->
+    <div class="col-12 col-md-7">
+      <div class="nw-card h-100">
+        <div class="sec-title mb-1"><i class="bi bi-trophy me-1"></i>Financial Freedom Progress</div>
+        <div style="font-size:.72rem;color:var(--slate5);margin-bottom:.75rem">เป้าหมายอิสรภาพทางการเงินตาม Kiyosaki — passive income ≥ ค่าใช้จ่าย/เดือน</div>
+
+        <!-- Retirement plan selector -->
+        <div style="display:flex;align-items:center;gap:.5rem;margin-bottom:.85rem;flex-wrap:wrap">
+          <label style="font-size:.72rem;font-weight:600;color:var(--slate6);white-space:nowrap">เป้าหมาย (แผนเกษียณ):</label>
+          <select id="ffPlanSel" class="form-select form-select-sm rounded-3"
+                  style="font-size:.75rem;max-width:220px;border:1.5px solid var(--slate3)"
+                  onchange="updateFreedomBar()">
+            <option value="">— ไม่เลือกแผน —</option>
+          </select>
+        </div>
+
+        <!-- Bar 1: Passive Income vs Monthly Expense -->
+        <div style="margin-bottom:1rem">
+          <div style="display:flex;justify-content:space-between;font-size:.72rem;font-weight:600;margin-bottom:.3rem">
+            <span style="color:var(--slate7)"><i class="bi bi-cash-coin me-1 text-success"></i>Passive Income / เดือน</span>
+            <span id="ffIncomeLabel" style="color:var(--green-dk)">฿0</span>
+          </div>
+          <div style="background:var(--slate2);border-radius:99px;height:14px;overflow:hidden">
+            <div id="ffIncomeBar" style="height:100%;width:0%;background:linear-gradient(90deg,#22c55e,#10b981);border-radius:99px;transition:width .6s ease"></div>
+          </div>
+          <div style="display:flex;justify-content:space-between;font-size:.66rem;color:var(--slate5);margin-top:.22rem">
+            <span id="ffIncomePct">0%</span>
+            <span id="ffExpenseTarget">เป้า: —</span>
+          </div>
+        </div>
+
+        <!-- Bar 2: Net Worth vs Total Needed -->
+        <div>
+          <div style="display:flex;justify-content:space-between;font-size:.72rem;font-weight:600;margin-bottom:.3rem">
+            <span style="color:var(--slate7)"><i class="bi bi-bank me-1 text-primary"></i>Net Worth สะสม</span>
+            <span id="ffNwLabel" style="color:var(--blue)">฿0</span>
+          </div>
+          <div style="background:var(--slate2);border-radius:99px;height:14px;overflow:hidden">
+            <div id="ffNwBar" style="height:100%;width:0%;background:linear-gradient(90deg,#2563eb,#0ea5e9);border-radius:99px;transition:width .6s ease"></div>
+          </div>
+          <div style="display:flex;justify-content:space-between;font-size:.66rem;color:var(--slate5);margin-top:.22rem">
+            <span id="ffNwPct">0%</span>
+            <span id="ffNwTarget">เป้า: เลือกแผนเกษียณ</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════════════════
+       ROW: Asset Allocation Radar  +  Kiyosaki Bubble
+       ══════════════════════════════════════════════════════ -->
+  <div class="row g-3 mb-3">
+
+    <!-- Asset Allocation Radar -->
+    <div class="col-12 col-md-6">
+      <div class="nw-card h-100">
+        <div class="sec-title mb-1"><i class="bi bi-diagram-3 me-1"></i>Asset Allocation Radar</div>
+        <div style="font-size:.72rem;color:var(--slate5);margin-bottom:.6rem">การกระจายความเสี่ยงของพอร์ตทรัพย์สิน</div>
+        <div style="height:260px"><canvas id="radarChart"></canvas></div>
+      </div>
+    </div>
+
+    <!-- Kiyosaki Quadrant Bubble -->
+    <div class="col-12 col-md-6">
+      <div class="nw-card h-100">
+        <div class="sec-title mb-1"><i class="bi bi-grid-1x2 me-1"></i>Kiyosaki Quadrant</div>
+        <div style="font-size:.72rem;color:var(--slate5);margin-bottom:.6rem">มูลค่า vs Cash Flow — มุมขวาบน = ทรัพย์สินที่แท้จริง</div>
+        <div style="height:260px;position:relative"><canvas id="bubbleChart"></canvas></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════════════════
+       ROW: Net Worth Projection  +  Category Trend
+       ══════════════════════════════════════════════════════ -->
+  <div class="row g-3 mb-3">
+
+    <!-- Net Worth Growth Projection -->
+    <div class="col-12 col-md-6">
+      <div class="nw-card h-100">
+        <div class="sec-title mb-1"><i class="bi bi-graph-up-arrow me-1"></i>Net Worth Growth Projection</div>
+        <div style="font-size:.72rem;color:var(--slate5);margin-bottom:.6rem">ประวัติจริง (เส้นทึบ) + ฉายอนาคต 3 ปี (เส้นประ) จาก CAGR</div>
+        <div id="projEmpty" style="display:none" class="nw-empty"><i class="bi bi-graph-up"></i>ต้องการ Snapshot ≥ 2 จุด</div>
+        <div id="projWrap"  style="height:240px"><canvas id="projChart"></canvas></div>
+      </div>
+    </div>
+
+    <!-- Category Trend Multi-line -->
+    <div class="col-12 col-md-6">
+      <div class="nw-card h-100">
+        <div class="sec-title mb-1"><i class="bi bi-activity me-1"></i>Category Trend Over Time</div>
+        <div style="font-size:.72rem;color:var(--slate5);margin-bottom:.6rem">แนวโน้มมูลค่าแต่ละประเภทสินทรัพย์ตามเวลา</div>
+        <div id="catTrendEmpty" style="display:none" class="nw-empty"><i class="bi bi-activity"></i>ต้องการ Snapshot ≥ 2 จุด</div>
+        <div id="catTrendWrap" style="height:240px"><canvas id="catTrendChart"></canvas></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── Snapshot History ───────────────────────────────── -->
+  <div class="nw-card mb-3">
+    <div class="d-flex justify-content-between align-items-center mb-2">
+      <div class="sec-title mb-0">
+        <i class="bi bi-clock-history me-1"></i>ประวัติ Snapshot ทั้งหมด
+      </div>
+      <button type="button" onclick="deleteAllSnapshots()"
+              style="font-size:.75rem;font-weight:600;padding:.25rem .7rem;border-radius:8px;
+                     border:1.5px solid rgba(239,68,68,.35);background:rgba(239,68,68,.07);
+                     color:var(--red-dk);cursor:pointer;display:flex;align-items:center;gap:.3rem">
+        <i class="bi bi-trash3"></i> ลบทั้งหมด
+      </button>
+    </div>
+    <div style="overflow-x:auto">
+      <table class="hist-tbl">
+        <thead><tr>
+          <th class="hist-chk-cell"><input type="checkbox" class="hist-hdr-chk" id="chkSelectAll" onclick="toggleSelectAll(this)" title="เลือกทั้งหมด"></th>
+          <th>วันที่/เวลา</th>
+          <th class="text-end">ความมั่งคั่งสุทธิ</th>
+          <th class="text-end">ทรัพย์สินรวม</th>
+          <th class="text-end">หนี้สินรวม</th>
+          <th>บันทึกช่วยจำ</th>
+          <th class="text-center" style="width:80px">จัดการ</th>
+        </tr></thead>
+        <tbody id="histTbody">
+          <tr><td colspan="7"><div class="nw-empty"><i class="bi bi-inbox"></i>ยังไม่มีประวัติ Snapshot</div></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+</div><!-- /nw-page -->
+</form><!-- /snapshotForm -->
+
+<!-- Bulk delete form -->
+<form id="bulkDeleteForm" method="post" action="/assets/delete/bulk" style="display:none"></form>
+
+<!-- Floating bulk-delete bar -->
+<div id="bulkBar">
+  <i class="bi bi-check2-square"></i>
+  เลือกแล้ว <span id="bulkCount" class="bulk-count">0 รายการ</span>
+  <button type="button" class="bulk-del-btn" onclick="deleteSelectedSnapshots()">
+    <i class="bi bi-trash3"></i> ลบที่เลือก
+  </button>
+  <button type="button" class="bulk-cancel" onclick="cancelBulkSel()" title="ยกเลิก">
+    <i class="bi bi-x-lg"></i>
+  </button>
+</div>
+
+<!-- ================================================================
+     Add / Edit Item Modal
+     ================================================================ -->
+<div class="modal fade nw-modal" id="itemModal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" style="max-width:460px">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="modalTitle" style="font-size:.96rem;font-weight:800">เพิ่มทรัพย์สิน</h5>
+        <button type="button" class="btn-close btn-close-sm" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body" style="padding:1rem 1.1rem">
+        <input type="hidden" id="mType" value="ASSET">
+        <input type="hidden" id="mIdx"  value="-1">
+
+        <!-- Kiyosaki principle alert -->
+        <div id="kiyAlert" class="kiy-alert kiy-alert-asset">
+          <strong><i class="bi bi-lightbulb-fill me-1"></i>Robert Kiyosaki Principle:</strong>
+          <span id="kiyAlertText"></span>
+        </div>
+
+        <div class="mb-3">
+          <label>ประเภท / หมวดหมู่</label>
+          <select class="form-select" id="mCategory" onchange="onCatChange()"></select>
+        </div>
+        <div class="mb-3">
+          <label>
+            ชื่อเรียก
+            <span style="color:#94a3b8;font-weight:400;font-size:.71rem">— ไม่จำเป็น (ใช้ชื่อหมวดถ้าว่าง)</span>
+          </label>
+          <input type="text" class="form-control" id="mName" placeholder="เช่น บัญชี KBank ออมทรัพย์">
+        </div>
+        <div class="row g-2 mb-1">
+          <div class="col-6">
+            <label>มูลค่า (บาท)</label>
+            <input type="number" class="form-control" id="mAmount" min="0" step="0.01" placeholder="0">
+          </div>
+          <div class="col-6">
+            <label>CF/เดือน (฿) — กรอกค่าบวกเสมอ</label>
+            <input type="number" class="form-control" id="mCashFlow" min="0" step="0.01" placeholder="0">
+            <div class="cf-hint" id="cfHint">* ระบบจะบันทึกเป็นค่าบวก (+) ให้อัตโนมัติ</div>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-sm btn-outline-secondary rounded-3"
+                data-bs-dismiss="modal">ยกเลิก</button>
+        <button type="button" class="btn btn-sm rounded-3 fw-bold text-white" id="mSaveBtn"
+                style="background:linear-gradient(135deg,#1e3a8a,#2563eb 55%,#0ea5e9)"
+                onclick="saveDialog()">บันทึก</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ================================================================
+     Save / Edit Snapshot Modal
+     ================================================================ -->
+<div class="modal fade snap-modal" id="snapModal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" style="max-width:420px">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="snapModalTitle" style="font-size:.96rem;font-weight:800;color:var(--blue-dark)">
+          <i class="bi bi-camera me-2"></i>บันทึก Snapshot รายเดือน
+        </h5>
+        <button type="button" class="btn-close btn-close-sm" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body" style="padding:1rem 1.1rem">
+        <div class="row g-2 mb-3">
+          <div class="col-6">
+            <label>วันที่</label>
+            <input type="date" class="form-control" id="smpDate">
+          </div>
+          <div class="col-6">
+            <label>เวลา</label>
+            <input type="time" class="form-control" id="smpTime">
+          </div>
+        </div>
+        <div class="mb-3">
+          <label>Net Worth ปัจจุบัน</label>
+          <div class="nw-display-box" id="smpNetWorth">฿0</div>
+        </div>
+        <div class="mb-2">
+          <label>บันทึกช่วยจำ (Memo)</label>
+          <textarea class="form-control" id="smpMemo" rows="2"
+                    placeholder="เช่น Snapshot มีนาคม 2026"></textarea>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-sm btn-outline-secondary rounded-3"
+                data-bs-dismiss="modal">ยกเลิก</button>
+        <button type="button" class="btn btn-sm rounded-3 fw-bold text-white" id="snapSaveBtn"
+                style="background:linear-gradient(135deg,#1e3a8a,#2563eb 55%,#0ea5e9)"
+                onclick="confirmSnapshot()">
+          <i class="bi bi-check2 me-1"></i><span id="snapSaveBtnText">บันทึกข้อมูลปัจจุบัน</span>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ── Edit Snapshot Modal ─────────────────────────────── -->
+<div class="modal fade snap-modal" id="snapEditModal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable" style="max-width:480px">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" style="font-size:.96rem;font-weight:800;color:var(--blue-dark)">
+          <i class="bi bi-pencil-square me-2"></i>แก้ไข Snapshot
+        </h5>
+        <button type="button" class="btn-close btn-close-sm" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body" style="padding:1rem 1.1rem">
+        <p style="font-size:.75rem;color:var(--slate5);margin-bottom:.9rem">
+          บันทึกยอดรวมทรัพย์สินและหนี้สินปัจจุบันเพื่อดูแนวโน้มการเติบโต
+        </p>
+        <div class="row g-2 mb-3">
+          <div class="col-6">
+            <label class="snap-modal-label">วันที่ Snapshot</label>
+            <input type="date" class="form-control" id="eSmpDate">
+          </div>
+          <div class="col-6">
+            <label class="snap-modal-label">เวลา</label>
+            <input type="time" class="form-control" id="eSmpTime">
+          </div>
+        </div>
+        <div class="mb-3">
+          <label class="snap-modal-label">ความมั่งคั่ง (Wealth)</label>
+          <div class="nw-display-box" id="eSmpNetWorth">฿0</div>
+        </div>
+        <div class="mb-3">
+          <label class="snap-modal-label">บันทึกช่วยจำ (Memo)</label>
+          <textarea class="form-control" id="eSmpMemo" rows="3"
+                    placeholder="เช่น ซื้อกองทุนเพิ่ม, จ่ายหนี้บัตรหมดแล้ว"></textarea>
+        </div>
+        <!-- Items editable list -->
+        <div style="background:var(--slate1);border-radius:10px;padding:.75rem .9rem">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:.55rem">
+            <div style="font-size:.72rem;font-weight:700;color:var(--slate6);display:flex;align-items:center;gap:.35rem">
+              <i class="bi bi-list-ul"></i> รายการปัจจุบัน
+            </div>
+            <div style="display:flex;gap:.35rem">
+              <button type="button" class="btn btn-sm rounded-2 fw-600"
+                      style="font-size:.7rem;padding:.18rem .55rem;background:rgba(34,197,94,.12);color:var(--green-dk);border:1px solid rgba(34,197,94,.3)"
+                      onclick="openEditAddItem('ASSET')">
+                <i class="bi bi-plus"></i> ทรัพย์สิน
+              </button>
+              <button type="button" class="btn btn-sm rounded-2 fw-600"
+                      style="font-size:.7rem;padding:.18rem .55rem;background:rgba(239,68,68,.1);color:var(--red-dk);border:1px solid rgba(239,68,68,.25)"
+                      onclick="openEditAddItem('LIABILITY')">
+                <i class="bi bi-plus"></i> หนี้สิน
+              </button>
+            </div>
+          </div>
+          <div id="eSnapItemList"></div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-sm btn-outline-secondary rounded-3"
+                data-bs-dismiss="modal">ยกเลิก</button>
+        <button type="button" class="btn btn-sm rounded-3 fw-bold text-white"
+                style="background:linear-gradient(135deg,#1e3a8a,#2563eb 55%,#0ea5e9);padding:.38rem 1.1rem"
+                onclick="confirmEditSnapshot()">
+          <i class="bi bi-check2 me-1"></i>อัปเดตข้อมูล Snapshot
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Edit snapshot full form (UPDATE existing snapshot) -->
+<form id="snapEditForm" method="post" th:action="@{/assets}" style="display:none">
+  <input type="hidden" name="id"           id="eFormSnapId">
+  <input type="hidden" name="snapshotDate" id="eFormDate">
+  <input type="hidden" name="snapshotTime" id="eFormTime">
+  <input type="hidden" name="snapshotName" id="eFormName">
+  <div id="eItemsContainer"></div>
+</form>
+
+<!-- Delete snapshot forms (generated by JS) -->
+<div id="deleteForms"></div>
+
+</main>
+
+<!-- ================================================================
+     Scripts
+     ================================================================ -->
+<th:block th:fragment="scripts">
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<script>
+/* ================================================================
+   Constants
+   ================================================================ */
+const CATS = {
+  ASSET: [
+    "เงินฝากออมทรัพย์","เงินฝากประจำ","พันธบัตรรัฐบาล","หุ้นกู้เอกชน",
+    "กองทุนรวมตราสารหนี้","กองทุนรวมหุ้น","กองทุนลดหย่อนภาษี (SSF/RMF/ThaiESG)",
+    "หุ้นไทย","หุ้นต่างประเทศ","ทองคำ/โลหะมีค่า","คริปโตเคอเรนซี/สินทรัพย์ดิจิทัล",
+    "ประกันชีวิต (มูลค่าเวนคืน)","กองทุนสำรองเลี้ยงชีพ (PVD)","กบข.",
+    "อสังหาริมทรัพย์ (ที่อยู่อาศัย)","อสังหาริมทรัพย์ (ลงทุน)","หุ้นส่วนธุรกิจ",
+    "รถยนต์/ยานพาหนะ","ของสะสมมีค่า","อื่นๆ"
+  ],
+  LIABILITY: [
+    "บัตรเครดิต","สินเชื่อส่วนบุคคล","สินเชื่อบ้าน","สินเชื่อรถยนต์",
+    "สินเชื่อรถจักรยานยนต์","หนี้ กยศ.","หนี้ยืมบุคคล","สินเชื่อธุรกิจ","ภาษีค้างจ่าย","อื่นๆ"
+  ]
+};
+
+const KIY = {
+  "เงินฝากออมทรัพย์":   "เงินฝากให้ผลตอบแทนต่ำ เหมาะสำหรับเงินสำรองฉุกเฉิน 3–6 เดือน",
+  "เงินฝากประจำ":        "ดอกเบี้ยสูงกว่าออมทรัพย์ แต่ยังต่ำกว่าเงินเฟ้อในระยะยาว",
+  "พันธบัตรรัฐบาล":     "ความเสี่ยงต่ำ ผลตอบแทนสม่ำเสมอ เหมาะพอร์ตอนุรักษ์นิยม",
+  "หุ้นกู้เอกชน":       "ผลตอบแทนสูงกว่าพันธบัตรรัฐ แต่มีความเสี่ยงด้านเครดิต",
+  "กองทุนรวมตราสารหนี้":"กระจายความเสี่ยง ผลตอบแทนสม่ำเสมอ",
+  "กองทุนรวมหุ้น":       "ผลตอบแทนสูงในระยะยาว บริหารโดยผู้เชี่ยวชาญ — I Quadrant",
+  "กองทุนลดหย่อนภาษี (SSF/RMF/ThaiESG)":"ลงทุนระยะยาว + ลดหย่อนภาษี สร้างความมั่งคั่งอย่างเป็นระบบ",
+  "หุ้นไทย":            "ผลตอบแทนสูงสุดในระยะยาว แต่ต้องวิเคราะห์ด้วยตนเอง",
+  "หุ้นต่างประเทศ":     "กระจายความเสี่ยงข้ามประเทศ เข้าถึงตลาดโลก",
+  "ทองคำ/โลหะมีค่า":   "สินทรัพย์ป้องกันเงินเฟ้อ ไม่สร้าง Cash Flow",
+  "คริปโตเคอเรนซี/สินทรัพย์ดิจิทัล":"ความเสี่ยงสูงมาก ผันผวนรุนแรง ใช้สัดส่วนน้อย",
+  "ประกันชีวิต (มูลค่าเวนคืน)":"คุ้มครองชีวิต + ออม แต่ผลตอบแทนต่ำกว่าลงทุนตรง",
+  "กองทุนสำรองเลี้ยงชีพ (PVD)":"นายจ้างสมทบ คุ้มค่ามาก ลดหย่อนภาษีได้ ไม่ควรถอนก่อนกำหนด",
+  "กบข.":               "กองทุนบำเหน็จข้าราชการ ปลอดภัย ผลตอบแทนสม่ำเสมอ",
+  "อสังหาริมทรัพย์ (ที่อยู่อาศัย)":"มูลค่าเพิ่มขึ้น แต่ไม่สร้าง Cash Flow หากอยู่เอง",
+  "อสังหาริมทรัพย์ (ลงทุน)":"💰 I Quadrant — ค่าเช่าทุกเดือน คือทรัพย์สินที่แท้จริงตาม Kiyosaki",
+  "หุ้นส่วนธุรกิจ":    "💼 B Quadrant — ระบบธุรกิจทำงานแทนคุณ รายได้แม้ไม่ทำงาน",
+  "รถยนต์/ยานพาหนะ":   "มูลค่าลดลงทุกปี มีค่าใช้จ่ายดูแล ไม่สร้าง Cash Flow",
+  "ของสะสมมีค่า":       "สภาพคล่องต่ำ มูลค่าขึ้นกับตลาดเฉพาะ",
+  "อื่นๆ":              "กำหนดมูลค่าและ Cash Flow ให้ถูกต้องเพื่อการวิเคราะห์ที่แม่นยำ",
+  "บัตรเครดิต":        "⚠️ ดอกเบี้ย 18–20%/ปี ชำระเต็มจำนวนทุกเดือน",
+  "สินเชื่อส่วนบุคคล": "⚠️ ดอกเบี้ยสูง ควรชำระให้หมดโดยเร็ว",
+  "สินเชื่อบ้าน":      "ยอมรับได้ หากบ้านสร้าง Cash Flow จากการปล่อยเช่า",
+  "สินเชื่อรถยนต์":    "รถเสื่อมค่า + ดอกเบี้ย ควรชำระให้เร็ว",
+  "สินเชื่อรถจักรยานยนต์":"ชำระให้เร็วที่สุดเพื่อลดดอกเบี้ย",
+  "หนี้ กยศ.":         "ดอกเบี้ยต่ำ วางแผนชำระอย่างเป็นระบบ",
+  "หนี้ยืมบุคคล":      "ชำระคืนตามที่ตกลงเพื่อรักษาความสัมพันธ์และเครดิต",
+  "สินเชื่อธุรกิจ":    "ยอมรับได้ถ้าธุรกิจสร้างผลตอบแทนสูงกว่าดอกเบี้ย",
+  "ภาษีค้างจ่าย":      "⚠️ มีเบี้ยปรับ ชำระโดยเร็วที่สุด",
+};
+
+// Pie chart colors — greens for assets (indices 0-4), reds for liabilities (5-9)
+const PIE_COLORS = [
+  "#22c55e","#10b981","#059669","#047857","#064e3b",
+  "#ef4444","#dc2626","#b91c1c","#991b1b","#7f1d1d"
+];
+const A_PIE_COLORS = PIE_COLORS.slice(0, 5);
+const L_PIE_COLORS = PIE_COLORS.slice(5);
+
+// Helper: hex → rgba
+function hexToRgba(hex, alpha) {
+  const r = parseInt(hex.slice(1,3), 16);
+  const g = parseInt(hex.slice(3,5), 16);
+  const b = parseInt(hex.slice(5,7), 16);
+  return 'rgba(' + r + ',' + g + ',' + b + ',' + alpha + ')';
+}
+const muteColors  = (arr, a) => arr.map(c => hexToRgba(c, a));
+const A_PIE_MUTED = muteColors(A_PIE_COLORS, 0.38);
+const L_PIE_MUTED = muteColors(L_PIE_COLORS, 0.38);
+
+/* ================================================================
+   State
+   ================================================================ */
+let items = [];
+let autoSnapshot = false;
+let cAssets = null, cLiabs = null, cCF = null, cTrend = null;
+let itemModalBs = null, snapModalBs = null, snapEditModalBs = null;
+let snapshotData = [];
+
+// Edit-snapshot-modal state
+let editItems = [];
+let editSnapId = null;
+let snapItemEditMode = false; // true = item modal saves to editItems, not items
+
+const DRAFT_KEY = 'finplan_nw_draft';
+
+function saveDraft() {
+  const snapId = document.getElementById('hidSnapId').value;
+  if (!snapId || snapId === '') {
+    localStorage.setItem(DRAFT_KEY, JSON.stringify(items));
+  }
+}
+
+function clearDraft() {
+  localStorage.removeItem(DRAFT_KEY);
+}
+
+/* ================================================================
+   Init
+   ================================================================ */
+document.addEventListener('DOMContentLoaded', () => {
+  // Load items from server
+  document.querySelectorAll('#serverItems > div').forEach(el => {
+    items.push({
+      id:       el.dataset.id   || null,
+      name:     el.dataset.name || '',
+      category: el.dataset.category || '',
+      amount:   parseFloat(el.dataset.amount)   || 0,
+      cashFlow: parseFloat(el.dataset.cashFlow) || 0,
+      type:     el.dataset.type || 'ASSET',
+    });
+  });
+
+  const snapId = document.getElementById('hidSnapId').value;
+  if (snapId && snapId !== '') {
+    // On existing snapshot page: clear any unsaved draft
+    clearDraft();
+  } else if (items.length === 0) {
+    // On new snapshot page: restore draft from localStorage if exists
+    try {
+      const draft = localStorage.getItem(DRAFT_KEY);
+      if (draft) items = JSON.parse(draft);
+    } catch(e) { /* ignore corrupt draft */ }
+  }
+
+  // Load snapshot history (including per-snapshot items for tooltip)
+  document.querySelectorAll('#snapshotHistory > div').forEach(el => {
+    const snapItems = [];
+    el.querySelectorAll('span').forEach(s => {
+      snapItems.push({
+        name:     s.dataset.name     || '',
+        category: s.dataset.category || '',
+        amount:   parseFloat(s.dataset.amount) || 0,
+        type:     s.dataset.type     || 'ASSET',
+      });
+    });
+    snapshotData.push({
+      id:               el.dataset.id,
+      date:             el.dataset.date || '',
+      time:             el.dataset.time || '',
+      name:             el.dataset.name || '',
+      netWorth:         parseFloat(el.dataset.netWorth)    || 0,
+      totalAssets:      parseFloat(el.dataset.assets)      || 0,
+      totalLiabilities: parseFloat(el.dataset.liabilities) || 0,
+      items:            snapItems,
+    });
+  });
+
+  // Init Bootstrap modals
+  itemModalBs     = new bootstrap.Modal(document.getElementById('itemModal'));
+  snapModalBs     = new bootstrap.Modal(document.getElementById('snapModal'));
+  snapEditModalBs = new bootstrap.Modal(document.getElementById('snapEditModal'));
+
+  // Stack item modal ON TOP of snap-edit modal when in snapItemEditMode
+  document.getElementById('itemModal').addEventListener('show.bs.modal', () => {
+    if (snapItemEditMode) {
+      // Raise item modal above snapEditModal (default z-index 1055)
+      document.getElementById('itemModal').style.zIndex = 1090;
+    }
+  });
+  document.getElementById('itemModal').addEventListener('shown.bs.modal', () => {
+    if (snapItemEditMode) {
+      // Raise the most-recently-added backdrop so it sits between the two modals
+      const backdrops = document.querySelectorAll('.modal-backdrop');
+      if (backdrops.length) {
+        backdrops[backdrops.length - 1].style.zIndex = 1080;
+      }
+    }
+  });
+  document.getElementById('itemModal').addEventListener('hidden.bs.modal', () => {
+    document.getElementById('itemModal').style.zIndex = '';
+    snapItemEditMode = false;
+  });
+
+  // Auto snapshot toggle — restore persisted state
+  const savedAutoSnap = localStorage.getItem('finplan_auto_snap') === 'true';
+  autoSnapshot = savedAutoSnap;
+  document.getElementById('autoSnapToggle').checked = savedAutoSnap;
+
+  document.getElementById('autoSnapToggle').addEventListener('change', function() {
+    autoSnapshot = this.checked;
+    localStorage.setItem('finplan_auto_snap', this.checked);
+  });
+
+  initCharts();
+  renderAll();
+  renderHistory();
+});
+
+/* ================================================================
+   Helpers
+   ================================================================ */
+const fmt = n => '฿' + (+(n||0)).toLocaleString('th-TH', {minimumFractionDigits:0, maximumFractionDigits:0});
+const fmtAbs = n => '฿' + Math.abs(+(n||0)).toLocaleString('th-TH', {minimumFractionDigits:0, maximumFractionDigits:0});
+
+function fmtCF(n) {
+  if (!n || n === 0) return '฿0';
+  const sign = n > 0 ? '+' : '-';
+  return sign + '฿' + Math.abs(n).toLocaleString('th-TH', {minimumFractionDigits:0, maximumFractionDigits:0});
+}
+
+function cfBadge(n) {
+  if (!n || n === 0) return '<span class="cf-badge cf-zero">+฿0</span>';
+  if (n > 0) return '<span class="cf-badge cf-pos">+' + fmtAbs(n) + '</span>';
+  return '<span class="cf-badge cf-neg">-' + fmtAbs(n) + '</span>';
+}
+
+const displayName = it => (it.name && it.name !== it.category) ? it.name : (it.category || it.name || '—');
+
+function esc(s) {
+  return String(s)
+    .replace(/&/g,'&amp;').replace(/</g,'&lt;')
+    .replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+function todayStr() {
+  return new Date().toISOString().split('T')[0];
+}
+
+function nowTimeStr() {
+  const d = new Date();
+  return String(d.getHours()).padStart(2,'0') + ':' + String(d.getMinutes()).padStart(2,'0');
+}
+
+/* ================================================================
+   Render
+   ================================================================ */
+function renderAll(triggerAutoSave) {
+  renderTable('ASSET');
+  renderTable('LIABILITY');
+  updateStats();
+  updateCharts();
+  saveDraft();
+  if (triggerAutoSave && autoSnapshot) autoSaveSnapshot();
+}
+
+function autoSaveSnapshot() {
+  document.getElementById('hidSnapId').value   = '';
+  document.getElementById('hidSnapDate').value = todayStr();
+  document.getElementById('hidSnapTime').value = nowTimeStr();
+  document.getElementById('hidSnapName').value = 'Auto Snapshot';
+  items = items.map(it => ({ ...it, id: null }));
+  serializeItems();
+  document.getElementById('snapshotForm').submit();
+}
+
+function renderTable(type) {
+  const tbodyId    = type === 'ASSET' ? 'aTbody'    : 'lTbody';
+  const totalAmtId = type === 'ASSET' ? 'aTotalAmt' : 'lTotalAmt';
+  const totalCFId  = type === 'ASSET' ? 'aTotalCF'  : 'lTotalCF';
+  const emptyTxt   = type === 'ASSET' ? 'ยังไม่มีทรัพย์สิน' : 'ยังไม่มีหนี้สิน';
+  const cfColor    = type === 'ASSET' ? 'var(--green-dk)' : 'var(--red-dk)';
+
+  const filtered = items.filter(it => it.type === type);
+  const tbody    = document.getElementById(tbodyId);
+
+  if (filtered.length === 0) {
+    tbody.innerHTML = '<tr><td colspan="4"><div class="nw-empty"><i class="bi bi-inbox"></i>' + emptyTxt + '</div></td></tr>';
+  } else {
+    let html = '';
+    filtered.forEach(item => {
+      const gi = items.indexOf(item);
+      const dn = esc(displayName(item));
+      const showCat = item.name && item.name !== item.category && item.category;
+      html += '<tr>';
+      html += '<td><div class="item-name">' + dn + '</div>';
+      if (showCat) html += '<div class="item-cat">' + esc(item.category) + '</div>';
+      html += '</td>';
+      html += '<td class="text-end" style="color:' + cfColor + '">' + fmt(item.amount) + '</td>';
+      html += '<td class="text-end">' + cfBadge(item.cashFlow) + '</td>';
+      html += '<td><div class="item-acts">';
+      html += '<button type="button" class="act-btn edit" onclick="openDialog(\'' + type + '\',' + gi + ')" title="แก้ไข"><i class="bi bi-pencil"></i></button>';
+      html += '<button type="button" class="act-btn del" onclick="delItem(' + gi + ')" title="ลบ"><i class="bi bi-trash3"></i></button>';
+      html += '</div></td></tr>';
+    });
+    tbody.innerHTML = html;
+  }
+
+  const totalAmt = filtered.reduce((s, it) => s + (it.amount || 0), 0);
+  // Assets: CF stored positive, Liabilities: CF stored negative
+  const totalCF  = filtered.reduce((s, it) => s + (it.cashFlow || 0), 0);
+
+  document.getElementById(totalAmtId).textContent = fmt(totalAmt);
+
+  // TOTAL CASH IN: show as +฿X, TOTAL CASH OUT: show as ฿-X
+  const cfEl = document.getElementById(totalCFId);
+  if (type === 'ASSET') {
+    cfEl.textContent = totalCF === 0 ? '฿0' : '+' + fmtAbs(totalCF);
+    cfEl.style.color = 'var(--green-dk)';
+  } else {
+    cfEl.textContent = totalCF === 0 ? '฿0' : '฿' + totalCF.toLocaleString('th-TH', {minimumFractionDigits:0, maximumFractionDigits:0});
+    cfEl.style.color = 'var(--red-dk)';
+  }
+}
+
+function updateStats() {
+  const aItems = items.filter(it => it.type === 'ASSET');
+  const lItems = items.filter(it => it.type === 'LIABILITY');
+  const a  = aItems.reduce((s, it) => s + (it.amount   || 0), 0);
+  const l  = lItems.reduce((s, it) => s + (it.amount   || 0), 0);
+  const totalCashIn  = aItems.reduce((s, it) => s + (it.cashFlow || 0), 0);
+  const totalCashOut = lItems.reduce((s, it) => s + (it.cashFlow || 0), 0);
+  const netCF = totalCashIn + totalCashOut; // totalCashOut is already negative
+
+  document.getElementById('sNetWorth').textContent = fmt(a - l);
+  document.getElementById('sAssets').textContent   = fmt(a);
+  document.getElementById('sLiabs').textContent    = fmt(l);
+  document.getElementById('sAssetsCount').textContent = 'จำนวน ' + aItems.length + ' รายการ';
+  document.getElementById('sLiabsCount').textContent  = 'จำนวน ' + lItems.length + ' รายการ';
+
+  const cfEl   = document.getElementById('sCashFlow');
+  const cfCard = document.getElementById('cfStatCard');
+  const cfBadgeEl = document.getElementById('cfBadge');
+
+  // Net Cash Flow display
+  const cfStr = netCF === 0 ? '฿0'
+    : (netCF > 0 ? '+' : '') + netCF.toLocaleString('th-TH', {minimumFractionDigits:0, maximumFractionDigits:0, style:'currency', currency:'THB'}).replace('THB','฿').trim();
+  // simpler format:
+  const cfDisplay = (netCF >= 0 ? '+' : '') + '฿' + Math.abs(netCF).toLocaleString('th-TH', {minimumFractionDigits:0, maximumFractionDigits:0});
+
+  cfEl.textContent = netCF >= 0
+    ? '+฿' + netCF.toLocaleString('th-TH', {minimumFractionDigits:0, maximumFractionDigits:0})
+    : '฿' + netCF.toLocaleString('th-TH', {minimumFractionDigits:0, maximumFractionDigits:0});
+
+  // Color the cash flow stat card based on positive/negative
+  if (netCF >= 0) {
+    cfEl.style.color = 'var(--green-dk)';
+    cfCard.className = 'stat-card h-100';
+    cfCard.style.cssText = 'border-radius:16px;padding:.9rem 1.05rem;background:rgba(34,197,94,.09);border:1.5px solid rgba(34,197,94,.22)';
+    document.querySelector('#cfStatCard .stat-tag').style.color = 'var(--green-dk)';
+    document.querySelector('#cfStatCard .stat-sub').style.color = 'var(--green-dk)';
+  } else {
+    cfEl.style.color = 'var(--red-dk)';
+    cfCard.className = 'stat-card h-100';
+    cfCard.style.cssText = 'border-radius:16px;padding:.9rem 1.05rem;background:rgba(239,68,68,.08);border:1.5px solid rgba(239,68,68,.2)';
+    document.querySelector('#cfStatCard .stat-tag').style.color = 'var(--red-dk)';
+    document.querySelector('#cfStatCard .stat-sub').style.color = 'var(--red-dk)';
+  }
+
+  // CF Badge in the cash flow section
+  const cfNetStr = (netCF >= 0 ? '+' : '') + '฿' + netCF.toLocaleString('th-TH', {minimumFractionDigits:0, maximumFractionDigits:0});
+  if (cfBadgeEl) {
+    cfBadgeEl.textContent = 'NET CASH FLOW ' + cfNetStr;
+    if (netCF >= 0) {
+      cfBadgeEl.style.background = 'rgba(34,197,94,.1)';
+      cfBadgeEl.style.color = 'var(--green-dk)';
+    } else {
+      cfBadgeEl.style.background = 'rgba(239,68,68,.1)';
+      cfBadgeEl.style.color = 'var(--red-dk)';
+    }
+  }
+}
+
+/* ================================================================
+   Charts
+   ================================================================ */
+function initCharts() {
+  // ── Assets Donut Pie ──────────────────────────────────
+  const aCtx = document.getElementById('assetsPie');
+  const aCenterEl = document.getElementById('aPieCenter');
+
+  const assetPieCenterPlugin = {
+    id: 'assetPieCenter',
+    afterDraw(chart) {
+      // clear if no active element
+      if (!chart._hoveredIdx && chart._hoveredIdx !== 0) {
+        aCenterEl.innerHTML = '';
+      }
+    }
+  };
+
+  cAssets = new Chart(aCtx, {
+    type: 'doughnut',
+    data: { labels: [], datasets: [{ data: [], backgroundColor: A_PIE_MUTED, hoverBackgroundColor: A_PIE_COLORS, borderWidth: 2, borderColor:'#fff', hoverOffset: 16 }] },
+    options: {
+      responsive: true, maintainAspectRatio: false, cutout: '62%',
+      plugins: {
+        legend: { position:'bottom', labels: { boxWidth:10, font:{size:10}, padding:8 } },
+        tooltip: { enabled: false }
+      },
+      onHover: (evt, els, chart) => {
+        if (els.length > 0) {
+          const idx = els[0].index;
+          chart._hoveredIdx = idx;
+          const lbl = chart.data.labels[idx];
+          const val = chart.data.datasets[0].data[idx];
+          const total = chart.data.datasets[0].data.reduce((a,b)=>a+b,0);
+          const pct = total > 0 ? ((val/total)*100).toFixed(1) : '0';
+          aCenterEl.innerHTML =
+            '<div class="pc-name">' + esc(lbl) + '</div>' +
+            '<div class="pc-val">' + fmt(val) + '</div>' +
+            '<div class="pc-pct">' + pct + '%</div>';
+        } else {
+          chart._hoveredIdx = null;
+          aCenterEl.innerHTML = '';
+        }
+      }
+    }
+  });
+
+  // ── Liabilities Donut Pie ─────────────────────────────
+  const lCtx = document.getElementById('liabsPie');
+  const lCenterEl = document.getElementById('lPieCenter');
+
+  cLiabs = new Chart(lCtx, {
+    type: 'doughnut',
+    data: { labels: [], datasets: [{ data: [], backgroundColor: L_PIE_MUTED, hoverBackgroundColor: L_PIE_COLORS, borderWidth: 2, borderColor:'#fff', hoverOffset: 16 }] },
+    options: {
+      responsive: true, maintainAspectRatio: false, cutout: '62%',
+      plugins: {
+        legend: { position:'bottom', labels: { boxWidth:10, font:{size:10}, padding:8 } },
+        tooltip: { enabled: false }
+      },
+      onHover: (evt, els, chart) => {
+        if (els.length > 0) {
+          const idx = els[0].index;
+          chart._hoveredIdx = idx;
+          const lbl = chart.data.labels[idx];
+          const val = chart.data.datasets[0].data[idx];
+          const total = chart.data.datasets[0].data.reduce((a,b)=>a+b,0);
+          const pct = total > 0 ? ((val/total)*100).toFixed(1) : '0';
+          lCenterEl.innerHTML =
+            '<div class="pc-name">' + esc(lbl) + '</div>' +
+            '<div class="pc-val">' + fmt(val) + '</div>' +
+            '<div class="pc-pct">' + pct + '%</div>';
+        } else {
+          chart._hoveredIdx = null;
+          lCenterEl.innerHTML = '';
+        }
+      }
+    }
+  });
+
+  // ── Horizontal Cash Flow Bar ──────────────────────────
+  cCF = new Chart(document.getElementById('cfChart'), {
+    type: 'bar',
+    data: { labels: [], datasets: [{ data: [], backgroundColor: [], borderRadius: 5, borderWidth: 0 }] },
+    options: {
+      indexAxis: 'y', responsive: true, maintainAspectRatio: false,
+      plugins: {
+        legend: { display: false },
+        tooltip: { callbacks: { label: c => ' ' + fmtCF(c.parsed.x) } }
+      },
+      scales: {
+        x: { grid: { color: '#f1f5f9' }, ticks: { font:{size:9}, callback: v => fmt(v) } },
+        y: { grid: { display:false }, ticks: { font:{size:9} } }
+      }
+    }
+  });
+
+  // ── Wealth Trend (bar + line) ─────────────────────────
+  const trendTooltipEl = document.getElementById('trendTooltip');
+
+  // Sort snapshots ASC by date for trend
+  const sortedAsc = [...snapshotData].sort((a,b) => {
+    if (a.date < b.date) return -1;
+    if (a.date > b.date) return 1;
+    return 0;
+  });
+
+  const trendLabels = sortedAsc.map(s => s.date);
+  const nwArr       = sortedAsc.map(s => s.netWorth);
+  const aArr        = sortedAsc.map(s => s.totalAssets);
+  const lArr        = sortedAsc.map(s => s.totalLiabilities);
+
+  if (trendLabels.length < 2) {
+    document.getElementById('trendEmpty').style.display = '';
+    document.getElementById('trendWrap').style.display  = 'none';
+  } else {
+    cTrend = new Chart(document.getElementById('trendChart'), {
+      type: 'bar',
+      data: {
+        labels: trendLabels,
+        datasets: [
+          { label:'ทรัพย์สิน', data: aArr,
+            backgroundColor:'rgba(34,197,94,.22)', hoverBackgroundColor:'rgba(34,197,94,.65)',
+            borderRadius:5, order:2 },
+          { label:'หนี้สิน',   data: lArr,
+            backgroundColor:'rgba(239,68,68,.18)', hoverBackgroundColor:'rgba(239,68,68,.55)',
+            borderRadius:5, order:2 },
+          { label:'Net Worth', data: nwArr, type:'line',
+            borderColor:'rgba(37,99,235,.5)', hoverBorderColor:'#2563eb',
+            backgroundColor:'rgba(37,99,235,.05)', tension:.35,
+            pointRadius:4, pointHoverRadius:6,
+            pointBackgroundColor:'rgba(37,99,235,.5)', pointHoverBackgroundColor:'#2563eb',
+            fill:true, order:1 }
+        ]
+      },
+      options: {
+        responsive: true, maintainAspectRatio: false,
+        interaction: { mode:'index', intersect:false },
+        plugins: {
+          legend: { position:'bottom', labels: { boxWidth:10, font:{size:10}, padding:8 } },
+          tooltip: {
+            enabled: false,
+            external: ctx => {
+              const tt = ctx.tooltip;
+              if (tt.opacity === 0) { trendTooltipEl.style.display = 'none'; return; }
+
+              const dataIndex = tt.dataPoints && tt.dataPoints[0] ? tt.dataPoints[0].dataIndex : -1;
+              if (dataIndex < 0 || dataIndex >= sortedAsc.length) { trendTooltipEl.style.display = 'none'; return; }
+
+              const snapData        = sortedAsc[dataIndex];
+              const currentNetWorth = snapData.netWorth;
+              const currentAssets   = snapData.totalAssets;
+              const currentLiabs    = snapData.totalLiabilities;
+
+              // Use items FROM THAT SPECIFIC SNAPSHOT (correct % calculation)
+              const assetItemsForSnap = (snapData.items || [])
+                .filter(i => i.type === 'ASSET').sort((a,b) => b.amount - a.amount).slice(0,5);
+              const liabItemsForSnap  = (snapData.items || [])
+                .filter(i => i.type === 'LIABILITY').sort((a,b) => b.amount - a.amount).slice(0,5);
+
+              // Format date as Thai locale
+              const thDate = snapData.date
+                ? new Date(snapData.date).toLocaleDateString('th-TH', {day:'numeric',month:'short',year:'numeric'})
+                : dateLabel;
+
+              let html = '<div class="tt-date"><i class="bi bi-calendar3"></i>' + esc(thDate) + '</div>';
+
+              if (assetItemsForSnap.length > 0) {
+                html += '<div class="tt-block">';
+                html += '<div class="tt-header asset"><span>ทรัพย์สิน</span><span>' + fmt(currentAssets) + '</span></div>';
+                assetItemsForSnap.forEach(it => {
+                  const dn  = esc(it.name && it.name !== it.category ? it.name : (it.category || it.name));
+                  const pct = currentAssets > 0 ? ((it.amount / currentAssets) * 100).toFixed(1) : '0';
+                  html += '<div class="tt-item"><span class="it-name">' + dn + '</span><span class="it-pct">' + pct + '%</span></div>';
                 });
+                html += '</div>';
+              }
+              if (liabItemsForSnap.length > 0) {
+                html += '<div class="tt-block">';
+                html += '<div class="tt-header liab"><span>หนี้สิน</span><span>' + fmt(currentLiabs) + '</span></div>';
+                liabItemsForSnap.forEach(it => {
+                  const dn  = esc(it.name && it.name !== it.category ? it.name : (it.category || it.name));
+                  const pct = currentLiabs > 0 ? ((it.amount / currentLiabs) * 100).toFixed(1) : '0';
+                  html += '<div class="tt-item"><span class="it-name">' + dn + '</span><span class="it-pct">' + pct + '%</span></div>';
+                });
+                html += '</div>';
+              }
+              html += '<div class="tt-nw"><span class="nw-label">ความมั่งคั่งสุทธิ:</span><span class="nw-val">' + fmt(currentNetWorth) + '</span></div>';
 
-                const netWorth = totalAssets - totalLiabilities;
+              trendTooltipEl.innerHTML = html;
+              trendTooltipEl.style.display = 'block';
 
-                // Update display using IDs
-                const totalAssetsEl = document.getElementById('totalAssetsDisplay');
-                const totalLiabilitiesEl = document.getElementById('totalLiabilitiesDisplay');
-                const netWorthEl = document.getElementById('netWorthDisplay');
-
-                if (totalAssetsEl) {
-                    totalAssetsEl.textContent = totalAssets.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
-                }
-                if (totalLiabilitiesEl) {
-                    totalLiabilitiesEl.textContent = totalLiabilities.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
-                }
-                if (netWorthEl) {
-                    netWorthEl.textContent = netWorth.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
-                    // Update color based on positive/negative
-                    if (netWorth >= 0) {
-                        netWorthEl.className = 'text-success';
-                    } else {
-                        netWorthEl.className = 'text-danger';
-                    }
-                }
+              // Position tooltip
+              const canvasRect = ctx.chart.canvas.getBoundingClientRect();
+              const wrapRect   = document.getElementById('trendWrap').getBoundingClientRect();
+              let left = tt.caretX + 12;
+              let top  = tt.caretY - 20;
+              if (left + 250 > wrapRect.width) left = tt.caretX - 250;
+              trendTooltipEl.style.left = left + 'px';
+              trendTooltipEl.style.top  = Math.max(0, top) + 'px';
             }
-        </script>
-    </th:block>
+          }
+        },
+        scales: {
+          x: { grid: { display:false }, ticks: { font:{size:9} } },
+          y: { grid: { color:'#f1f5f9' }, ticks: { font:{size:9}, callback: v => fmt(v) } }
+        }
+      }
+    });
+  }
+}
 
+function updateCharts() {
+  // ── Assets Pie ─────────────────────────────────────────
+  // Group by category
+  const aGrouped = {};
+  items.filter(it => it.type === 'ASSET' && it.amount > 0).forEach(it => {
+    const key = displayName(it);
+    aGrouped[key] = (aGrouped[key] || 0) + it.amount;
+  });
+  const aSorted = Object.entries(aGrouped).sort((a,b) => b[1] - a[1]);
+
+  const aPieWrap  = document.getElementById('aPieWrap');
+  const aPieEmpty = document.getElementById('aPieEmpty');
+  if (aSorted.length === 0) {
+    aPieWrap.style.display  = 'none';
+    aPieEmpty.style.display = '';
+  } else {
+    aPieWrap.style.display  = '';
+    aPieEmpty.style.display = 'none';
+    cAssets.data.labels              = aSorted.map(e => e[0]);
+    cAssets.data.datasets[0].data   = aSorted.map(e => e[1]);
+    cAssets.data.datasets[0].backgroundColor      = aSorted.map((_, i) => A_PIE_MUTED[i % A_PIE_MUTED.length]);
+    cAssets.data.datasets[0].hoverBackgroundColor = aSorted.map((_, i) => A_PIE_COLORS[i % A_PIE_COLORS.length]);
+    cAssets.update('none');
+  }
+
+  // ── Liabilities Pie ────────────────────────────────────
+  const lGrouped = {};
+  items.filter(it => it.type === 'LIABILITY' && it.amount > 0).forEach(it => {
+    const key = displayName(it);
+    lGrouped[key] = (lGrouped[key] || 0) + it.amount;
+  });
+  const lSorted = Object.entries(lGrouped).sort((a,b) => b[1] - a[1]);
+
+  const lPieWrap  = document.getElementById('lPieWrap');
+  const lPieEmpty = document.getElementById('lPieEmpty');
+  if (lSorted.length === 0) {
+    lPieWrap.style.display  = 'none';
+    lPieEmpty.style.display = '';
+  } else {
+    lPieWrap.style.display  = '';
+    lPieEmpty.style.display = 'none';
+    cLiabs.data.labels              = lSorted.map(e => e[0]);
+    cLiabs.data.datasets[0].data   = lSorted.map(e => e[1]);
+    cLiabs.data.datasets[0].backgroundColor      = lSorted.map((_, i) => L_PIE_MUTED[i % L_PIE_MUTED.length]);
+    cLiabs.data.datasets[0].hoverBackgroundColor = lSorted.map((_, i) => L_PIE_COLORS[i % L_PIE_COLORS.length]);
+    cLiabs.update('none');
+  }
+
+  // ── Cash Flow Horizontal Bar ───────────────────────────
+  // Sort by CF descending
+  const cfItems = items.filter(it => it.cashFlow !== 0 && it.cashFlow != null)
+    .sort((a,b) => b.cashFlow - a.cashFlow);
+
+  const cfWrap  = document.getElementById('cfWrap');
+  const cfEmpty = document.getElementById('cfEmpty');
+
+  if (cfItems.length === 0) {
+    cfWrap.style.display  = 'none';
+    cfEmpty.style.display = '';
+  } else {
+    cfWrap.style.display  = '';
+    cfEmpty.style.display = 'none';
+    // Dynamic height
+    const barH = Math.max(120, cfItems.length * 36 + 30);
+    cfWrap.style.height = barH + 'px';
+    cCF.data.labels = cfItems.map(it => displayName(it));
+    cCF.data.datasets[0].data = cfItems.map(it => it.cashFlow);
+    cCF.data.datasets[0].backgroundColor = cfItems.map(it =>
+      it.cashFlow >= 0 ? 'rgba(22,163,74,.28)' : 'rgba(239,68,68,.25)');
+    cCF.data.datasets[0].hoverBackgroundColor = cfItems.map(it =>
+      it.cashFlow >= 0 ? 'rgba(22,163,74,.85)' : 'rgba(239,68,68,.8)');
+    cCF.update('none');
+  }
+}
+
+/* ================================================================
+   History Table
+   ================================================================ */
+function renderHistory() {
+  const tbody = document.getElementById('histTbody');
+  if (!snapshotData || snapshotData.length === 0) {
+    tbody.innerHTML = '<tr><td colspan="7"><div class="nw-empty"><i class="bi bi-inbox"></i>ยังไม่มีประวัติ Snapshot</div></td></tr>';
+    cancelBulkSel();
+    return;
+  }
+
+  // Sort ASC for diff calculation
+  const sortedAsc = [...snapshotData].sort((a,b) => {
+    if (a.date < b.date) return -1;
+    if (a.date > b.date) return 1;
+    return 0;
+  });
+
+  // Calculate diffs
+  const withDiffs = sortedAsc.map((snap, i) => {
+    const prev = i > 0 ? sortedAsc[i-1] : null;
+    return {
+      ...snap,
+      netWorthDiff:    prev !== null ? snap.netWorth - prev.netWorth : null,
+      assetDiff:       prev !== null ? snap.totalAssets - prev.totalAssets : null,
+      liabilityDiff:   prev !== null ? snap.totalLiabilities - prev.totalLiabilities : null,
+    };
+  });
+
+  // Display newest first
+  const displayList = [...withDiffs].reverse();
+
+  let html = '';
+  displayList.forEach(snap => {
+    const dateStr = snap.date || '';
+    const timeStr = snap.time || '';
+    const isSel = selectedSnapIds.has(snap.id);
+
+    html += '<tr onclick="openEditSnapModal(' + snap.id + ')" style="cursor:pointer"' + (isSel ? ' class="snap-selected"' : '') + '>';
+    // Checkbox column
+    html += '<td class="hist-chk-cell" onclick="event.stopPropagation()">';
+    html += '<input type="checkbox" class="snap-row-chk" data-id="' + snap.id + '"'
+          + (isSel ? ' checked' : '')
+          + ' onclick="toggleSnapSel(' + snap.id + ',this)">';
+    html += '</td>';
+    // Date/Time column
+    html += '<td>';
+    html += '<div class="hist-date">' + esc(dateStr) + '</div>';
+    if (timeStr) html += '<div class="hist-time">' + esc(timeStr) + '</div>';
+    html += '</td>';
+
+    // Net Worth + diff
+    html += '<td class="text-end">';
+    html += '<div style="font-weight:700;color:#60a5fa">' + fmt(snap.netWorth) + '</div>';
+    html += diffBadge(snap.netWorthDiff);
+    html += '</td>';
+
+    // Total Assets + diff
+    html += '<td class="text-end">';
+    html += '<div style="font-weight:700;color:var(--green-dk)">' + fmt(snap.totalAssets) + '</div>';
+    html += diffBadge(snap.assetDiff);
+    html += '</td>';
+
+    // Total Liabilities + diff
+    html += '<td class="text-end">';
+    html += '<div style="font-weight:700;color:var(--red-dk)">' + fmt(snap.totalLiabilities) + '</div>';
+    html += diffBadge(snap.liabilityDiff);
+    html += '</td>';
+
+    // Memo
+    html += '<td style="color:var(--slate5);font-size:.77rem">' + esc(snap.name || '—') + '</td>';
+
+    // Actions
+    html += '<td onclick="event.stopPropagation()">';
+    html += '<div class="hist-acts">';
+    html += '<button type="button" class="hist-act-btn edit" onclick="openEditSnapModal(' + snap.id + ')" title="แก้ไข"><i class="bi bi-pencil"></i></button>';
+    html += '<button type="button" class="hist-act-btn del" onclick="deleteSnapshot(' + snap.id + ')" title="ลบ"><i class="bi bi-trash3"></i></button>';
+    html += '</div></td>';
+    html += '</tr>';
+  });
+
+  tbody.innerHTML = html;
+
+  // Build delete forms
+  let formHtml = '';
+  snapshotData.forEach(snap => {
+    formHtml += '<form id="delForm_' + snap.id + '" method="post" action="/assets/delete/' + snap.id + '" style="display:none">';
+    formHtml += '<input type="hidden" name="_method" value="POST">';
+    formHtml += '</form>';
+  });
+  document.getElementById('deleteForms').innerHTML = formHtml;
+}
+
+function diffBadge(diff) {
+  if (diff === null || diff === undefined) return '';
+  if (diff === 0) return '<div style="font-size:.63rem;color:#94a3b8">—</div>';
+  const icon = diff > 0 ? 'bi-arrow-up-right' : 'bi-arrow-down-right';
+  const cls  = diff > 0 ? 'diff-up' : 'diff-dn';
+  const sign = diff > 0 ? '+' : '';
+  return '<div class="' + cls + '"><i class="bi ' + icon + '"></i> ' + sign + fmt(diff) + '</div>';
+}
+
+/* ================================================================
+   Edit Snapshot Modal
+   ================================================================ */
+function openEditSnapModal(id) {
+  editSnapId = id;
+  const snap = snapshotData.find(s => String(s.id) === String(id));
+  if (!snap) return;
+
+  document.getElementById('eSmpDate').value = snap.date || todayStr();
+  document.getElementById('eSmpTime').value = snap.time || nowTimeStr();
+  document.getElementById('eSmpMemo').value = snap.name || '';
+
+  // Load editItems from server span elements
+  editItems = [];
+  const snapEl = document.querySelector('#snapshotHistory > div[data-id="' + id + '"]');
+  if (snapEl) {
+    snapEl.querySelectorAll('span').forEach(s => {
+      editItems.push({
+        id:       s.dataset.itemId  || null,
+        name:     s.dataset.name    || '',
+        category: s.dataset.category || '',
+        amount:   parseFloat(s.dataset.amount)   || 0,
+        cashFlow: parseFloat(s.dataset.cashFlow) || 0,
+        type:     s.dataset.type    || 'ASSET',
+      });
+    });
+  }
+
+  updateEditNetWorth();
+  renderEditItems();
+  snapEditModalBs.show();
+}
+
+function updateEditNetWorth() {
+  const a = editItems.filter(it => it.type === 'ASSET').reduce((s, it) => s + (it.amount||0), 0);
+  const l = editItems.filter(it => it.type === 'LIABILITY').reduce((s, it) => s + (it.amount||0), 0);
+  document.getElementById('eSmpNetWorth').textContent = fmt(a - l);
+}
+
+function renderEditItems() {
+  const aItems = editItems.filter(it => it.type === 'ASSET');
+  const lItems = editItems.filter(it => it.type === 'LIABILITY');
+  let html = '';
+
+  const itemRow = (it) => {
+    const gi  = editItems.indexOf(it);
+    const dn  = esc(it.name && it.name !== it.category ? it.name : (it.category || it.name || '—'));
+    const isA = it.type === 'ASSET';
+    const amtCls = isA ? 'amt-a' : 'amt-l';
+    return '<div class="esnap-item">'
+      + '<div><div class="name">' + dn + '</div>'
+      + (it.category && it.name !== it.category ? '<div style="font-size:.67rem;color:var(--slate5)">' + esc(it.category) + '</div>' : '')
+      + '</div>'
+      + '<div style="display:flex;align-items:center;gap:.35rem">'
+      + '<span class="' + amtCls + '">' + fmt(it.amount) + '</span>'
+      + '<button type="button" onclick="openEditItem(' + gi + ')" '
+      +   'style="border:none;background:none;padding:.12rem .25rem;cursor:pointer;color:var(--slate5);font-size:.78rem" title="แก้ไข">'
+      +   '<i class="bi bi-pencil"></i></button>'
+      + '<button type="button" onclick="delEditItem(' + gi + ')" '
+      +   'style="border:none;background:none;padding:.12rem .25rem;cursor:pointer;color:var(--red-dk);font-size:.78rem" title="ลบ">'
+      +   '<i class="bi bi-trash3"></i></button>'
+      + '</div></div>';
+  };
+
+  if (aItems.length > 0) {
+    html += '<div class="esnap-section asset">ASSETS</div>';
+    aItems.forEach(it => { html += itemRow(it); });
+  }
+  if (lItems.length > 0) {
+    html += '<div class="esnap-section liab">LIABILITIES</div>';
+    lItems.forEach(it => { html += itemRow(it); });
+  }
+  if (!html) html = '<div style="font-size:.75rem;color:var(--slate5)">ไม่มีรายการ — กด + เพื่อเพิ่ม</div>';
+  document.getElementById('eSnapItemList').innerHTML = html;
+}
+
+function openEditItem(idx) {
+  snapItemEditMode = true;
+  const it = editItems[idx];
+  openDialog(it.type, idx); // reuse item modal; idx mapped via snapItemEditMode
+}
+
+function openEditAddItem(type) {
+  snapItemEditMode = true;
+  openDialog(type, undefined); // add new item to editItems
+}
+
+function delEditItem(idx) {
+  if (!confirm('ลบรายการนี้ใช่ไหม?')) return;
+  editItems.splice(idx, 1);
+  updateEditNetWorth();
+  renderEditItems();
+}
+
+function confirmEditSnapshot() {
+  document.getElementById('eFormSnapId').value = editSnapId;
+  document.getElementById('eFormDate').value   = document.getElementById('eSmpDate').value;
+  document.getElementById('eFormTime').value   = document.getElementById('eSmpTime').value;
+  document.getElementById('eFormName').value   = document.getElementById('eSmpMemo').value.trim();
+
+  // Serialize editItems into hidden inputs
+  const c = document.getElementById('eItemsContainer');
+  let h = '';
+  editItems.forEach((it, i) => {
+    if (it.id) h += '<input type="hidden" name="items[' + i + '].id" value="' + esc(it.id) + '">';
+    h += '<input type="hidden" name="items[' + i + '].name"            value="' + esc(it.name) + '">';
+    h += '<input type="hidden" name="items[' + i + '].category"        value="' + esc(it.category) + '">';
+    h += '<input type="hidden" name="items[' + i + '].amount"          value="' + (it.amount || 0) + '">';
+    h += '<input type="hidden" name="items[' + i + '].monthlyCashFlow" value="' + (it.cashFlow || 0) + '">';
+    h += '<input type="hidden" name="items[' + i + '].type"            value="' + esc(it.type) + '">';
+  });
+  c.innerHTML = h;
+
+  snapEditModalBs.hide();
+  document.getElementById('snapEditForm').submit();
+}
+
+/* ── Multi-select bulk delete ─────────────────────── */
+let selectedSnapIds = new Set();
+
+function toggleSnapSel(id, cb) {
+  if (cb.checked) selectedSnapIds.add(id);
+  else selectedSnapIds.delete(id);
+  cb.closest('tr').classList.toggle('snap-selected', cb.checked);
+  updateBulkBar();
+  updateSelectAllChk();
+}
+
+function toggleSelectAll(cb) {
+  document.querySelectorAll('.snap-row-chk').forEach(c => {
+    c.checked = cb.checked;
+    const id = parseInt(c.dataset.id);
+    if (cb.checked) { selectedSnapIds.add(id); c.closest('tr').classList.add('snap-selected'); }
+    else { selectedSnapIds.delete(id); c.closest('tr').classList.remove('snap-selected'); }
+  });
+  updateBulkBar();
+}
+
+function updateBulkBar() {
+  const n = selectedSnapIds.size;
+  document.getElementById('bulkCount').textContent = n + ' รายการ';
+  document.getElementById('bulkBar').classList.toggle('show', n > 0);
+}
+
+function updateSelectAllChk() {
+  const allChks = document.querySelectorAll('.snap-row-chk');
+  const chkAll = document.getElementById('chkSelectAll');
+  if (!chkAll || allChks.length === 0) return;
+  const checked = [...allChks].filter(c => c.checked).length;
+  chkAll.checked = checked === allChks.length;
+  chkAll.indeterminate = checked > 0 && checked < allChks.length;
+}
+
+function cancelBulkSel() {
+  selectedSnapIds.clear();
+  document.querySelectorAll('.snap-row-chk').forEach(c => {
+    c.checked = false;
+    c.closest('tr').classList.remove('snap-selected');
+  });
+  const chkAll = document.getElementById('chkSelectAll');
+  if (chkAll) { chkAll.checked = false; chkAll.indeterminate = false; }
+  updateBulkBar();
+}
+
+function deleteSelectedSnapshots() {
+  const n = selectedSnapIds.size;
+  if (n === 0) return;
+  if (!confirm('ลบ Snapshot ที่เลือก ' + n + ' รายการใช่ไหม?\nการกระทำนี้ไม่สามารถย้อนกลับได้')) return;
+  const f = document.getElementById('bulkDeleteForm');
+  f.querySelectorAll('input[name="ids"]').forEach(i => i.remove());
+  selectedSnapIds.forEach(id => {
+    const inp = document.createElement('input');
+    inp.type = 'hidden'; inp.name = 'ids'; inp.value = id;
+    f.appendChild(inp);
+  });
+  f.submit();
+}
+
+function deleteAllSnapshots() {
+  if (snapshotData.length === 0) return;
+  if (!confirm('ลบประวัติ Snapshot ทั้งหมด ' + snapshotData.length + ' รายการใช่ไหม?\nการกระทำนี้ไม่สามารถย้อนกลับได้')) return;
+  const f = document.createElement('form');
+  f.method = 'post';
+  f.action = '/assets/delete/all';
+  document.body.appendChild(f);
+  f.submit();
+}
+
+function deleteSnapshot(id) {
+  if (!confirm('ลบ Snapshot นี้ใช่ไหม?')) return;
+  const form = document.getElementById('delForm_' + id);
+  if (form) form.submit();
+  else {
+    // Fallback: create and submit form
+    const f = document.createElement('form');
+    f.method = 'post';
+    f.action = '/assets/delete/' + id;
+    document.body.appendChild(f);
+    f.submit();
+  }
+}
+
+/* ================================================================
+   Add / Edit Item Modal
+   ================================================================ */
+function openDialog(type, editIdx) {
+  const isEdit = editIdx !== undefined && editIdx >= 0;
+  document.getElementById('mType').value = type;
+  document.getElementById('mIdx').value  = isEdit ? editIdx : -1;
+  document.getElementById('modalTitle').textContent =
+    isEdit ? (type === 'ASSET' ? 'แก้ไขทรัพย์สิน' : 'แก้ไขหนี้สิน')
+           : (type === 'ASSET' ? 'เพิ่มทรัพย์สิน' : 'เพิ่มหนี้สิน');
+
+  // CF hint text
+  const cfHint = document.getElementById('cfHint');
+  if (type === 'ASSET') {
+    cfHint.textContent = '* ระบบจะบันทึกเป็นค่าบวก (+) ให้อัตโนมัติ';
+    cfHint.style.color = 'var(--green-dk)';
+    document.getElementById('kiyAlert').className = 'kiy-alert kiy-alert-asset';
+  } else {
+    cfHint.textContent = '* ระบบจะบันทึกเป็นค่าลบ (-) ให้อัตโนมัติ';
+    cfHint.style.color = 'var(--red-dk)';
+    document.getElementById('kiyAlert').className = 'kiy-alert kiy-alert-liab';
+  }
+
+  const sel = document.getElementById('mCategory');
+  sel.innerHTML = CATS[type].map(c => '<option value="' + esc(c) + '">' + esc(c) + '</option>').join('');
+
+  if (isEdit) {
+    // Read from editItems when in snap-edit mode, else from items
+    const it = snapItemEditMode ? editItems[editIdx] : items[editIdx];
+    sel.value = it.category || CATS[type][0];
+    document.getElementById('mName').value     = (it.name !== it.category) ? it.name : '';
+    document.getElementById('mAmount').value   = it.amount || '';
+    // Always show positive in the input
+    document.getElementById('mCashFlow').value = Math.abs(it.cashFlow) || '';
+  } else {
+    sel.value = CATS[type][0];
+    document.getElementById('mName').value     = '';
+    document.getElementById('mAmount').value   = '';
+    document.getElementById('mCashFlow').value = '';
+  }
+
+  onCatChange();
+  itemModalBs.show();
+}
+
+function onCatChange() {
+  const cat  = document.getElementById('mCategory').value;
+  const hint = KIY[cat];
+  const box  = document.getElementById('kiyAlert');
+  if (hint) {
+    document.getElementById('kiyAlertText').textContent = ' ' + hint;
+    box.classList.add('show');
+  } else {
+    box.classList.remove('show');
+  }
+}
+
+function saveDialog() {
+  const type    = document.getElementById('mType').value;
+  const editIdx = parseInt(document.getElementById('mIdx').value);
+  const category = document.getElementById('mCategory').value;
+  const name     = document.getElementById('mName').value.trim() || category;
+  const amount   = parseFloat(document.getElementById('mAmount').value) || 0;
+
+  // CF logic: user always enters positive; assets store positive, liabilities store negative
+  const cfRawValue = Math.abs(parseFloat(document.getElementById('mCashFlow').value) || 0);
+  const finalCashFlow = type === 'ASSET' ? cfRawValue : -cfRawValue;
+
+  if (snapItemEditMode) {
+    // Operating on editItems (inside Edit Snapshot modal)
+    if (editIdx >= 0) {
+      editItems[editIdx] = { ...editItems[editIdx], name, category, amount, cashFlow: finalCashFlow, type };
+    } else {
+      editItems.push({ id: null, name, category, amount, cashFlow: finalCashFlow, type });
+    }
+    snapItemEditMode = false;
+    itemModalBs.hide();
+    updateEditNetWorth();
+    renderEditItems();
+    return;
+  }
+
+  if (editIdx >= 0) {
+    items[editIdx] = { ...items[editIdx], name, category, amount, cashFlow: finalCashFlow, type };
+  } else {
+    items.push({ id: null, name, category, amount, cashFlow: finalCashFlow, type });
+  }
+  itemModalBs.hide();
+  renderAll(true);
+}
+
+function delItem(idx) {
+  if (!confirm('ลบรายการนี้ใช่ไหม?')) return;
+  items.splice(idx, 1);
+  renderAll(true);
+}
+
+/* ================================================================
+   Save Snapshot Modal
+   ================================================================ */
+function openSnapModal() {
+  document.getElementById('snapModalTitle').innerHTML =
+    '<i class="bi bi-camera me-2"></i>บันทึก Snapshot รายเดือน';
+  document.getElementById('snapSaveBtnText').textContent = 'บันทึกข้อมูลปัจจุบัน';
+
+  // Default date = today, time = now
+  const dateInput = document.getElementById('smpDate');
+  const timeInput = document.getElementById('smpTime');
+  if (!dateInput.value) dateInput.value = todayStr();
+  if (!timeInput.value) timeInput.value = nowTimeStr();
+
+  // Show current net worth
+  const a = items.filter(it => it.type === 'ASSET').reduce((s, it) => s + (it.amount||0), 0);
+  const l = items.filter(it => it.type === 'LIABILITY').reduce((s, it) => s + (it.amount||0), 0);
+  document.getElementById('smpNetWorth').textContent = fmt(a - l);
+
+  // Pre-fill memo from existing snapshot name
+  const existingName = document.getElementById('hidSnapName').value;
+  if (existingName && !document.getElementById('smpMemo').value) {
+    document.getElementById('smpMemo').value = existingName;
+  }
+
+  snapModalBs.show();
+}
+
+function confirmSnapshot() {
+  const date = document.getElementById('smpDate').value;
+  const time = document.getElementById('smpTime').value;
+  const memo = document.getElementById('smpMemo').value.trim();
+
+  // Always create a NEW snapshot — never update existing
+  document.getElementById('hidSnapId').value   = '';
+  document.getElementById('hidSnapDate').value = date;
+  document.getElementById('hidSnapTime').value = time;
+  document.getElementById('hidSnapName').value = memo;
+
+  // Strip item IDs so JPA inserts fresh rows (not updates old ones)
+  items = items.map(it => ({ ...it, id: null }));
+
+  snapModalBs.hide();
+  serializeItems();
+  document.getElementById('snapshotForm').submit();
+}
+
+/* ================================================================
+   Serialize items before submit
+   ================================================================ */
+function serializeItems() {
+  const c = document.getElementById('itemsContainer');
+  let h = '';
+  items.forEach((it, i) => {
+    if (it.id) h += '<input type="hidden" name="items[' + i + '].id" value="' + esc(it.id) + '">';
+    h += '<input type="hidden" name="items[' + i + '].name"            value="' + esc(it.name) + '">';
+    h += '<input type="hidden" name="items[' + i + '].category"        value="' + esc(it.category) + '">';
+    h += '<input type="hidden" name="items[' + i + '].amount"          value="' + (it.amount || 0) + '">';
+    h += '<input type="hidden" name="items[' + i + '].monthlyCashFlow" value="' + (it.cashFlow || 0) + '">';
+    h += '<input type="hidden" name="items[' + i + '].type"            value="' + esc(it.type) + '">';
+  });
+  c.innerHTML = h;
+}
+
+/* ================================================================
+   ADVANCED VISUALIZATIONS
+   ================================================================ */
+
+// ── Category groups for Radar ──────────────────────────────────
+const RADAR_GROUPS = {
+  'เงินสด/ออมทรัพย์': ['เงินฝากออมทรัพย์','เงินฝากประจำ'],
+  'ตราสารหนี้':        ['พันธบัตรรัฐบาล','หุ้นกู้เอกชน','กองทุนรวมตราสารหนี้'],
+  'หุ้น/กองทุน':      ['กองทุนรวมหุ้น','กองทุนลดหย่อนภาษี (SSF/RMF/ThaiESG)','หุ้นไทย','หุ้นต่างประเทศ'],
+  'ทองคำ/คริปโต':     ['ทองคำ/โลหะมีค่า','คริปโตเคอเรนซี/สินทรัพย์ดิจิทัล'],
+  'อสังหาฯ/ธุรกิจ':  ['อสังหาริมทรัพย์ (ที่อยู่อาศัย)','อสังหาริมทรัพย์ (ลงทุน)','หุ้นส่วนธุรกิจ'],
+  'อื่นๆ':            ['ประกันชีวิต (มูลค่าเวนคืน)','กองทุนสำรองเลี้ยงชีพ (PVD)','กบข.','รถยนต์/ยานพาหนะ','ของสะสมมีค่า','อื่นๆ'],
+};
+const RADAR_LABELS = Object.keys(RADAR_GROUPS);
+
+// Chart references
+let cGauge = null, cRadar = null, cBubble = null, cProj = null, cCatTrend = null;
+
+// Retirement plans data
+let retirementPlans = [];
+
+/* ── Load retirement plans ─────────────────────────────────── */
+document.addEventListener('DOMContentLoaded', () => {
+  document.querySelectorAll('#retirementData > div').forEach(el => {
+    retirementPlans.push({
+      id:              el.dataset.id,
+      name:            el.dataset.name            || 'แผนเกษียณ',
+      monthlyExpense:  parseFloat(el.dataset.monthlyExpense)  || 0,
+      totalNeeded:     parseFloat(el.dataset.totalNeeded)     || 0,
+      requiredMonthly: parseFloat(el.dataset.requiredMonthly) || 0,
+    });
+  });
+  // Populate plan selector
+  const sel = document.getElementById('ffPlanSel');
+  retirementPlans.forEach(p => {
+    const opt = document.createElement('option');
+    opt.value = p.id;
+    opt.textContent = p.name + ' (เป้า: ' + fmt(p.totalNeeded) + ')';
+    sel.appendChild(opt);
+  });
+  initAdvancedCharts();
+}, { once: false }); // allow stacking with existing DOMContentLoaded
+
+/* ── Init all advanced charts ─────────────────────────────── */
+function initAdvancedCharts() {
+  initGauge();
+  initRadar();
+  initBubble();
+  initProjection();
+  initCatTrend();
+  updateFreedomBar();
+}
+
+/* ================================================================
+   1. Debt-to-Asset Ratio Gauge
+   ================================================================ */
+function initGauge() {
+  const ctx = document.getElementById('gaugeChart');
+  // Semicircle gauge: rotation=-90, circumference=180
+  // Zone data: green(30) + yellow(30) + red(40) + hidden fill(100)
+  cGauge = new Chart(ctx, {
+    type: 'doughnut',
+    data: {
+      datasets: [{
+        data: [30, 30, 40, 100],
+        backgroundColor: ['rgba(34,197,94,.7)','rgba(245,158,11,.7)','rgba(239,68,68,.7)','rgba(0,0,0,0)'],
+        borderWidth: 0,
+        circumference: 180,
+        rotation: -90,
+      },{
+        data: [0, 100],
+        backgroundColor: ['rgba(37,99,235,.85)','rgba(226,232,240,.35)'],
+        borderWidth: 0,
+        circumference: 180,
+        rotation: -90,
+      }]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false, cutout: '68%',
+      plugins: { legend: { display: false }, tooltip: { enabled: false } },
+    }
+  });
+  updateGauge();
+}
+
+function updateGauge() {
+  if (!cGauge) return;
+  const a = items.filter(it => it.type === 'ASSET').reduce((s, it) => s + (it.amount || 0), 0);
+  const l = items.filter(it => it.type === 'LIABILITY').reduce((s, it) => s + (it.amount || 0), 0);
+  const ratio = a > 0 ? Math.min((l / a) * 100, 100) : (l > 0 ? 100 : 0);
+
+  // Update needle dataset (ratio%, remaining%)
+  cGauge.data.datasets[1].data = [ratio, 100 - ratio];
+  cGauge.update('none');
+
+  // Text
+  document.getElementById('gaugeRatioPct').textContent = ratio.toFixed(1) + '%';
+  let label, color, tip;
+  if (ratio < 30) {
+    label = 'HEALTHY'; color = '#22c55e';
+    tip = '✅ สุขภาพการเงินดี หนี้สินอยู่ในระดับปลอดภัย';
+  } else if (ratio < 60) {
+    label = 'WARNING'; color = '#f59e0b';
+    tip = '⚠️ หนี้สินเริ่มสูง ควรเร่งชำระและลดการก่อหนี้ใหม่';
+  } else {
+    label = 'DANGER'; color = '#ef4444';
+    tip = '🚨 หนี้สินสูงเกินไป ต้องปรับโครงสร้างการเงินโดยด่วน';
+  }
+  document.getElementById('gaugeLabel').textContent   = label;
+  document.getElementById('gaugeRatioPct').style.color = color;
+  document.getElementById('gaugeTip').textContent     = tip;
+}
+
+/* ================================================================
+   2. Financial Freedom Progress Bar
+   ================================================================ */
+function updateFreedomBar() {
+  const totalPassive = items.filter(it => it.type === 'ASSET').reduce((s, it) => s + (it.cashFlow || 0), 0);
+  const netWorth     = items.filter(it => it.type === 'ASSET').reduce((s, it) => s + (it.amount || 0), 0)
+                     - items.filter(it => it.type === 'LIABILITY').reduce((s, it) => s + (it.amount || 0), 0);
+
+  const selVal = document.getElementById('ffPlanSel').value;
+  const plan   = retirementPlans.find(p => String(p.id) === selVal);
+
+  // Bar 1: Passive Income progress
+  const monthlyTarget = plan ? plan.monthlyExpense : 0;
+  const incomePct     = monthlyTarget > 0 ? Math.min((totalPassive / monthlyTarget) * 100, 100) : 0;
+  document.getElementById('ffIncomeLabel').textContent  = (totalPassive >= 0 ? '+' : '') + fmt(totalPassive) + '/เดือน';
+  document.getElementById('ffIncomeBar').style.width    = incomePct.toFixed(1) + '%';
+  document.getElementById('ffIncomePct').textContent    = incomePct.toFixed(1) + '%';
+  document.getElementById('ffExpenseTarget').textContent = plan ? 'เป้า: ' + fmt(monthlyTarget) + '/เดือน' : 'เป้า: เลือกแผนเกษียณ';
+
+  // Bar 2: Net Worth progress
+  const nwTarget = plan ? plan.totalNeeded : 0;
+  const nwPct    = nwTarget > 0 ? Math.min((netWorth / nwTarget) * 100, 100) : 0;
+  document.getElementById('ffNwLabel').textContent   = fmt(netWorth);
+  document.getElementById('ffNwBar').style.width     = nwPct.toFixed(1) + '%';
+  document.getElementById('ffNwPct').textContent     = nwPct.toFixed(1) + '%';
+  document.getElementById('ffNwTarget').textContent  = plan ? 'เป้า: ' + fmt(nwTarget) : 'เป้า: เลือกแผนเกษียณ';
+}
+
+/* ================================================================
+   3. Asset Allocation Radar
+   ================================================================ */
+function initRadar() {
+  cRadar = new Chart(document.getElementById('radarChart'), {
+    type: 'radar',
+    data: {
+      labels: RADAR_LABELS,
+      datasets: [{
+        label: 'พอร์ตของคุณ',
+        data: new Array(RADAR_LABELS.length).fill(0),
+        backgroundColor: 'rgba(37,99,235,.15)',
+        borderColor: 'rgba(37,99,235,.7)',
+        pointBackgroundColor: '#2563eb',
+        pointRadius: 4,
+        borderWidth: 2,
+      }]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      plugins: { legend: { display: false }, tooltip: { callbacks: { label: c => ' ' + fmt(c.raw) } } },
+      scales: {
+        r: {
+          beginAtZero: true,
+          ticks: { display: false },
+          grid:  { color: 'rgba(100,116,139,.15)' },
+          pointLabels: { font: { size: 10 }, color: '#475569' },
+        }
+      }
+    }
+  });
+  updateRadar();
+}
+
+function updateRadar() {
+  if (!cRadar) return;
+  const vals = RADAR_LABELS.map(label => {
+    const cats = RADAR_GROUPS[label];
+    return items.filter(it => it.type === 'ASSET' && cats.includes(it.category))
+                .reduce((s, it) => s + (it.amount || 0), 0);
+  });
+  cRadar.data.datasets[0].data = vals;
+  cRadar.update('none');
+}
+
+/* ================================================================
+   4. Kiyosaki Quadrant Bubble Chart
+   ================================================================ */
+function initBubble() {
+  cBubble = new Chart(document.getElementById('bubbleChart'), {
+    type: 'bubble',
+    data: { datasets: [] },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      plugins: {
+        legend: { display: false },
+        tooltip: {
+          callbacks: {
+            label: c => {
+              const d = c.raw;
+              return ' ' + esc(d.label || '') + '  ฿' + (d.x || 0).toLocaleString('th-TH') + '  CF: ' + fmtCF(d.cf);
+            }
+          }
+        }
+      },
+      scales: {
+        x: {
+          title: { display: true, text: 'มูลค่า (฿)', font: { size: 9 }, color: '#94a3b8' },
+          ticks: { font: { size: 8 }, callback: v => '฿' + (v >= 1e6 ? (v/1e6).toFixed(1)+'M' : v >= 1e3 ? (v/1e3).toFixed(0)+'K' : v) },
+          grid: { color: 'rgba(226,232,240,.6)' }
+        },
+        y: {
+          title: { display: true, text: 'Cash Flow/เดือน', font: { size: 9 }, color: '#94a3b8' },
+          ticks: { font: { size: 8 }, callback: v => fmtCF(v) },
+          grid: { color: 'rgba(226,232,240,.6)' }
+        }
+      }
+    }
+  });
+  updateBubble();
+}
+
+function updateBubble() {
+  if (!cBubble) return;
+  const maxAmt = Math.max(...items.map(it => it.amount || 0), 1);
+  const datasets = items
+    .filter(it => (it.amount || 0) > 0)
+    .map(it => ({
+      label: displayName(it),
+      data: [{
+        x: it.amount,
+        y: it.cashFlow || 0,
+        r: Math.max(6, Math.sqrt((it.amount / maxAmt)) * 22),
+        label: displayName(it),
+        cf: it.cashFlow || 0,
+      }],
+      backgroundColor: it.type === 'ASSET' ? 'rgba(34,197,94,.4)' : 'rgba(239,68,68,.4)',
+      hoverBackgroundColor: it.type === 'ASSET' ? 'rgba(34,197,94,.85)' : 'rgba(239,68,68,.85)',
+      borderColor: it.type === 'ASSET' ? '#16a34a' : '#dc2626',
+      borderWidth: 1.5,
+    }));
+  cBubble.data.datasets = datasets;
+  cBubble.update('none');
+}
+
+/* ================================================================
+   5. Net Worth Growth Projection
+   ================================================================ */
+function initProjection() {
+  const sortedAscProj = [...snapshotData].sort((a, b) => a.date < b.date ? -1 : 1);
+  if (sortedAscProj.length < 2) {
+    document.getElementById('projEmpty').style.display = '';
+    document.getElementById('projWrap').style.display  = 'none';
+    return;
+  }
+
+  // Calculate CAGR per month
+  const first = sortedAscProj[0];
+  const last  = sortedAscProj[sortedAscProj.length - 1];
+  const months = Math.max(1, Math.round((new Date(last.date) - new Date(first.date)) / (1000 * 60 * 60 * 24 * 30)));
+  const monthlyGrowth = last.netWorth > 0 && first.netWorth > 0
+    ? Math.pow(last.netWorth / first.netWorth, 1 / months) - 1
+    : 0.01;
+
+  const histLabels = sortedAscProj.map(s => s.date);
+  const histData   = sortedAscProj.map(s => s.netWorth);
+
+  // Project 36 months ahead
+  const projLabels = [], projData = [];
+  const lastDate = new Date(last.date);
+  for (let m = 1; m <= 36; m++) {
+    const d = new Date(lastDate);
+    d.setMonth(d.getMonth() + m);
+    projLabels.push(d.toISOString().split('T')[0]);
+    projData.push(Math.round(last.netWorth * Math.pow(1 + monthlyGrowth, m)));
+  }
+
+  const allLabels = [...histLabels, ...projLabels];
+  const histFull  = [...histData,   ...new Array(36).fill(null)];
+  const projFull  = [...new Array(histData.length - 1).fill(null), last.netWorth, ...projData];
+
+  cProj = new Chart(document.getElementById('projChart'), {
+    type: 'line',
+    data: {
+      labels: allLabels,
+      datasets: [
+        {
+          label: 'ข้อมูลจริง',
+          data: histFull,
+          borderColor: '#2563eb', backgroundColor: 'rgba(37,99,235,.08)',
+          borderWidth: 2.5, pointRadius: 4, pointBackgroundColor: '#2563eb',
+          fill: true, tension: .3, spanGaps: false,
+        },
+        {
+          label: 'ฉายอนาคต',
+          data: projFull,
+          borderColor: '#f59e0b', backgroundColor: 'rgba(245,158,11,.06)',
+          borderWidth: 2, borderDash: [6, 4], pointRadius: 2, pointBackgroundColor: '#f59e0b',
+          fill: true, tension: .3, spanGaps: false,
+        }
+      ]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      plugins: {
+        legend: { position: 'bottom', labels: { boxWidth: 10, font: { size: 10 }, padding: 8 } },
+        tooltip: { callbacks: { label: c => ' ' + fmt(c.parsed.y) } }
+      },
+      scales: {
+        x: { grid: { display: false }, ticks: { font: { size: 8 }, maxTicksLimit: 8 } },
+        y: { grid: { color: '#f1f5f9' }, ticks: { font: { size: 8 }, callback: v => fmt(v) } }
+      }
+    }
+  });
+}
+
+/* ================================================================
+   6. Category Trend Over Time (Multi-line)
+   ================================================================ */
+function initCatTrend() {
+  const sortedAscCat = [...snapshotData].sort((a, b) => a.date < b.date ? -1 : 1);
+  if (sortedAscCat.length < 2) {
+    document.getElementById('catTrendEmpty').style.display = '';
+    document.getElementById('catTrendWrap').style.display  = 'none';
+    return;
+  }
+
+  const labels = sortedAscCat.map(s => s.date);
+
+  // Gather all categories that appear across snapshots
+  const catTotals = {};
+  sortedAscCat.forEach(snap => {
+    RADAR_LABELS.forEach(grpLabel => {
+      const cats = RADAR_GROUPS[grpLabel];
+      const total = (snap.items || []).filter(it => it.type === 'ASSET' && cats.includes(it.category))
+                                      .reduce((s, it) => s + (it.amount || 0), 0);
+      if (!catTotals[grpLabel]) catTotals[grpLabel] = [];
+      catTotals[grpLabel].push(total);
+    });
+  });
+
+  // Filter to groups that have at least 1 non-zero value
+  const CAT_COLORS = ['#2563eb','#22c55e','#f59e0b','#8b5cf6','#ef4444','#06b6d4'];
+  const datasets = Object.entries(catTotals)
+    .filter(([, vals]) => vals.some(v => v > 0))
+    .map(([label, vals], i) => ({
+      label,
+      data: vals,
+      borderColor: CAT_COLORS[i % CAT_COLORS.length],
+      backgroundColor: CAT_COLORS[i % CAT_COLORS.length] + '18',
+      borderWidth: 2, pointRadius: 3,
+      fill: false, tension: .3,
+    }));
+
+  cCatTrend = new Chart(document.getElementById('catTrendChart'), {
+    type: 'line',
+    data: { labels, datasets },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      plugins: {
+        legend: { position: 'bottom', labels: { boxWidth: 10, font: { size: 10 }, padding: 6 } },
+        tooltip: { callbacks: { label: c => ' ' + c.dataset.label + ': ' + fmt(c.parsed.y) } }
+      },
+      scales: {
+        x: { grid: { display: false }, ticks: { font: { size: 8 }, maxTicksLimit: 8 } },
+        y: { grid: { color: '#f1f5f9' }, ticks: { font: { size: 8 }, callback: v => fmt(v) } }
+      }
+    }
+  });
+}
+
+/* ── Hook advanced chart updates into renderAll ─────────────── */
+const _origUpdateStats = updateStats;
+updateStats = function() {
+  _origUpdateStats();
+  updateGauge();
+  updateRadar();
+  updateBubble();
+  updateFreedomBar();
+};
+</script>
+</th:block>
 </body>
-
 </html>

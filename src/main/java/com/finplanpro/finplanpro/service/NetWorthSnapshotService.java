@@ -2,6 +2,7 @@ package com.finplanpro.finplanpro.service;
 
 import com.finplanpro.finplanpro.entity.NetWorthSnapshot;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -17,4 +18,8 @@ public interface NetWorthSnapshotService {
     void deleteAllByUser();
 
     void seedDefaultItems(NetWorthSnapshot snapshot);
+
+    void updateMeta(Long id, LocalDate date, String time, String name);
+
+    void deleteByIds(java.util.List<Long> ids);
 }

@@ -24,7 +24,12 @@ public class NetWorthItem {
 
     private String name;
 
+    private String category;
+
     private BigDecimal amount;
+
+    @Column(name = "monthly_cash_flow")
+    private BigDecimal monthlyCashFlow;
 
     @Enumerated(EnumType.STRING)
     private ItemType type;
@@ -36,6 +41,11 @@ public class NetWorthItem {
     public NetWorthItem(String name, ItemType type) {
         this.name = name;
         this.type = type;
-        // amount remains null by default
+    }
+
+    public NetWorthItem(String name, String category, ItemType type) {
+        this.name = name;
+        this.category = category;
+        this.type = type;
     }
 }
