@@ -9,6 +9,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -45,36 +46,32 @@ public class NetWorthSnapshotServiceImpl implements NetWorthSnapshotService {
     @Override
     public void seedDefaultItems(NetWorthSnapshot snapshot) {
         // Assets
-        snapshot.addItem(new com.finplanpro.finplanpro.entity.NetWorthItem("เงินสด",
-                com.finplanpro.finplanpro.entity.NetWorthItem.ItemType.ASSET));
-        snapshot.addItem(new com.finplanpro.finplanpro.entity.NetWorthItem("ตราสารหนี้/พันธบัตร/หุ้นกู้",
-                com.finplanpro.finplanpro.entity.NetWorthItem.ItemType.ASSET));
-        snapshot.addItem(new com.finplanpro.finplanpro.entity.NetWorthItem("กองทุนสำรองเลี้ยงชีพ RMF/LTF",
-                com.finplanpro.finplanpro.entity.NetWorthItem.ItemType.ASSET));
-        snapshot.addItem(new com.finplanpro.finplanpro.entity.NetWorthItem("กองทุนหุ้น",
-                com.finplanpro.finplanpro.entity.NetWorthItem.ItemType.ASSET));
-        snapshot.addItem(new com.finplanpro.finplanpro.entity.NetWorthItem("หุ้นรายตัว",
-                com.finplanpro.finplanpro.entity.NetWorthItem.ItemType.ASSET));
-        snapshot.addItem(new com.finplanpro.finplanpro.entity.NetWorthItem("ทองคำ",
-                com.finplanpro.finplanpro.entity.NetWorthItem.ItemType.ASSET));
-        snapshot.addItem(new com.finplanpro.finplanpro.entity.NetWorthItem("บิตคอย",
-                com.finplanpro.finplanpro.entity.NetWorthItem.ItemType.ASSET));
+        snapshot.addItem(new com.finplanpro.finplanpro.entity.NetWorthItem(
+                "เงินฝากออมทรัพย์", "เงินฝากออมทรัพย์", com.finplanpro.finplanpro.entity.NetWorthItem.ItemType.ASSET));
+        snapshot.addItem(new com.finplanpro.finplanpro.entity.NetWorthItem(
+                "พันธบัตรรัฐบาล", "พันธบัตรรัฐบาล", com.finplanpro.finplanpro.entity.NetWorthItem.ItemType.ASSET));
+        snapshot.addItem(new com.finplanpro.finplanpro.entity.NetWorthItem(
+                "กองทุนลดหย่อนภาษี (SSF/RMF/ThaiESG)", "กองทุนลดหย่อนภาษี (SSF/RMF/ThaiESG)", com.finplanpro.finplanpro.entity.NetWorthItem.ItemType.ASSET));
+        snapshot.addItem(new com.finplanpro.finplanpro.entity.NetWorthItem(
+                "กองทุนรวมหุ้น", "กองทุนรวมหุ้น", com.finplanpro.finplanpro.entity.NetWorthItem.ItemType.ASSET));
+        snapshot.addItem(new com.finplanpro.finplanpro.entity.NetWorthItem(
+                "หุ้นไทย", "หุ้นไทย", com.finplanpro.finplanpro.entity.NetWorthItem.ItemType.ASSET));
+        snapshot.addItem(new com.finplanpro.finplanpro.entity.NetWorthItem(
+                "ทองคำ/โลหะมีค่า", "ทองคำ/โลหะมีค่า", com.finplanpro.finplanpro.entity.NetWorthItem.ItemType.ASSET));
+        snapshot.addItem(new com.finplanpro.finplanpro.entity.NetWorthItem(
+                "คริปโตเคอเรนซี/สินทรัพย์ดิจิทัล", "คริปโตเคอเรนซี/สินทรัพย์ดิจิทัล", com.finplanpro.finplanpro.entity.NetWorthItem.ItemType.ASSET));
 
         // Liabilities
-        snapshot.addItem(new com.finplanpro.finplanpro.entity.NetWorthItem("บัตรเครดิต",
-                com.finplanpro.finplanpro.entity.NetWorthItem.ItemType.LIABILITY));
-        snapshot.addItem(new com.finplanpro.finplanpro.entity.NetWorthItem("บัตรกดเงินสด",
-                com.finplanpro.finplanpro.entity.NetWorthItem.ItemType.LIABILITY));
-        snapshot.addItem(new com.finplanpro.finplanpro.entity.NetWorthItem("สินเชื่อส่วนบุคคล",
-                com.finplanpro.finplanpro.entity.NetWorthItem.ItemType.LIABILITY));
-        snapshot.addItem(new com.finplanpro.finplanpro.entity.NetWorthItem("ผ่อนสินค้า",
-                com.finplanpro.finplanpro.entity.NetWorthItem.ItemType.LIABILITY));
-        snapshot.addItem(new com.finplanpro.finplanpro.entity.NetWorthItem("หนี้นอกระบบ",
-                com.finplanpro.finplanpro.entity.NetWorthItem.ItemType.LIABILITY));
-        snapshot.addItem(new com.finplanpro.finplanpro.entity.NetWorthItem("กู้ซื้อบ้าน",
-                com.finplanpro.finplanpro.entity.NetWorthItem.ItemType.LIABILITY));
-        snapshot.addItem(new com.finplanpro.finplanpro.entity.NetWorthItem("กู้ซื้อรถ",
-                com.finplanpro.finplanpro.entity.NetWorthItem.ItemType.LIABILITY));
+        snapshot.addItem(new com.finplanpro.finplanpro.entity.NetWorthItem(
+                "บัตรเครดิต", "บัตรเครดิต", com.finplanpro.finplanpro.entity.NetWorthItem.ItemType.LIABILITY));
+        snapshot.addItem(new com.finplanpro.finplanpro.entity.NetWorthItem(
+                "สินเชื่อส่วนบุคคล", "สินเชื่อส่วนบุคคล", com.finplanpro.finplanpro.entity.NetWorthItem.ItemType.LIABILITY));
+        snapshot.addItem(new com.finplanpro.finplanpro.entity.NetWorthItem(
+                "หนี้ยืมบุคคล", "หนี้ยืมบุคคล", com.finplanpro.finplanpro.entity.NetWorthItem.ItemType.LIABILITY));
+        snapshot.addItem(new com.finplanpro.finplanpro.entity.NetWorthItem(
+                "สินเชื่อบ้าน", "สินเชื่อบ้าน", com.finplanpro.finplanpro.entity.NetWorthItem.ItemType.LIABILITY));
+        snapshot.addItem(new com.finplanpro.finplanpro.entity.NetWorthItem(
+                "สินเชื่อรถยนต์", "สินเชื่อรถยนต์", com.finplanpro.finplanpro.entity.NetWorthItem.ItemType.LIABILITY));
     }
 
     @Override
@@ -105,6 +102,32 @@ public class NetWorthSnapshotServiceImpl implements NetWorthSnapshotService {
     public void deleteAllByUser() {
         User user = getCurrentUser();
         snapshotRepository.deleteByUser(user);
+    }
+
+    @Override
+    @Transactional
+    public void updateMeta(Long id, LocalDate date, String time, String name) {
+        User user = getCurrentUser();
+        NetWorthSnapshot snap = snapshotRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Snapshot not found"));
+        if (!snap.getUser().equals(user)) {
+            throw new SecurityException("Unauthorized");
+        }
+        snap.setSnapshotDate(date);
+        snap.setSnapshotTime(time);
+        snap.setSnapshotName(name);
+        snapshotRepository.save(snap);
+    }
+
+    @Override
+    @Transactional
+    public void deleteByIds(java.util.List<Long> ids) {
+        User user = getCurrentUser();
+        ids.forEach(id -> snapshotRepository.findById(id).ifPresent(snap -> {
+            if (snap.getUser().equals(user)) {
+                snapshotRepository.deleteById(id);
+            }
+        }));
     }
 
     private User getCurrentUser() {

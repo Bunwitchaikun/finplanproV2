@@ -2,13 +2,17 @@ package com.finplanpro.finplanpro.controller;
 
 import com.finplanpro.finplanpro.entity.NetWorthSnapshot;
 import com.finplanpro.finplanpro.service.NetWorthSnapshotService;
+import com.finplanpro.finplanpro.service.RetirementBasicService;
 import jakarta.validation.Valid;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.time.LocalDate;
+import java.util.List;
 import java.util.Optional;
 
 @Controller
@@ -16,19 +20,21 @@ import java.util.Optional;
 public class NetWorthController {
 
     private final NetWorthSnapshotService snapshotService;
+    private final RetirementBasicService retirementService;
 
-    public NetWorthController(NetWorthSnapshotService snapshotService) {
+    public NetWorthController(NetWorthSnapshotService snapshotService,
+                              RetirementBasicService retirementService) {
         this.snapshotService = snapshotService;
+        this.retirementService = retirementService;
     }
 
     @GetMapping
     public String showForm(Model model) {
         if (!model.containsAttribute("snapshot")) {
-            NetWorthSnapshot snapshot = new NetWorthSnapshot();
-            // Seed default items for the view
-            snapshotService.seedDefaultItems(snapshot);
-            model.addAttribute("snapshot", snapshot);
+            model.addAttribute("snapshot", new NetWorthSnapshot());
         }
+        model.addAttribute("userSnapshots", snapshotService.findSnapshotsByUser());
+        model.addAttribute("retirementPlans", retirementService.findPlansByUser());
         model.addAttribute("activeMenu", "assets");
         return "assets/form";
     }
@@ -39,10 +45,9 @@ public class NetWorthController {
         if (result.hasErrors()) {
             return "assets/form";
         }
-        snapshotService.save(snapshot);
-        redirectAttributes.addFlashAttribute("successMessage",
-                "Snapshot '" + snapshot.getSnapshotName() + "' saved successfully!");
-        return "redirect:/assets/list";
+        NetWorthSnapshot saved = snapshotService.save(snapshot);
+        redirectAttributes.addFlashAttribute("successMessage", "บันทึก Snapshot สำเร็จ!");
+        return "redirect:/assets/edit/" + saved.getId();
     }
 
     @GetMapping("/list")
@@ -60,8 +65,25 @@ public class NetWorthController {
             return "redirect:/assets/list";
         }
         model.addAttribute("snapshot", snapshotOpt.get());
+        model.addAttribute("userSnapshots", snapshotService.findSnapshotsByUser());
+        model.addAttribute("retirementPlans", retirementService.findPlansByUser());
         model.addAttribute("activeMenu", "assets");
         return "assets/form";
+    }
+
+    @PostMapping("/edit/{id}/meta")
+    public String updateMeta(@PathVariable Long id,
+                             @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate snapshotDate,
+                             @RequestParam(required = false) String snapshotTime,
+                             @RequestParam(required = false) String snapshotName,
+                             RedirectAttributes redirectAttributes) {
+        try {
+            snapshotService.updateMeta(id, snapshotDate, snapshotTime, snapshotName);
+            redirectAttributes.addFlashAttribute("successMessage", "อัปเดต Snapshot สำเร็จ!");
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute("errorMessage", "เกิดข้อผิดพลาด: " + e.getMessage());
+        }
+        return "redirect:/assets";
     }
 
     @PostMapping("/delete/{id}")
@@ -76,7 +98,18 @@ public class NetWorthController {
             e.printStackTrace();
             redirectAttributes.addFlashAttribute("errorMessage", "Error deleting snapshot.");
         }
-        return "redirect:/assets/list";
+        return "redirect:/assets";
+    }
+
+    @PostMapping("/delete/bulk")
+    public String deleteBulk(@RequestParam List<Long> ids, RedirectAttributes redirectAttributes) {
+        try {
+            snapshotService.deleteByIds(ids);
+            redirectAttributes.addFlashAttribute("successMessage", "ลบ " + ids.size() + " Snapshot สำเร็จ!");
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute("errorMessage", "เกิดข้อผิดพลาด: " + e.getMessage());
+        }
+        return "redirect:/assets";
     }
 
     @PostMapping("/delete/all")
@@ -91,6 +124,6 @@ public class NetWorthController {
             e.printStackTrace();
             redirectAttributes.addFlashAttribute("errorMessage", "Error deleting all snapshots.");
         }
-        return "redirect:/assets/list";
+        return "redirect:/assets";
     }
 }
