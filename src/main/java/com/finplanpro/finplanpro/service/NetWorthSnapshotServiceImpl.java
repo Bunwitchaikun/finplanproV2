@@ -1,5 +1,6 @@
 package com.finplanpro.finplanpro.service;
 
+import com.finplanpro.finplanpro.entity.NetWorthItem;
 import com.finplanpro.finplanpro.entity.NetWorthSnapshot;
 import com.finplanpro.finplanpro.entity.User;
 import com.finplanpro.finplanpro.repository.NetWorthSnapshotRepository;
@@ -9,8 +10,11 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @Service
@@ -77,7 +81,49 @@ public class NetWorthSnapshotServiceImpl implements NetWorthSnapshotService {
     @Override
     public List<NetWorthSnapshot> findSnapshotsByUser() {
         User user = getCurrentUser();
-        return snapshotRepository.findByUserOrderBySnapshotDateDesc(user);
+        return snapshotRepository.findByUserAndDraftFalseOrderBySnapshotDateDesc(user);
+    }
+
+    @Override
+    @Transactional
+    public void saveDraft(List<Map<String, Object>> items) {
+        User user = getCurrentUser();
+        NetWorthSnapshot draft = snapshotRepository.findByUserAndDraftTrue(user)
+                .orElseGet(() -> {
+                    NetWorthSnapshot d = new NetWorthSnapshot();
+                    d.setUser(user);
+                    d.setDraft(true);
+                    d.setSnapshotDate(LocalDate.now());
+                    return d;
+                });
+        draft.getItems().clear();
+        if (items != null) {
+            for (Map<String, Object> m : items) {
+                NetWorthItem it = new NetWorthItem();
+                it.setName(String.valueOf(m.getOrDefault("name", "")));
+                it.setCategory(String.valueOf(m.getOrDefault("category", "")));
+                Object amt = m.get("amount");
+                it.setAmount(amt != null ? new BigDecimal(amt.toString()) : BigDecimal.ZERO);
+                Object cf = m.get("cashFlow");
+                it.setMonthlyCashFlow(cf != null ? new BigDecimal(cf.toString()) : BigDecimal.ZERO);
+                String typeStr = String.valueOf(m.getOrDefault("type", "ASSET"));
+                it.setType("LIABILITY".equals(typeStr) ? NetWorthItem.ItemType.LIABILITY : NetWorthItem.ItemType.ASSET);
+                draft.addItem(it);
+            }
+        }
+        snapshotRepository.save(draft);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<NetWorthItem> getDraftItems() {
+        User user = getCurrentUser();
+        return snapshotRepository.findByUserAndDraftTrue(user)
+                .map(snap -> {
+                    List<NetWorthItem> list = new java.util.ArrayList<>(snap.getItems());
+                    return list;
+                })
+                .orElse(Collections.emptyList());
     }
 
     @Override

@@ -1,9 +1,11 @@
 package com.finplanpro.finplanpro.service;
 
+import com.finplanpro.finplanpro.entity.NetWorthItem;
 import com.finplanpro.finplanpro.entity.NetWorthSnapshot;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 public interface NetWorthSnapshotService {
@@ -21,5 +23,11 @@ public interface NetWorthSnapshotService {
 
     void updateMeta(Long id, LocalDate date, String time, String name);
 
-    void deleteByIds(java.util.List<Long> ids);
+    void deleteByIds(List<Long> ids);
+
+    /** Save current working items to the user's draft snapshot (DB-persisted across logins). */
+    void saveDraft(List<Map<String, Object>> items);
+
+    /** Return items from the user's draft snapshot, or empty list if none. */
+    List<NetWorthItem> getDraftItems();
 }

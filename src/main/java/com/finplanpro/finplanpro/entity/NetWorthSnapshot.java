@@ -31,6 +31,9 @@ public class NetWorthSnapshot {
     @Column(name = "snapshot_time")
     private String snapshotTime;
 
+    @Column(name = "is_draft", nullable = false)
+    private boolean draft = false;
+
     @OneToMany(mappedBy = "snapshot", cascade = CascadeType.ALL, orphanRemoval = true)
     private java.util.List<NetWorthItem> items = new java.util.ArrayList<>();
 

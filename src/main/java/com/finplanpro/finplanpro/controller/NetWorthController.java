@@ -5,6 +5,7 @@ import com.finplanpro.finplanpro.service.NetWorthSnapshotService;
 import com.finplanpro.finplanpro.service.RetirementBasicService;
 import jakarta.validation.Valid;
 import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -13,6 +14,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @Controller
@@ -34,9 +36,21 @@ public class NetWorthController {
             model.addAttribute("snapshot", new NetWorthSnapshot());
         }
         model.addAttribute("userSnapshots", snapshotService.findSnapshotsByUser());
+        model.addAttribute("draftItems", snapshotService.getDraftItems());
         model.addAttribute("retirementPlans", retirementService.findPlansByUser());
         model.addAttribute("activeMenu", "assets");
         return "assets/form";
+    }
+
+    @PostMapping("/draft")
+    @ResponseBody
+    public ResponseEntity<Void> saveDraft(@RequestBody List<Map<String, Object>> items) {
+        try {
+            snapshotService.saveDraft(items);
+        } catch (Exception e) {
+            // silently ignore — draft save is best-effort
+        }
+        return ResponseEntity.ok().build();
     }
 
     @PostMapping
@@ -66,6 +80,7 @@ public class NetWorthController {
         }
         model.addAttribute("snapshot", snapshotOpt.get());
         model.addAttribute("userSnapshots", snapshotService.findSnapshotsByUser());
+        model.addAttribute("draftItems", snapshotService.getDraftItems());
         model.addAttribute("retirementPlans", retirementService.findPlansByUser());
         model.addAttribute("activeMenu", "assets");
         return "assets/form";

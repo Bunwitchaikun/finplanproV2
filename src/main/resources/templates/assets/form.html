@@ -49,35 +49,35 @@ body,.main-content{height:auto!important;overflow:visible!important}
 .nw-btn-save:hover{opacity:.9;color:#fff}
 
 /* ── Stat cards ─────────────────────────────────────── */
-.stat-card{border-radius:16px;padding:.9rem 1.05rem}
+.stat-card{border-radius:16px;padding:1.04rem 1.21rem}
 .stat-blue{
-  background:linear-gradient(135deg,var(--blue-dark),var(--blue) 55%,var(--sky));
-  color:#fff;box-shadow:0 6px 20px rgba(37,99,235,.28)}
+  background:linear-gradient(135deg,#2563eb,#3b82f6 55%,#38bdf8);
+  color:#fff;box-shadow:0 6px 20px rgba(37,99,235,.18)}
 .stat-green{background:var(--green-light);border:1.5px solid rgba(34,197,94,.22)}
 .stat-red  {background:var(--red-light);  border:1.5px solid rgba(239,68,68,.2)}
 .stat-red2 {background:rgba(239,68,68,.08);border:1.5px solid rgba(239,68,68,.2)}
-.stat-tag {font-size:.62rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;opacity:.8;margin-bottom:.2rem}
-.stat-val {font-size:1.38rem;font-weight:900;line-height:1.15}
-.stat-sub {font-size:.64rem;opacity:.68;margin-top:.15rem;line-height:1.4}
+.stat-tag {font-size:.71rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;opacity:.8;margin-bottom:.23rem}
+.stat-val {font-size:1.59rem;font-weight:900;line-height:1.15}
+.stat-sub {font-size:.74rem;opacity:.68;margin-top:.17rem;line-height:1.4}
 
 /* ── Section cards ──────────────────────────────────── */
 .nw-card{
   background:var(--card-bg);border-radius:var(--card-radius);
-  box-shadow:var(--card-shadow);padding:1rem 1.15rem;border:none}
-.sec-title{font-size:.93rem;font-weight:700;color:var(--slate8)}
+  box-shadow:var(--card-shadow);padding:1.15rem 1.32rem;border:none}
+.sec-title{font-size:1.07rem;font-weight:700;color:var(--slate8)}
 
 /* ── Asset/Liability panel headers ─────────────────── */
 .panel-header-asset{
   background:rgba(34,197,94,.07);border-radius:10px 10px 0 0;
-  padding:.55rem .8rem;margin:-1rem -1.15rem .75rem;
+  padding:.63rem .92rem;margin:-1.15rem -1.32rem .86rem;
   display:flex;justify-content:space-between;align-items:center}
 .panel-header-liab{
   background:rgba(239,68,68,.06);border-radius:10px 10px 0 0;
-  padding:.55rem .8rem;margin:-1rem -1.15rem .75rem;
+  padding:.63rem .92rem;margin:-1.15rem -1.32rem .86rem;
   display:flex;justify-content:space-between;align-items:center}
 .panel-kiy-tip{
-  font-size:.71rem;font-style:italic;color:var(--slate5);
-  padding:.42rem .65rem;border-radius:8px;margin-bottom:.7rem;line-height:1.5;
+  font-size:.82rem;font-style:italic;color:var(--slate5);
+  padding:.48rem .75rem;border-radius:8px;margin-bottom:.8rem;line-height:1.5;
   background:rgba(248,250,252,.8);border:1px solid var(--slate2)}
 .panel-kiy-tip-asset{border-left:3px solid var(--green)}
 .panel-kiy-tip-liab {border-left:3px solid var(--red)}
@@ -96,14 +96,14 @@ body,.main-content{height:auto!important;overflow:visible!important}
 /* ── Item tables ────────────────────────────────────── */
 .nw-tbl{width:100%;border-collapse:collapse}
 .nw-tbl thead th{
-  font-size:.6rem;font-weight:700;text-transform:uppercase;
-  letter-spacing:.06em;color:#94a3b8;padding:.3rem .42rem;
+  font-size:.69rem;font-weight:700;text-transform:uppercase;
+  letter-spacing:.06em;color:#94a3b8;padding:.35rem .48rem;
   border-bottom:1.5px solid var(--slate2)}
 .nw-tbl tbody tr{border-bottom:1px solid var(--slate1);transition:background .1s}
 .nw-tbl tbody tr:hover{background:rgba(37,99,235,.025)}
-.nw-tbl tbody td{padding:.42rem .42rem;vertical-align:middle;font-size:.81rem}
-.item-name{font-weight:700;color:var(--slate8);font-size:.82rem}
-.item-cat {font-size:.66rem;color:#94a3b8;margin-top:.05rem}
+.nw-tbl tbody td{padding:.48rem .48rem;vertical-align:middle;font-size:.93rem}
+.item-name{font-weight:700;color:var(--slate8);font-size:.94rem}
+.item-cat {font-size:.76rem;color:#94a3b8;margin-top:.05rem}
 
 /* action buttons */
 .item-acts{display:flex;gap:.2rem;justify-content:flex-end;opacity:0;transition:opacity .12s}
@@ -116,19 +116,19 @@ tr:hover .item-acts{opacity:1}
 .act-btn.del {color:var(--red)}.act-btn.del:hover {background:rgba(239,68,68,.1)}
 
 /* CF badges */
-.cf-badge{display:inline-block;padding:.1rem .4rem;border-radius:99px;font-size:.63rem;font-weight:700}
+.cf-badge{display:inline-block;padding:.1rem .46rem;border-radius:99px;font-size:.72rem;font-weight:700}
 .cf-pos {background:rgba(22,163,74,.12);color:var(--green-dk);font-weight:400}
 .cf-neg {background:rgba(220,38,38,.1); color:var(--red-dk)}
 .cf-zero{background:var(--slate2);color:var(--slate5)}
 
 /* Table footer totals */
-.total-row td{padding:.45rem .42rem;font-size:.8rem;font-weight:700;border-top:2px solid var(--slate2)}
-.total-label-asset{font-size:.7rem;font-weight:800;color:var(--green-dk);text-transform:uppercase;letter-spacing:.05em}
-.total-label-liab {font-size:.7rem;font-weight:800;color:var(--red-dk); text-transform:uppercase;letter-spacing:.05em}
+.total-row td{padding:.52rem .48rem;font-size:.92rem;font-weight:700;border-top:2px solid var(--slate2)}
+.total-label-asset{font-size:.81rem;font-weight:800;color:var(--green-dk);text-transform:uppercase;letter-spacing:.05em}
+.total-label-liab {font-size:.81rem;font-weight:800;color:var(--red-dk); text-transform:uppercase;letter-spacing:.05em}
 
 /* Empty state */
-.nw-empty{text-align:center;padding:1.3rem .5rem;color:#94a3b8;font-size:.78rem}
-.nw-empty i{font-size:1.6rem;display:block;margin-bottom:.4rem}
+.nw-empty{text-align:center;padding:1.5rem .5rem;color:#94a3b8;font-size:.9rem}
+.nw-empty i{font-size:1.85rem;display:block;margin-bottom:.46rem}
 
 /* ── Chart containers ───────────────────────────────── */
 .pie-wrap  {position:relative;height:240px;margin-top:.5rem}
@@ -169,6 +169,33 @@ tr:hover .item-acts{opacity:1}
 #trendTooltip .tt-nw .nw-label{font-weight:700;color:var(--slate7)}
 #trendTooltip .tt-nw .nw-val  {font-weight:800;color:var(--blue);font-size:.88rem}
 
+/* ── Category Trend Tooltip ─────────────────────────── */
+#catTooltip{
+  position:absolute;pointer-events:none;display:none;z-index:999;
+  background:#fff;backdrop-filter:blur(8px);
+  border-radius:14px;box-shadow:0 8px 32px rgba(0,0,0,.14);
+  padding:.8rem 1rem;min-width:220px;max-width:300px;
+  border:1px solid var(--slate2);font-size:.75rem;color:var(--slate7)}
+#catTooltip .ct-date{
+  font-weight:800;color:var(--slate8);margin-bottom:.55rem;font-size:.78rem;
+  display:flex;align-items:center;gap:.35rem}
+#catTooltip .ct-section{margin-bottom:.4rem}
+#catTooltip .ct-header{
+  font-weight:800;font-size:.72rem;text-transform:uppercase;letter-spacing:.04em;
+  margin-bottom:.22rem;padding-bottom:.18rem;border-bottom:1.5px solid var(--slate2)}
+#catTooltip .ct-header.asset{color:var(--blue)}
+#catTooltip .ct-header.liab{color:var(--red-dk)}
+#catTooltip .ct-row{
+  display:flex;justify-content:space-between;align-items:center;
+  gap:.5rem;padding:.12rem 0;border-bottom:1px solid #f1f5f9}
+#catTooltip .ct-row:last-child{border-bottom:none}
+#catTooltip .ct-swatch{width:8px;height:8px;border-radius:2px;flex-shrink:0}
+#catTooltip .ct-name{color:var(--slate6);font-size:.72rem;flex:1}
+#catTooltip .ct-pct{font-size:.72rem;font-weight:700;color:var(--slate7)}
+#catTooltip .ct-total{
+  margin-top:.45rem;padding-top:.4rem;border-top:2px solid var(--slate2);
+  display:flex;justify-content:space-between;font-size:.78rem;font-weight:800;color:var(--slate8)}
+
 /* ── Snapshot History table ─────────────────────────── */
 .hist-tbl{width:100%;border-collapse:collapse;font-size:.8rem}
 .hist-tbl thead th{
@@ -180,8 +207,8 @@ tr:hover .item-acts{opacity:1}
 .hist-tbl tbody td{padding:.5rem .55rem;vertical-align:middle}
 .hist-date{font-weight:700;color:var(--slate8)}
 .hist-time{font-size:.66rem;color:#94a3b8;margin-top:.05rem}
-.diff-up  {font-size:.64rem;color:var(--green-dk);font-weight:700}
-.diff-dn  {font-size:.64rem;color:var(--red-dk);  font-weight:700}
+.diff-up  {font-size:.64rem;color:var(--green-dk);font-weight:400}
+.diff-dn  {font-size:.64rem;color:var(--red-dk);  font-weight:400}
 .hist-acts{display:flex;gap:.3rem;justify-content:center}
 .hist-act-btn{
   background:none;border:none;width:28px;height:28px;border-radius:7px;
@@ -275,13 +302,26 @@ tr:hover .item-acts{opacity:1}
      th:data-snapshot-date="${snapshot.snapshotDate}"></div>
 
 <div id="serverItems" style="display:none">
-    <div th:each="item : ${snapshot.items}"
-         th:data-id="${item.id}"
-         th:data-name="${item.name}"
-         th:data-category="${item.category}"
-         th:data-amount="${item.amount}"
-         th:data-cash-flow="${item.monthlyCashFlow}"
-         th:data-type="${item.type}"></div>
+    <!-- Edit mode: load snapshot's own items -->
+    <th:block th:if="${snapshot.id != null}">
+        <div th:each="item : ${snapshot.items}"
+             th:data-id="${item.id}"
+             th:data-name="${item.name}"
+             th:data-category="${item.category}"
+             th:data-amount="${item.amount}"
+             th:data-cash-flow="${item.monthlyCashFlow}"
+             th:data-type="${item.type}"></div>
+    </th:block>
+    <!-- New form: load server draft items (persisted across sessions) -->
+    <th:block th:if="${snapshot.id == null}">
+        <div th:each="item : ${draftItems}"
+             th:data-id="${item.id}"
+             th:data-name="${item.name}"
+             th:data-category="${item.category}"
+             th:data-amount="${item.amount}"
+             th:data-cash-flow="${item.monthlyCashFlow}"
+             th:data-type="${item.type}"></div>
+    </th:block>
 </div>
 
 <div id="snapshotHistory" style="display:none">
@@ -354,11 +394,12 @@ tr:hover .item-acts{opacity:1}
   </div>
 
   <!-- ── 4 Stat cards ──────────────────────────────────── -->
-  <div class="row g-3 mb-3">
+  <div class="row g-4 mb-4">
     <div class="col-6 col-md-3">
       <div class="stat-card stat-blue h-100">
         <div class="stat-tag">NET WORTH สุทธิ</div>
         <div class="stat-val" id="sNetWorth">฿0</div>
+        <div id="sNetWorthDiff" style="min-height:1.1rem"></div>
         <div class="stat-sub">ความมั่งคั่งสุทธิ = ทรัพย์สินรวม - หนี้สินรวม</div>
       </div>
     </div>
@@ -366,6 +407,7 @@ tr:hover .item-acts{opacity:1}
       <div class="stat-card stat-green h-100">
         <div class="stat-tag" style="color:var(--green-dk)">TOTAL ASSETS (สร้างกระแสเงินสด)</div>
         <div class="stat-val" id="sAssets" style="color:var(--green-dk)">฿0</div>
+        <div id="sAssetsDiff" style="min-height:1.1rem"></div>
         <div class="stat-sub" id="sAssetsCount" style="color:var(--green-dk)">จำนวน 0 รายการ</div>
       </div>
     </div>
@@ -373,6 +415,7 @@ tr:hover .item-acts{opacity:1}
       <div class="stat-card stat-red h-100">
         <div class="stat-tag" style="color:var(--red-dk)">TOTAL LIABILITIES (ลดกระแสเงินสด)</div>
         <div class="stat-val" id="sLiabs" style="color:var(--red-dk)">฿0</div>
+        <div id="sLiabsDiff" style="min-height:1.1rem"></div>
         <div class="stat-sub" id="sLiabsCount" style="color:var(--red-dk)">จำนวน 0 รายการ</div>
       </div>
     </div>
@@ -380,13 +423,99 @@ tr:hover .item-acts{opacity:1}
       <div class="stat-card stat-red2 h-100" id="cfStatCard">
         <div class="stat-tag" style="color:var(--red-dk)">NET CASHFLOW/MONTH</div>
         <div class="stat-val" id="sCashFlow" style="color:var(--red-dk)">฿0</div>
+        <div id="sCashFlowDiff" style="min-height:1.1rem"></div>
         <div class="stat-sub" style="color:var(--red-dk)">สภาพคล่องรายเดือน</div>
       </div>
     </div>
   </div>
 
+  <!-- ══════════════════════════════════════════════════════
+       ROW: Debt-to-Asset Gauge  +  Financial Freedom Bar
+       ══════════════════════════════════════════════════════ -->
+  <div class="row g-4 mb-4">
+
+    <!-- Debt-to-Asset Gauge -->
+    <div class="col-12 col-md-5">
+      <div class="nw-card h-100">
+        <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:.7rem">
+          <div>
+            <div class="sec-title mb-1"><i class="bi bi-speedometer2 me-1"></i>ตรวจสุขภาพทางการเงิน</div>
+            <div style="font-size:.72rem;color:var(--slate5)">สัดส่วนหนี้สินต่อทรัพย์สินรวม (Debt-to-Asset Ratio)</div>
+          </div>
+          <div id="gaugeCenter" style="text-align:right;line-height:1.3;flex-shrink:0;margin-left:.75rem">
+            <div id="gaugeRatioPct" style="font-size:1.7rem;font-weight:900;color:var(--slate8)">0%</div>
+            <div id="gaugeLabel"    style="font-size:.7rem;font-weight:700;color:#94a3b8;letter-spacing:.04em">HEALTHY</div>
+          </div>
+        </div>
+        <div style="max-width:240px;margin:0 auto">
+          <canvas id="gaugeChart" height="120"></canvas>
+        </div>
+        <div style="display:flex;justify-content:space-evenly;margin-top:.6rem;font-size:.66rem;font-weight:700">
+          <span style="color:#22c55e">● ปลอดภัย &lt;30%</span>
+          <span style="color:#f59e0b">● ระวัง 30-60%</span>
+          <span style="color:#ef4444">● อันตราย &gt;60%</span>
+        </div>
+        <div id="gaugeTip" style="margin-top:.6rem;font-size:.72rem;padding:.4rem .65rem;border-radius:8px;background:var(--slate1);color:var(--slate6);text-align:center"></div>
+      </div>
+    </div>
+
+    <!-- Financial Freedom Progress Bar -->
+    <div class="col-12 col-md-7">
+      <div class="nw-card h-100">
+        <div class="sec-title mb-1"><i class="bi bi-trophy me-1"></i>Financial Freedom Progress</div>
+        <div style="font-size:.72rem;color:var(--slate5);margin-bottom:.75rem">เป้าหมายอิสรภาพทางการเงินตาม Kiyosaki — passive income ≥ ค่าใช้จ่าย/เดือน</div>
+
+        <!-- Retirement plan selector -->
+        <div style="display:flex;align-items:center;gap:.5rem;margin-bottom:.85rem;flex-wrap:wrap">
+          <label style="font-size:.72rem;font-weight:600;color:var(--slate6);white-space:nowrap">เป้าหมาย (แผนเกษียณ):</label>
+          <select id="ffPlanSel" class="form-select form-select-sm rounded-3"
+                  style="font-size:.75rem;max-width:220px;border:1.5px solid var(--slate3)"
+                  onchange="updateFreedomBar();localStorage.setItem('finplan_ff_plan',this.value)">
+            <option value="">— ไม่เลือกแผน —</option>
+          </select>
+          <a href="/retirement/basic"
+             style="display:inline-flex;align-items:center;gap:.3rem;font-size:.72rem;font-weight:600;
+                    padding:.28rem .7rem;border-radius:8px;white-space:nowrap;text-decoration:none;
+                    background:rgba(37,99,235,.08);border:1.5px solid rgba(37,99,235,.25);color:var(--blue)">
+            <i class="bi bi-plus-circle"></i> สร้าง / จัดการแผน
+          </a>
+        </div>
+
+        <!-- Bar 1: Passive Income vs Monthly Expense -->
+        <div style="margin-bottom:1rem">
+          <div style="display:flex;justify-content:space-between;font-size:.72rem;font-weight:600;margin-bottom:.3rem">
+            <span style="color:var(--slate7)"><i class="bi bi-cash-coin me-1 text-success"></i>Passive Income / เดือน</span>
+            <span id="ffIncomeLabel" style="color:var(--green-dk)">฿0</span>
+          </div>
+          <div style="background:var(--slate2);border-radius:99px;height:14px;overflow:hidden">
+            <div id="ffIncomeBar" style="height:100%;width:0%;background:linear-gradient(90deg,#22c55e,#10b981);border-radius:99px;transition:width .6s ease"></div>
+          </div>
+          <div style="display:flex;justify-content:space-between;font-size:.66rem;color:var(--slate5);margin-top:.22rem">
+            <span id="ffIncomePct">0%</span>
+            <span id="ffExpenseTarget">เป้า: —</span>
+          </div>
+        </div>
+
+        <!-- Bar 2: Net Worth vs Total Needed -->
+        <div>
+          <div style="display:flex;justify-content:space-between;font-size:.72rem;font-weight:600;margin-bottom:.3rem">
+            <span style="color:var(--slate7)"><i class="bi bi-bank me-1 text-primary"></i>Net Worth สะสม</span>
+            <span id="ffNwLabel" style="color:var(--blue)">฿0</span>
+          </div>
+          <div style="background:var(--slate2);border-radius:99px;height:14px;overflow:hidden">
+            <div id="ffNwBar" style="height:100%;width:0%;background:linear-gradient(90deg,#2563eb,#0ea5e9);border-radius:99px;transition:width .6s ease"></div>
+          </div>
+          <div style="display:flex;justify-content:space-between;font-size:.66rem;color:var(--slate5);margin-top:.22rem">
+            <span id="ffNwPct">0%</span>
+            <span id="ffNwTarget">เป้า: เลือกแผนเกษียณ</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <!-- ── Assets + Liabilities tables ──────────────────── -->
-  <div class="row g-3 mb-3">
+  <div class="row g-4 mb-4">
 
     <!-- Assets panel -->
     <div class="col-lg-6">
@@ -464,7 +593,7 @@ tr:hover .item-acts{opacity:1}
   </div>
 
   <!-- ── Wealth Trend Analysis (full-width) ────────────── -->
-  <div class="nw-card mb-3" style="position:relative">
+  <div class="nw-card mb-4" style="position:relative">
     <div class="sec-title mb-2">
       <i class="bi bi-graph-up me-1"></i>Wealth Trend Analysis
     </div>
@@ -476,8 +605,8 @@ tr:hover .item-acts{opacity:1}
     <div id="trendTooltip"></div>
   </div>
 
-  <!-- ── Pie charts row ────────────────────────────────── -->
-  <div class="row g-3 mb-3">
+  <!-- ── Pie charts + Radar row ───────────────────────── -->
+  <div class="row g-4 mb-4">
     <div class="col-lg-6">
       <div class="nw-card h-100">
         <div class="sec-title mb-1">
@@ -490,6 +619,11 @@ tr:hover .item-acts{opacity:1}
         <div class="nw-empty" id="aPieEmpty" style="display:none">
           <i class="bi bi-pie-chart"></i>ยังไม่มีข้อมูลทรัพย์สิน
         </div>
+        <!-- Asset Allocation Radar (below pie) -->
+        <hr style="border-color:var(--slate2);margin:.85rem 0">
+        <div class="sec-title mb-1" style="font-size:.74rem"><i class="bi bi-diagram-3 me-1"></i>Asset Allocation Radar</div>
+        <div style="font-size:.7rem;color:var(--slate5);margin-bottom:.4rem">การกระจายความเสี่ยงของพอร์ตทรัพย์สิน</div>
+        <div style="height:220px"><canvas id="radarChart"></canvas></div>
       </div>
     </div>
     <div class="col-lg-6">
@@ -504,116 +638,31 @@ tr:hover .item-acts{opacity:1}
         <div class="nw-empty" id="lPieEmpty" style="display:none">
           <i class="bi bi-pie-chart"></i>ยังไม่มีข้อมูลหนี้สิน
         </div>
+        <!-- Liabilities Allocation Radar (below pie) -->
+        <hr style="border-color:var(--slate2);margin:.85rem 0">
+        <div class="sec-title mb-1" style="font-size:.74rem"><i class="bi bi-slash-circle me-1" style="color:var(--red-dk)"></i>Liabilities Allocation Radar</div>
+        <div style="font-size:.7rem;color:var(--slate5);margin-bottom:.4rem">โครงสร้างหนี้สินแยกตามประเภท</div>
+        <div id="liabRadarEmpty" class="nw-empty"><i class="bi bi-shield-check"></i>ยังไม่มีหนี้สิน</div>
+        <div id="liabRadarWrap" style="height:220px;display:none"><canvas id="liabRadarChart"></canvas></div>
       </div>
     </div>
   </div>
 
-  <!-- ── Monthly Cash Flow Analysis (full-width) ───────── -->
-  <div class="nw-card mb-3">
-    <div class="d-flex justify-content-between align-items-center mb-2">
-      <div class="sec-title">
-        <i class="bi bi-bar-chart-horizontal me-1"></i>วิเคราะห์กระแสเงินสด (Monthly Cash Flow Analysis)
-      </div>
-      <span class="badge rounded-pill px-3 py-2" id="cfBadge"
-            style="font-size:.75rem;font-weight:800;background:rgba(239,68,68,.1);color:var(--red-dk)">
-        NET CASH FLOW ฿0
-      </span>
-    </div>
-    <div class="cf-wrap" id="cfWrap"><canvas id="cfChart"></canvas></div>
-    <div class="nw-empty" id="cfEmpty" style="display:none">
-      <i class="bi bi-wind"></i>ยังไม่มีข้อมูลกระแสเงินสด<br>
-      <small>กรอกช่อง CF/เดือน ในแต่ละรายการ</small>
-    </div>
-  </div>
-
-  <!-- ══════════════════════════════════════════════════════
-       ROW: Debt-to-Asset Gauge  +  Financial Freedom Bar
-       ══════════════════════════════════════════════════════ -->
-  <div class="row g-3 mb-3">
-
-    <!-- Debt-to-Asset Gauge -->
-    <div class="col-12 col-md-5">
-      <div class="nw-card h-100">
-        <div class="sec-title mb-1"><i class="bi bi-speedometer2 me-1"></i>ตรวจสุขภาพทางการเงิน</div>
-        <div style="font-size:.72rem;color:var(--slate5);margin-bottom:.7rem">สัดส่วนหนี้สินต่อทรัพย์สินรวม (Debt-to-Asset Ratio)</div>
-        <div style="position:relative;max-width:240px;margin:0 auto">
-          <canvas id="gaugeChart" height="130"></canvas>
-          <div id="gaugeCenter" style="position:absolute;bottom:0;left:50%;transform:translateX(-50%);text-align:center;line-height:1.2">
-            <div id="gaugeRatioPct" style="font-size:1.6rem;font-weight:900;color:var(--slate8)">0%</div>
-            <div id="gaugeLabel"    style="font-size:.7rem;font-weight:700;color:#94a3b8">HEALTHY</div>
-          </div>
-        </div>
-        <div style="display:flex;justify-content:space-evenly;margin-top:.6rem;font-size:.66rem;font-weight:700">
-          <span style="color:#22c55e">● ปลอดภัย &lt;30%</span>
-          <span style="color:#f59e0b">● ระวัง 30-60%</span>
-          <span style="color:#ef4444">● อันตราย &gt;60%</span>
-        </div>
-        <div id="gaugeTip" style="margin-top:.6rem;font-size:.72rem;padding:.4rem .65rem;border-radius:8px;background:var(--slate1);color:var(--slate6);text-align:center"></div>
-      </div>
-    </div>
-
-    <!-- Financial Freedom Progress Bar -->
-    <div class="col-12 col-md-7">
-      <div class="nw-card h-100">
-        <div class="sec-title mb-1"><i class="bi bi-trophy me-1"></i>Financial Freedom Progress</div>
-        <div style="font-size:.72rem;color:var(--slate5);margin-bottom:.75rem">เป้าหมายอิสรภาพทางการเงินตาม Kiyosaki — passive income ≥ ค่าใช้จ่าย/เดือน</div>
-
-        <!-- Retirement plan selector -->
-        <div style="display:flex;align-items:center;gap:.5rem;margin-bottom:.85rem;flex-wrap:wrap">
-          <label style="font-size:.72rem;font-weight:600;color:var(--slate6);white-space:nowrap">เป้าหมาย (แผนเกษียณ):</label>
-          <select id="ffPlanSel" class="form-select form-select-sm rounded-3"
-                  style="font-size:.75rem;max-width:220px;border:1.5px solid var(--slate3)"
-                  onchange="updateFreedomBar()">
-            <option value="">— ไม่เลือกแผน —</option>
-          </select>
-        </div>
-
-        <!-- Bar 1: Passive Income vs Monthly Expense -->
-        <div style="margin-bottom:1rem">
-          <div style="display:flex;justify-content:space-between;font-size:.72rem;font-weight:600;margin-bottom:.3rem">
-            <span style="color:var(--slate7)"><i class="bi bi-cash-coin me-1 text-success"></i>Passive Income / เดือน</span>
-            <span id="ffIncomeLabel" style="color:var(--green-dk)">฿0</span>
-          </div>
-          <div style="background:var(--slate2);border-radius:99px;height:14px;overflow:hidden">
-            <div id="ffIncomeBar" style="height:100%;width:0%;background:linear-gradient(90deg,#22c55e,#10b981);border-radius:99px;transition:width .6s ease"></div>
-          </div>
-          <div style="display:flex;justify-content:space-between;font-size:.66rem;color:var(--slate5);margin-top:.22rem">
-            <span id="ffIncomePct">0%</span>
-            <span id="ffExpenseTarget">เป้า: —</span>
-          </div>
-        </div>
-
-        <!-- Bar 2: Net Worth vs Total Needed -->
-        <div>
-          <div style="display:flex;justify-content:space-between;font-size:.72rem;font-weight:600;margin-bottom:.3rem">
-            <span style="color:var(--slate7)"><i class="bi bi-bank me-1 text-primary"></i>Net Worth สะสม</span>
-            <span id="ffNwLabel" style="color:var(--blue)">฿0</span>
-          </div>
-          <div style="background:var(--slate2);border-radius:99px;height:14px;overflow:hidden">
-            <div id="ffNwBar" style="height:100%;width:0%;background:linear-gradient(90deg,#2563eb,#0ea5e9);border-radius:99px;transition:width .6s ease"></div>
-          </div>
-          <div style="display:flex;justify-content:space-between;font-size:.66rem;color:var(--slate5);margin-top:.22rem">
-            <span id="ffNwPct">0%</span>
-            <span id="ffNwTarget">เป้า: เลือกแผนเกษียณ</span>
-          </div>
-        </div>
-      </div>
+  <!-- ── Category Trend Over Time (full-width) ────────── -->
+  <div class="nw-card mb-4">
+    <div class="sec-title mb-1"><i class="bi bi-activity me-1"></i>Category Trend Over Time</div>
+    <div style="font-size:.72rem;color:var(--slate5);margin-bottom:.6rem">สัดส่วน % ของแต่ละประเภทเทียบกับมูลค่ารวม (Assets + Liabilities) — <span style="color:#3b82f6">■ ทรัพย์สิน (สีเย็น)</span> &nbsp; <span style="color:#ef4444">■ หนี้สิน (สีร้อน)</span></div>
+    <div id="catTrendEmpty" style="display:none" class="nw-empty"><i class="bi bi-activity"></i>ต้องการ Snapshot ≥ 2 จุด</div>
+    <div id="catTrendWrap" style="position:relative;height:280px">
+      <canvas id="catTrendChart"></canvas>
+      <div id="catTooltip"></div>
     </div>
   </div>
 
   <!-- ══════════════════════════════════════════════════════
-       ROW: Asset Allocation Radar  +  Kiyosaki Bubble
+       ROW: Kiyosaki Bubble  +  Monthly Cash Flow Analysis
        ══════════════════════════════════════════════════════ -->
-  <div class="row g-3 mb-3">
-
-    <!-- Asset Allocation Radar -->
-    <div class="col-12 col-md-6">
-      <div class="nw-card h-100">
-        <div class="sec-title mb-1"><i class="bi bi-diagram-3 me-1"></i>Asset Allocation Radar</div>
-        <div style="font-size:.72rem;color:var(--slate5);margin-bottom:.6rem">การกระจายความเสี่ยงของพอร์ตทรัพย์สิน</div>
-        <div style="height:260px"><canvas id="radarChart"></canvas></div>
-      </div>
-    </div>
+  <div class="row g-4 mb-4">
 
     <!-- Kiyosaki Quadrant Bubble -->
     <div class="col-12 col-md-6">
@@ -623,36 +672,30 @@ tr:hover .item-acts{opacity:1}
         <div style="height:260px;position:relative"><canvas id="bubbleChart"></canvas></div>
       </div>
     </div>
-  </div>
 
-  <!-- ══════════════════════════════════════════════════════
-       ROW: Net Worth Projection  +  Category Trend
-       ══════════════════════════════════════════════════════ -->
-  <div class="row g-3 mb-3">
-
-    <!-- Net Worth Growth Projection -->
+    <!-- Monthly Cash Flow Analysis -->
     <div class="col-12 col-md-6">
       <div class="nw-card h-100">
-        <div class="sec-title mb-1"><i class="bi bi-graph-up-arrow me-1"></i>Net Worth Growth Projection</div>
-        <div style="font-size:.72rem;color:var(--slate5);margin-bottom:.6rem">ประวัติจริง (เส้นทึบ) + ฉายอนาคต 3 ปี (เส้นประ) จาก CAGR</div>
-        <div id="projEmpty" style="display:none" class="nw-empty"><i class="bi bi-graph-up"></i>ต้องการ Snapshot ≥ 2 จุด</div>
-        <div id="projWrap"  style="height:240px"><canvas id="projChart"></canvas></div>
-      </div>
-    </div>
-
-    <!-- Category Trend Multi-line -->
-    <div class="col-12 col-md-6">
-      <div class="nw-card h-100">
-        <div class="sec-title mb-1"><i class="bi bi-activity me-1"></i>Category Trend Over Time</div>
-        <div style="font-size:.72rem;color:var(--slate5);margin-bottom:.6rem">แนวโน้มมูลค่าแต่ละประเภทสินทรัพย์ตามเวลา</div>
-        <div id="catTrendEmpty" style="display:none" class="nw-empty"><i class="bi bi-activity"></i>ต้องการ Snapshot ≥ 2 จุด</div>
-        <div id="catTrendWrap" style="height:240px"><canvas id="catTrendChart"></canvas></div>
+        <div class="d-flex justify-content-between align-items-center mb-2">
+          <div class="sec-title">
+            <i class="bi bi-bar-chart me-1"></i>วิเคราะห์กระแสเงินสด (Monthly Cash Flow Analysis)
+          </div>
+          <span class="badge rounded-pill px-3 py-2" id="cfBadge"
+                style="font-size:.75rem;font-weight:800;background:rgba(239,68,68,.1);color:var(--red-dk)">
+            NET CASH FLOW ฿0
+          </span>
+        </div>
+        <div style="position:relative;height:260px" id="cfWrap"><canvas id="cfChart"></canvas></div>
+        <div class="nw-empty" id="cfEmpty" style="display:none">
+          <i class="bi bi-wind"></i>ยังไม่มีข้อมูลกระแสเงินสด<br>
+          <small>บันทึก Snapshot อย่างน้อย 1 ครั้ง และกรอกช่อง CF/เดือน ในรายการ</small>
+        </div>
       </div>
     </div>
   </div>
 
   <!-- ── Snapshot History ───────────────────────────────── -->
-  <div class="nw-card mb-3">
+  <div class="nw-card mb-4">
     <div class="d-flex justify-content-between align-items-center mb-2">
       <div class="sec-title mb-0">
         <i class="bi bi-clock-history me-1"></i>ประวัติ Snapshot ทั้งหมด
@@ -672,11 +715,14 @@ tr:hover .item-acts{opacity:1}
           <th class="text-end">ความมั่งคั่งสุทธิ</th>
           <th class="text-end">ทรัพย์สินรวม</th>
           <th class="text-end">หนี้สินรวม</th>
+          <th class="text-end">Cash Flow In</th>
+          <th class="text-end">Cash Flow Out</th>
+          <th class="text-end">Net Cash Flow</th>
           <th>บันทึกช่วยจำ</th>
           <th class="text-center" style="width:80px">จัดการ</th>
         </tr></thead>
         <tbody id="histTbody">
-          <tr><td colspan="7"><div class="nw-empty"><i class="bi bi-inbox"></i>ยังไม่มีประวัติ Snapshot</div></td></tr>
+          <tr><td colspan="10"><div class="nw-empty"><i class="bi bi-inbox"></i>ยังไม่มีประวัติ Snapshot</div></td></tr>
         </tbody>
       </table>
     </div>
@@ -976,7 +1022,15 @@ const DRAFT_KEY = 'finplan_nw_draft';
 function saveDraft() {
   const snapId = document.getElementById('hidSnapId').value;
   if (!snapId || snapId === '') {
+    // Save to localStorage as fast local cache
     localStorage.setItem(DRAFT_KEY, JSON.stringify(items));
+    // Also persist to server so items survive logout/login (CSRF disabled globally)
+    fetch('/assets/draft', {
+      method: 'POST',
+      keepalive: true,
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(items)
+    }).catch(() => {});
   }
 }
 
@@ -1002,14 +1056,22 @@ document.addEventListener('DOMContentLoaded', () => {
 
   const snapId = document.getElementById('hidSnapId').value;
   if (snapId && snapId !== '') {
-    // On existing snapshot page: clear any unsaved draft
-    clearDraft();
-  } else if (items.length === 0) {
-    // On new snapshot page: restore draft from localStorage if exists
+    // Viewing an existing snapshot — do NOT touch localStorage draft here
+    // (items are loaded from snapshot.items server-side, localStorage stays intact)
+  } else {
+    // On new-snapshot page: localStorage is primary (user's live edits live here),
+    // server draft is fallback when localStorage is empty (e.g. new device/browser).
     try {
-      const draft = localStorage.getItem(DRAFT_KEY);
-      if (draft) items = JSON.parse(draft);
-    } catch(e) { /* ignore corrupt draft */ }
+      const localRaw = localStorage.getItem(DRAFT_KEY);
+      const localItems = localRaw ? JSON.parse(localRaw) : [];
+      if (localItems.length > 0) {
+        // localStorage has data → use it (may include items not yet synced to server)
+        items = localItems;
+      }
+      // else: keep items loaded from server (cross-device restore)
+    } catch(e) { /* ignore corrupt localStorage */ }
+    // Always sync current items back to localStorage
+    localStorage.setItem(DRAFT_KEY, JSON.stringify(items));
   }
 
   // Load snapshot history (including per-snapshot items for tooltip)
@@ -1017,12 +1079,15 @@ document.addEventListener('DOMContentLoaded', () => {
     const snapItems = [];
     el.querySelectorAll('span').forEach(s => {
       snapItems.push({
-        name:     s.dataset.name     || '',
-        category: s.dataset.category || '',
-        amount:   parseFloat(s.dataset.amount) || 0,
-        type:     s.dataset.type     || 'ASSET',
+        name:      s.dataset.name     || '',
+        category:  s.dataset.category || '',
+        amount:    parseFloat(s.dataset.amount)    || 0,
+        cashFlow:  parseFloat(s.dataset.cashFlow)  || 0,
+        type:      s.dataset.type     || 'ASSET',
       });
     });
+    const snapCashIn  = snapItems.filter(it => it.type === 'ASSET').reduce((s, it) => s + (it.cashFlow || 0), 0);
+    const snapCashOut = snapItems.filter(it => it.type === 'LIABILITY').reduce((s, it) => s + Math.abs(it.cashFlow || 0), 0);
     snapshotData.push({
       id:               el.dataset.id,
       date:             el.dataset.date || '',
@@ -1031,6 +1096,9 @@ document.addEventListener('DOMContentLoaded', () => {
       netWorth:         parseFloat(el.dataset.netWorth)    || 0,
       totalAssets:      parseFloat(el.dataset.assets)      || 0,
       totalLiabilities: parseFloat(el.dataset.liabilities) || 0,
+      cashIn:           snapCashIn,
+      cashOut:          snapCashOut,
+      netCF:            snapCashIn - snapCashOut,
       items:            snapItems,
     });
   });
@@ -1197,6 +1265,21 @@ function updateStats() {
   document.getElementById('sAssetsCount').textContent = 'จำนวน ' + aItems.length + ' รายการ';
   document.getElementById('sLiabsCount').textContent  = 'จำนวน ' + lItems.length + ' รายการ';
 
+  // Stat card diffs: latest snapshot vs previous snapshot (same logic as history table)
+  const snapAsc  = [...snapshotData].sort((x,y) => x.date < y.date ? -1 : 1);
+  const snapLast = snapAsc.length > 0 ? snapAsc[snapAsc.length - 1] : null;
+  const snapPrev = snapAsc.length > 1 ? snapAsc[snapAsc.length - 2] : null;
+  document.getElementById('sNetWorthDiff').innerHTML = (snapLast && snapPrev)
+    ? statDiffBadge(snapLast.netWorth - snapPrev.netWorth, snapPrev.netWorth) : '';
+  document.getElementById('sAssetsDiff').innerHTML = (snapLast && snapPrev)
+    ? statDiffBadge(snapLast.totalAssets - snapPrev.totalAssets, snapPrev.totalAssets) : '';
+  document.getElementById('sLiabsDiff').innerHTML = (snapLast && snapPrev)
+    ? statDiffBadge(snapLast.totalLiabilities - snapPrev.totalLiabilities, snapPrev.totalLiabilities) : '';
+  const lastNetCF = snapLast ? ((snapLast.cashIn || 0) - (snapLast.cashOut || 0)) : 0;
+  const prevNetCF = snapPrev ? ((snapPrev.cashIn || 0) - (snapPrev.cashOut || 0)) : 0;
+  document.getElementById('sCashFlowDiff').innerHTML = (snapLast && snapPrev)
+    ? statDiffBadge(lastNetCF - prevNetCF, prevNetCF) : '';
+
   const cfEl   = document.getElementById('sCashFlow');
   const cfCard = document.getElementById('cfStatCard');
   const cfBadgeEl = document.getElementById('cfBadge');
@@ -1320,22 +1403,53 @@ function initCharts() {
     }
   });
 
-  // ── Horizontal Cash Flow Bar ──────────────────────────
-  cCF = new Chart(document.getElementById('cfChart'), {
-    type: 'bar',
-    data: { labels: [], datasets: [{ data: [], backgroundColor: [], borderRadius: 5, borderWidth: 0 }] },
-    options: {
-      indexAxis: 'y', responsive: true, maintainAspectRatio: false,
-      plugins: {
-        legend: { display: false },
-        tooltip: { callbacks: { label: c => ' ' + fmtCF(c.parsed.x) } }
-      },
-      scales: {
-        x: { grid: { color: '#f1f5f9' }, ticks: { font:{size:9}, callback: v => fmt(v) } },
-        y: { grid: { display:false }, ticks: { font:{size:9} } }
-      }
+  // ── Cash Flow Bar+Line (Grouped: CashIn / CashOut / Net) ──
+  {
+    const cfSorted = [...snapshotData].sort((a,b) => a.date < b.date ? -1 : 1);
+    const cfLabels  = cfSorted.map(s => s.date);
+    const cfInArr   = cfSorted.map(s => s.cashIn  || 0);
+    const cfOutArr  = cfSorted.map(s => s.cashOut  || 0);
+    const cfNetArr  = cfSorted.map(s => s.netCF   || 0);
+    const hasCFData = cfSorted.some(s => (s.cashIn || 0) !== 0 || (s.cashOut || 0) !== 0);
+    if (!hasCFData) {
+      document.getElementById('cfWrap').style.display  = 'none';
+      document.getElementById('cfEmpty').style.display = '';
     }
-  });
+    cCF = new Chart(document.getElementById('cfChart'), {
+      type: 'bar',
+      data: {
+        labels: cfLabels,
+        datasets: [
+          { label:'Cash Flow In',  data: cfInArr,
+            backgroundColor:'rgba(34,197,94,.22)', hoverBackgroundColor:'rgba(34,197,94,.65)',
+            borderRadius:5, order:2 },
+          { label:'Cash Flow Out', data: cfOutArr,
+            backgroundColor:'rgba(239,68,68,.18)', hoverBackgroundColor:'rgba(239,68,68,.55)',
+            borderRadius:5, order:2 },
+          { label:'Net Cash Flow', data: cfNetArr, type:'line',
+            borderColor:'rgba(37,99,235,.55)', hoverBorderColor:'#2563eb',
+            backgroundColor:'transparent', tension:.35,
+            pointRadius:3, pointHoverRadius:6,
+            pointBackgroundColor:'rgba(37,99,235,.55)', pointHoverBackgroundColor:'#2563eb',
+            fill:false, order:1 }
+        ]
+      },
+      options: {
+        responsive: true, maintainAspectRatio: false,
+        plugins: {
+          legend: { display:true, position:'top',
+            labels:{ color:'#94a3b8', boxWidth:10, font:{size:10}, padding:12 } },
+          tooltip: { callbacks: { label: c => ' ' + c.dataset.label + ': ' + fmt(c.parsed.y) } }
+        },
+        scales: {
+          x: { grid:{ display:false }, border:{ display:false },
+               ticks:{ color:'#94a3b8', font:{size:9}, maxRotation:45 } },
+          y: { grid:{ display:false }, border:{ display:false },
+               ticks:{ color:'#94a3b8', font:{size:9}, callback: v => fmt(v) } }
+        }
+      }
+    });
+  }
 
   // ── Wealth Trend (bar + line) ─────────────────────────
   const trendTooltipEl = document.getElementById('trendTooltip');
@@ -1368,11 +1482,11 @@ function initCharts() {
             backgroundColor:'rgba(239,68,68,.18)', hoverBackgroundColor:'rgba(239,68,68,.55)',
             borderRadius:5, order:2 },
           { label:'Net Worth', data: nwArr, type:'line',
-            borderColor:'rgba(37,99,235,.5)', hoverBorderColor:'#2563eb',
-            backgroundColor:'rgba(37,99,235,.05)', tension:.35,
-            pointRadius:4, pointHoverRadius:6,
-            pointBackgroundColor:'rgba(37,99,235,.5)', pointHoverBackgroundColor:'#2563eb',
-            fill:true, order:1 }
+            borderColor:'rgba(37,99,235,.55)', hoverBorderColor:'#2563eb',
+            backgroundColor:'transparent', tension:.35,
+            pointRadius:3, pointHoverRadius:6,
+            pointBackgroundColor:'rgba(37,99,235,.55)', pointHoverBackgroundColor:'#2563eb',
+            fill:false, order:1 }
         ]
       },
       options: {
@@ -1444,8 +1558,8 @@ function initCharts() {
           }
         },
         scales: {
-          x: { grid: { display:false }, ticks: { font:{size:9} } },
-          y: { grid: { color:'#f1f5f9' }, ticks: { font:{size:9}, callback: v => fmt(v) } }
+          x: { grid: { display:false }, border: { display:false }, ticks: { font:{size:9}, color:'#94a3b8' } },
+          y: { grid: { display:false }, border: { display:false }, ticks: { font:{size:9}, color:'#94a3b8', callback: v => fmt(v) } }
         }
       }
     });
@@ -1500,31 +1614,7 @@ function updateCharts() {
     cLiabs.update('none');
   }
 
-  // ── Cash Flow Horizontal Bar ───────────────────────────
-  // Sort by CF descending
-  const cfItems = items.filter(it => it.cashFlow !== 0 && it.cashFlow != null)
-    .sort((a,b) => b.cashFlow - a.cashFlow);
-
-  const cfWrap  = document.getElementById('cfWrap');
-  const cfEmpty = document.getElementById('cfEmpty');
-
-  if (cfItems.length === 0) {
-    cfWrap.style.display  = 'none';
-    cfEmpty.style.display = '';
-  } else {
-    cfWrap.style.display  = '';
-    cfEmpty.style.display = 'none';
-    // Dynamic height
-    const barH = Math.max(120, cfItems.length * 36 + 30);
-    cfWrap.style.height = barH + 'px';
-    cCF.data.labels = cfItems.map(it => displayName(it));
-    cCF.data.datasets[0].data = cfItems.map(it => it.cashFlow);
-    cCF.data.datasets[0].backgroundColor = cfItems.map(it =>
-      it.cashFlow >= 0 ? 'rgba(22,163,74,.28)' : 'rgba(239,68,68,.25)');
-    cCF.data.datasets[0].hoverBackgroundColor = cfItems.map(it =>
-      it.cashFlow >= 0 ? 'rgba(22,163,74,.85)' : 'rgba(239,68,68,.8)');
-    cCF.update('none');
-  }
+  // CF chart is driven by snapshotData (historical); no live-update needed here.
 }
 
 /* ================================================================
@@ -1533,7 +1623,7 @@ function updateCharts() {
 function renderHistory() {
   const tbody = document.getElementById('histTbody');
   if (!snapshotData || snapshotData.length === 0) {
-    tbody.innerHTML = '<tr><td colspan="7"><div class="nw-empty"><i class="bi bi-inbox"></i>ยังไม่มีประวัติ Snapshot</div></td></tr>';
+    tbody.innerHTML = '<tr><td colspan="10"><div class="nw-empty"><i class="bi bi-inbox"></i>ยังไม่มีประวัติ Snapshot</div></td></tr>';
     cancelBulkSel();
     return;
   }
@@ -1551,8 +1641,17 @@ function renderHistory() {
     return {
       ...snap,
       netWorthDiff:    prev !== null ? snap.netWorth - prev.netWorth : null,
+      netWorthPrev:    prev !== null ? prev.netWorth : null,
       assetDiff:       prev !== null ? snap.totalAssets - prev.totalAssets : null,
+      assetPrev:       prev !== null ? prev.totalAssets : null,
       liabilityDiff:   prev !== null ? snap.totalLiabilities - prev.totalLiabilities : null,
+      liabilityPrev:   prev !== null ? prev.totalLiabilities : null,
+      cashInDiff:      prev !== null ? (snap.cashIn  || 0) - (prev.cashIn  || 0) : null,
+      cashInPrev:      prev !== null ? (prev.cashIn  || 0) : null,
+      cashOutDiff:     prev !== null ? (snap.cashOut || 0) - (prev.cashOut || 0) : null,
+      cashOutPrev:     prev !== null ? (prev.cashOut || 0) : null,
+      netCFDiff:       prev !== null ? (snap.netCF   || 0) - (prev.netCF   || 0) : null,
+      netCFPrev:       prev !== null ? (prev.netCF   || 0) : null,
     };
   });
 
@@ -1581,19 +1680,38 @@ function renderHistory() {
     // Net Worth + diff
     html += '<td class="text-end">';
     html += '<div style="font-weight:700;color:#60a5fa">' + fmt(snap.netWorth) + '</div>';
-    html += diffBadge(snap.netWorthDiff);
+    html += cfDiffBadge(snap.netWorthDiff, snap.netWorthPrev);
     html += '</td>';
 
     // Total Assets + diff
     html += '<td class="text-end">';
     html += '<div style="font-weight:700;color:var(--green-dk)">' + fmt(snap.totalAssets) + '</div>';
-    html += diffBadge(snap.assetDiff);
+    html += cfDiffBadge(snap.assetDiff, snap.assetPrev);
     html += '</td>';
 
     // Total Liabilities + diff
     html += '<td class="text-end">';
     html += '<div style="font-weight:700;color:var(--red-dk)">' + fmt(snap.totalLiabilities) + '</div>';
-    html += diffBadge(snap.liabilityDiff);
+    html += cfDiffBadge(snap.liabilityDiff, snap.liabilityPrev);
+    html += '</td>';
+
+    // Cash Flow In
+    html += '<td class="text-end">';
+    html += '<div style="font-weight:700;color:#22c55e">' + fmt(snap.cashIn || 0) + '</div>';
+    html += cfDiffBadge(snap.cashInDiff, snap.cashInPrev);
+    html += '</td>';
+
+    // Cash Flow Out
+    html += '<td class="text-end">';
+    html += '<div style="font-weight:700;color:#ef4444">' + fmt(snap.cashOut || 0) + '</div>';
+    html += cfDiffBadge(snap.cashOutDiff, snap.cashOutPrev);
+    html += '</td>';
+
+    // Net Cash Flow
+    const netCFColor = (snap.netCF || 0) >= 0 ? '#22c55e' : '#ef4444';
+    html += '<td class="text-end">';
+    html += '<div style="font-weight:700;color:' + netCFColor + '">' + ((snap.netCF||0) >= 0 ? '+' : '') + fmt(snap.netCF || 0) + '</div>';
+    html += cfDiffBadge(snap.netCFDiff, snap.netCFPrev);
     html += '</td>';
 
     // Memo
@@ -1627,6 +1745,28 @@ function diffBadge(diff) {
   const cls  = diff > 0 ? 'diff-up' : 'diff-dn';
   const sign = diff > 0 ? '+' : '';
   return '<div class="' + cls + '"><i class="bi ' + icon + '"></i> ' + sign + fmt(diff) + '</div>';
+}
+
+function cfDiffBadge(diff, prevVal) {
+  if (diff === null || diff === undefined) return '';
+  if (diff === 0) return '<div style="font-size:.63rem;color:#94a3b8;font-weight:400">—</div>';
+  const icon = diff > 0 ? 'bi-arrow-up-right' : 'bi-arrow-down-right';
+  const cls  = diff > 0 ? 'diff-up' : 'diff-dn';
+  const sign = diff > 0 ? '+' : '';
+  const pct  = (prevVal !== 0 && prevVal !== null) ? ' (' + sign + (diff / Math.abs(prevVal) * 100).toFixed(1) + '%)' : '';
+  return '<div class="' + cls + '" style="font-size:.63rem;font-weight:400"><i class="bi ' + icon + '"></i> ' + sign + fmt(diff) + pct + '</div>';
+}
+
+function statDiffBadge(diff, prevVal) {
+  if (diff === null || diff === undefined || diff === 0) return '';
+  const up   = diff > 0;
+  const icon = up ? 'bi-arrow-up-right' : 'bi-arrow-down-right';
+  const sign = up ? '+' : '';
+  const pct  = (prevVal !== 0 && prevVal !== null)
+    ? ' (' + sign + (diff / Math.abs(prevVal) * 100).toFixed(1) + '%)'  : '';
+  const color = up ? '#16a34a' : '#dc2626';
+  return '<div style="font-size:.68rem;font-weight:400;color:' + color + '">'
+       + '<i class="bi ' + icon + '"></i> ' + sign + fmt(diff) + pct + '</div>';
 }
 
 /* ================================================================
@@ -2008,7 +2148,7 @@ const RADAR_GROUPS = {
 const RADAR_LABELS = Object.keys(RADAR_GROUPS);
 
 // Chart references
-let cGauge = null, cRadar = null, cBubble = null, cProj = null, cCatTrend = null;
+let cGauge = null, cRadar = null, cBubble = null, cLiabRadar = null, cCatTrend = null;
 
 // Retirement plans data
 let retirementPlans = [];
@@ -2032,6 +2172,11 @@ document.addEventListener('DOMContentLoaded', () => {
     opt.textContent = p.name + ' (เป้า: ' + fmt(p.totalNeeded) + ')';
     sel.appendChild(opt);
   });
+  // Restore previously selected plan
+  const savedPlan = localStorage.getItem('finplan_ff_plan');
+  if (savedPlan && [...sel.options].some(o => o.value === savedPlan)) {
+    sel.value = savedPlan;
+  }
   initAdvancedCharts();
 }, { once: false }); // allow stacking with existing DOMContentLoaded
 
@@ -2040,7 +2185,7 @@ function initAdvancedCharts() {
   initGauge();
   initRadar();
   initBubble();
-  initProjection();
+  initLiabRadar();
   initCatTrend();
   updateFreedomBar();
 }
@@ -2048,30 +2193,83 @@ function initAdvancedCharts() {
 /* ================================================================
    1. Debt-to-Asset Ratio Gauge
    ================================================================ */
+
+// Register needle plugin once
+if (!window._gaugeNeedleRegistered) {
+  window._gaugeNeedleRegistered = true;
+  Chart.register({
+    id: 'gaugeNeedle',
+    afterDraw(chart) {
+      if (chart.canvas.id !== 'gaugeChart') return;
+      const { ctx } = chart;
+      const meta = chart.getDatasetMeta(0);
+      if (!meta.data || meta.data.length === 0) return;
+      const arc = meta.data[0];
+      const cx = arc.x, cy = arc.y;
+      const outerR = arc.outerRadius;
+      const innerR = arc.innerRadius;
+      const ratio = chart._gaugeRatio !== undefined ? chart._gaugeRatio : 0;
+
+      // rotation:-90 + circumference:180 → arc from 9-o'clock (left) clockwise to 3-o'clock (right)
+      // Canvas math: 0%→π, 50%→1.5π(top), 100%→2π(right)
+      const angle = Math.PI + (ratio / 100) * Math.PI;
+
+      const tipLen  = outerR * 0.80;
+      const baseHalf = 4;
+      const perpA = angle + Math.PI / 2;
+      const perpB = angle - Math.PI / 2;
+
+      ctx.save();
+
+      // Triangle needle
+      ctx.beginPath();
+      ctx.moveTo(cx + baseHalf * Math.cos(perpA), cy + baseHalf * Math.sin(perpA));
+      ctx.lineTo(cx + tipLen   * Math.cos(angle),  cy + tipLen   * Math.sin(angle));
+      ctx.lineTo(cx + baseHalf * Math.cos(perpB), cy + baseHalf * Math.sin(perpB));
+      ctx.closePath();
+      ctx.fillStyle = '#1e293b';
+      ctx.shadowColor = 'rgba(0,0,0,.25)';
+      ctx.shadowBlur  = 4;
+      ctx.fill();
+
+      // Outer ring of center hub
+      ctx.beginPath();
+      ctx.arc(cx, cy, 9, 0, 2 * Math.PI);
+      ctx.fillStyle = '#1e293b';
+      ctx.shadowBlur = 6;
+      ctx.fill();
+
+      // Inner dot (white)
+      ctx.shadowBlur = 0;
+      ctx.beginPath();
+      ctx.arc(cx, cy, 5, 0, 2 * Math.PI);
+      ctx.fillStyle = '#fff';
+      ctx.fill();
+
+      ctx.restore();
+    }
+  });
+}
+
 function initGauge() {
   const ctx = document.getElementById('gaugeChart');
-  // Semicircle gauge: rotation=-90, circumference=180
-  // Zone data: green(30) + yellow(30) + red(40) + hidden fill(100)
+  // Zones: green 0-30%, yellow 30-60%, red 60-100% — data values are proportional
   cGauge = new Chart(ctx, {
     type: 'doughnut',
     data: {
       datasets: [{
-        data: [30, 30, 40, 100],
-        backgroundColor: ['rgba(34,197,94,.7)','rgba(245,158,11,.7)','rgba(239,68,68,.7)','rgba(0,0,0,0)'],
+        data: [30, 30, 40],
+        backgroundColor: ['rgba(34,197,94,.85)','rgba(245,158,11,.85)','rgba(239,68,68,.85)'],
         borderWidth: 0,
         circumference: 180,
         rotation: -90,
-      },{
-        data: [0, 100],
-        backgroundColor: ['rgba(37,99,235,.85)','rgba(226,232,240,.35)'],
-        borderWidth: 0,
-        circumference: 180,
-        rotation: -90,
+        hoverOffset: 0,
       }]
     },
     options: {
       responsive: true, maintainAspectRatio: false, cutout: '68%',
       plugins: { legend: { display: false }, tooltip: { enabled: false } },
+      animation: { duration: 0 },
     }
   });
   updateGauge();
@@ -2083,11 +2281,9 @@ function updateGauge() {
   const l = items.filter(it => it.type === 'LIABILITY').reduce((s, it) => s + (it.amount || 0), 0);
   const ratio = a > 0 ? Math.min((l / a) * 100, 100) : (l > 0 ? 100 : 0);
 
-  // Update needle dataset (ratio%, remaining%)
-  cGauge.data.datasets[1].data = [ratio, 100 - ratio];
+  cGauge._gaugeRatio = ratio;
   cGauge.update('none');
 
-  // Text
   document.getElementById('gaugeRatioPct').textContent = ratio.toFixed(1) + '%';
   let label, color, tip;
   if (ratio < 30) {
@@ -2100,9 +2296,9 @@ function updateGauge() {
     label = 'DANGER'; color = '#ef4444';
     tip = '🚨 หนี้สินสูงเกินไป ต้องปรับโครงสร้างการเงินโดยด่วน';
   }
-  document.getElementById('gaugeLabel').textContent   = label;
+  document.getElementById('gaugeLabel').textContent    = label;
   document.getElementById('gaugeRatioPct').style.color = color;
-  document.getElementById('gaugeTip').textContent     = tip;
+  document.getElementById('gaugeTip').textContent      = tip;
 }
 
 /* ================================================================
@@ -2144,9 +2340,9 @@ function initRadar() {
       datasets: [{
         label: 'พอร์ตของคุณ',
         data: new Array(RADAR_LABELS.length).fill(0),
-        backgroundColor: 'rgba(37,99,235,.15)',
-        borderColor: 'rgba(37,99,235,.7)',
-        pointBackgroundColor: '#2563eb',
+        backgroundColor: 'rgba(34,197,94,.15)',
+        borderColor: 'rgba(22,163,74,.7)',
+        pointBackgroundColor: '#16a34a',
         pointRadius: 4,
         borderWidth: 2,
       }]
@@ -2158,7 +2354,7 @@ function initRadar() {
         r: {
           beginAtZero: true,
           ticks: { display: false },
-          grid:  { color: 'rgba(100,116,139,.15)' },
+          grid:  { color: 'rgba(100,116,139,.06)' },
           pointLabels: { font: { size: 10 }, color: '#475569' },
         }
       }
@@ -2201,13 +2397,13 @@ function initBubble() {
       scales: {
         x: {
           title: { display: true, text: 'มูลค่า (฿)', font: { size: 9 }, color: '#94a3b8' },
-          ticks: { font: { size: 8 }, callback: v => '฿' + (v >= 1e6 ? (v/1e6).toFixed(1)+'M' : v >= 1e3 ? (v/1e3).toFixed(0)+'K' : v) },
-          grid: { color: 'rgba(226,232,240,.6)' }
+          ticks: { font: { size: 8 }, color:'#94a3b8', callback: v => '฿' + (v >= 1e6 ? (v/1e6).toFixed(1)+'M' : v >= 1e3 ? (v/1e3).toFixed(0)+'K' : v) },
+          grid: { display:false }, border: { display:false }
         },
         y: {
           title: { display: true, text: 'Cash Flow/เดือน', font: { size: 9 }, color: '#94a3b8' },
-          ticks: { font: { size: 8 }, callback: v => fmtCF(v) },
-          grid: { color: 'rgba(226,232,240,.6)' }
+          ticks: { font: { size: 8 }, color:'#94a3b8', callback: v => fmtCF(v) },
+          grid: { display:false }, border: { display:false }
         }
       }
     }
@@ -2241,72 +2437,75 @@ function updateBubble() {
 /* ================================================================
    5. Net Worth Growth Projection
    ================================================================ */
-function initProjection() {
-  const sortedAscProj = [...snapshotData].sort((a, b) => a.date < b.date ? -1 : 1);
-  if (sortedAscProj.length < 2) {
-    document.getElementById('projEmpty').style.display = '';
-    document.getElementById('projWrap').style.display  = 'none';
-    return;
-  }
+/* ================================================================
+   5. Liabilities Allocation Radar
+   ================================================================ */
+const LIAB_RADAR_GROUPS = {
+  'บัตรเครดิต':       ['บัตรเครดิต'],
+  'สินเชื่อส่วนบุคคล':['สินเชื่อส่วนบุคคล'],
+  'หนี้ยืมบุคคล':     ['หนี้ยืมบุคคล'],
+  'สินเชื่อบ้าน':     ['สินเชื่อบ้าน'],
+  'สินเชื่อรถยนต์':   ['สินเชื่อรถยนต์'],
+  'อื่นๆ':            ['อื่นๆ'],
+};
+const LIAB_RADAR_LABELS = Object.keys(LIAB_RADAR_GROUPS);
 
-  // Calculate CAGR per month
-  const first = sortedAscProj[0];
-  const last  = sortedAscProj[sortedAscProj.length - 1];
-  const months = Math.max(1, Math.round((new Date(last.date) - new Date(first.date)) / (1000 * 60 * 60 * 24 * 30)));
-  const monthlyGrowth = last.netWorth > 0 && first.netWorth > 0
-    ? Math.pow(last.netWorth / first.netWorth, 1 / months) - 1
-    : 0.01;
-
-  const histLabels = sortedAscProj.map(s => s.date);
-  const histData   = sortedAscProj.map(s => s.netWorth);
-
-  // Project 36 months ahead
-  const projLabels = [], projData = [];
-  const lastDate = new Date(last.date);
-  for (let m = 1; m <= 36; m++) {
-    const d = new Date(lastDate);
-    d.setMonth(d.getMonth() + m);
-    projLabels.push(d.toISOString().split('T')[0]);
-    projData.push(Math.round(last.netWorth * Math.pow(1 + monthlyGrowth, m)));
-  }
-
-  const allLabels = [...histLabels, ...projLabels];
-  const histFull  = [...histData,   ...new Array(36).fill(null)];
-  const projFull  = [...new Array(histData.length - 1).fill(null), last.netWorth, ...projData];
-
-  cProj = new Chart(document.getElementById('projChart'), {
-    type: 'line',
+function initLiabRadar() {
+  cLiabRadar = new Chart(document.getElementById('liabRadarChart'), {
+    type: 'radar',
     data: {
-      labels: allLabels,
-      datasets: [
-        {
-          label: 'ข้อมูลจริง',
-          data: histFull,
-          borderColor: '#2563eb', backgroundColor: 'rgba(37,99,235,.08)',
-          borderWidth: 2.5, pointRadius: 4, pointBackgroundColor: '#2563eb',
-          fill: true, tension: .3, spanGaps: false,
-        },
-        {
-          label: 'ฉายอนาคต',
-          data: projFull,
-          borderColor: '#f59e0b', backgroundColor: 'rgba(245,158,11,.06)',
-          borderWidth: 2, borderDash: [6, 4], pointRadius: 2, pointBackgroundColor: '#f59e0b',
-          fill: true, tension: .3, spanGaps: false,
-        }
-      ]
+      labels: LIAB_RADAR_LABELS,
+      datasets: [{
+        label: 'หนี้สินของคุณ',
+        data: new Array(LIAB_RADAR_LABELS.length).fill(0),
+        backgroundColor: 'rgba(239,68,68,.15)',
+        borderColor: 'rgba(239,68,68,.7)',
+        pointBackgroundColor: '#ef4444',
+        pointRadius: 4,
+        borderWidth: 2,
+      }]
     },
     options: {
       responsive: true, maintainAspectRatio: false,
-      plugins: {
-        legend: { position: 'bottom', labels: { boxWidth: 10, font: { size: 10 }, padding: 8 } },
-        tooltip: { callbacks: { label: c => ' ' + fmt(c.parsed.y) } }
-      },
+      plugins: { legend: { display: false }, tooltip: { callbacks: { label: c => ' ' + fmt(c.raw) } } },
       scales: {
-        x: { grid: { display: false }, ticks: { font: { size: 8 }, maxTicksLimit: 8 } },
-        y: { grid: { color: '#f1f5f9' }, ticks: { font: { size: 8 }, callback: v => fmt(v) } }
+        r: {
+          beginAtZero: true,
+          ticks: { display: false },
+          grid: { color: 'rgba(239,68,68,.08)' },
+          pointLabels: { font: { size: 10 }, color: '#475569' },
+        }
       }
     }
   });
+  updateLiabRadar();
+}
+
+function updateLiabRadar() {
+  if (!cLiabRadar) return;
+  const liabs = items.filter(it => it.type === 'LIABILITY');
+
+  if (liabs.length === 0) {
+    document.getElementById('liabRadarEmpty').style.display = '';
+    document.getElementById('liabRadarWrap').style.display  = 'none';
+    return;
+  }
+  document.getElementById('liabRadarEmpty').style.display = 'none';
+  document.getElementById('liabRadarWrap').style.display  = '';
+
+  const vals = LIAB_RADAR_LABELS.map(label => {
+    const cats = LIAB_RADAR_GROUPS[label];
+    // match by category; unknown categories accumulate into อื่นๆ
+    if (label === 'อื่นๆ') {
+      const knownCats = Object.values(LIAB_RADAR_GROUPS).flat().filter(c => c !== 'อื่นๆ');
+      return liabs.filter(it => !knownCats.includes(it.category))
+                  .reduce((s, it) => s + (it.amount || 0), 0);
+    }
+    return liabs.filter(it => cats.includes(it.category))
+                .reduce((s, it) => s + (it.amount || 0), 0);
+  });
+  cLiabRadar.data.datasets[0].data = vals;
+  cLiabRadar.update('none');
 }
 
 /* ================================================================
@@ -2322,43 +2521,185 @@ function initCatTrend() {
 
   const labels = sortedAscCat.map(s => s.date);
 
-  // Gather all categories that appear across snapshots
-  const catTotals = {};
-  sortedAscCat.forEach(snap => {
-    RADAR_LABELS.forEach(grpLabel => {
-      const cats = RADAR_GROUPS[grpLabel];
-      const total = (snap.items || []).filter(it => it.type === 'ASSET' && cats.includes(it.category))
-                                      .reduce((s, it) => s + (it.amount || 0), 0);
-      if (!catTotals[grpLabel]) catTotals[grpLabel] = [];
-      catTotals[grpLabel].push(total);
-    });
+  // Grand total at each snapshot (assets + liabilities)
+  const grandTotals = sortedAscCat.map(snap =>
+    (snap.items || []).reduce((s, it) => s + (it.amount || 0), 0) || 1
+  );
+
+  // Cool colors for Assets (bottom stack)
+  const ASSET_COLORS = [
+    'rgba(37,99,235,.72)',   // blue
+    'rgba(14,165,233,.72)',  // sky
+    'rgba(6,182,212,.72)',   // cyan
+    'rgba(139,92,246,.72)',  // violet
+    'rgba(99,102,241,.72)',  // indigo
+    'rgba(59,130,246,.72)',  // blue-400
+    'rgba(34,211,238,.72)',  // cyan-400
+    'rgba(129,140,248,.72)', // indigo-400
+  ];
+  // Warm colors for Liabilities (top stack)
+  const LIAB_COLORS = [
+    'rgba(239,68,68,.72)',   // red
+    'rgba(249,115,22,.72)',  // orange
+    'rgba(245,158,11,.72)',  // amber
+    'rgba(225,29,72,.72)',   // rose
+    'rgba(220,38,38,.72)',   // red-600
+    'rgba(251,146,60,.72)',  // orange-400
+  ];
+
+  const datasets = [];
+
+  // Asset categories first (cool, bottom of stack)
+  let ai = 0;
+  RADAR_LABELS.forEach(grpLabel => {
+    const cats = RADAR_GROUPS[grpLabel];
+    const rawVals = sortedAscCat.map(snap =>
+      (snap.items || []).filter(it => it.type === 'ASSET' && cats.includes(it.category))
+                        .reduce((s, it) => s + (it.amount || 0), 0)
+    );
+    if (rawVals.some(v => v > 0)) {
+      const pctVals = rawVals.map((v, i) => parseFloat((v / grandTotals[i] * 100).toFixed(2)));
+      const col = ASSET_COLORS[ai % ASSET_COLORS.length];
+      const borderCol = col.replace('.72)', '1)');
+      datasets.push({
+        label: grpLabel,
+        data: pctVals,
+        borderColor: borderCol,
+        backgroundColor: col,
+        borderWidth: 1.5,
+        pointRadius: 0,
+        pointHoverRadius: 4,
+        fill: true,
+        tension: .4,
+      });
+      ai++;
+    }
   });
 
-  // Filter to groups that have at least 1 non-zero value
-  const CAT_COLORS = ['#2563eb','#22c55e','#f59e0b','#8b5cf6','#ef4444','#06b6d4'];
-  const datasets = Object.entries(catTotals)
-    .filter(([, vals]) => vals.some(v => v > 0))
-    .map(([label, vals], i) => ({
-      label,
-      data: vals,
-      borderColor: CAT_COLORS[i % CAT_COLORS.length],
-      backgroundColor: CAT_COLORS[i % CAT_COLORS.length] + '18',
-      borderWidth: 2, pointRadius: 3,
-      fill: false, tension: .3,
-    }));
+  // Liability categories (warm, top of stack)
+  let li = 0;
+  const knownLiabCats = Object.values(LIAB_RADAR_GROUPS).flat().filter(c => c !== 'อื่นๆ');
+  LIAB_RADAR_LABELS.forEach(grpLabel => {
+    const cats = LIAB_RADAR_GROUPS[grpLabel];
+    const rawVals = sortedAscCat.map(snap => {
+      if (cats.includes('อื่นๆ')) {
+        return (snap.items || []).filter(it => it.type === 'LIABILITY' && !knownLiabCats.includes(it.category))
+                                 .reduce((s, it) => s + (it.amount || 0), 0);
+      }
+      return (snap.items || []).filter(it => it.type === 'LIABILITY' && cats.includes(it.category))
+                               .reduce((s, it) => s + (it.amount || 0), 0);
+    });
+    if (rawVals.some(v => v > 0)) {
+      const pctVals = rawVals.map((v, i) => parseFloat((v / grandTotals[i] * 100).toFixed(2)));
+      const col = LIAB_COLORS[li % LIAB_COLORS.length];
+      const borderCol = col.replace('.72)', '1)');
+      datasets.push({
+        label: grpLabel + ' (หนี้)',
+        data: pctVals,
+        borderColor: borderCol,
+        backgroundColor: col,
+        borderWidth: 1.5,
+        pointRadius: 0,
+        pointHoverRadius: 4,
+        fill: true,
+        tension: .4,
+      });
+      li++;
+    }
+  });
+
+  const catTooltipEl = document.getElementById('catTooltip');
 
   cCatTrend = new Chart(document.getElementById('catTrendChart'), {
     type: 'line',
     data: { labels, datasets },
     options: {
       responsive: true, maintainAspectRatio: false,
+      interaction: { mode: 'index', intersect: false },
       plugins: {
-        legend: { position: 'bottom', labels: { boxWidth: 10, font: { size: 10 }, padding: 6 } },
-        tooltip: { callbacks: { label: c => ' ' + c.dataset.label + ': ' + fmt(c.parsed.y) } }
+        legend: {
+          position: 'bottom',
+          labels: { boxWidth: 12, boxHeight: 8, font: { size: 10 }, padding: 8, usePointStyle: false }
+        },
+        tooltip: {
+          enabled: false,
+          external: ctx => {
+            const tt = ctx.tooltip;
+            if (tt.opacity === 0) { catTooltipEl.style.display = 'none'; return; }
+            const dataIndex = tt.dataPoints && tt.dataPoints[0] ? tt.dataPoints[0].dataIndex : -1;
+            if (dataIndex < 0) { catTooltipEl.style.display = 'none'; return; }
+
+            const dateLabel = labels[dataIndex] || '';
+            const thDate = dateLabel
+              ? new Date(dateLabel).toLocaleDateString('th-TH', {day:'numeric',month:'short',year:'numeric'})
+              : dateLabel;
+
+            // Separate asset vs liability datasets
+            const assetPts = tt.dataPoints.filter(p => !p.dataset.label.includes('(หนี้)'));
+            const liabPts  = tt.dataPoints.filter(p =>  p.dataset.label.includes('(หนี้)'));
+
+            let html = '<div class="ct-date"><i class="bi bi-calendar3"></i>' + esc(thDate) + '</div>';
+
+            if (assetPts.length > 0) {
+              html += '<div class="ct-section">';
+              html += '<div class="ct-header asset">ทรัพย์สิน</div>';
+              assetPts.filter(p => p.parsed.y > 0).sort((a,b) => b.parsed.y - a.parsed.y).forEach(p => {
+                const col = p.dataset.borderColor || p.dataset.backgroundColor;
+                html += '<div class="ct-row">'
+                      + '<span class="ct-swatch" style="background:' + col + '"></span>'
+                      + '<span class="ct-name">' + esc(p.dataset.label) + '</span>'
+                      + '<span class="ct-pct">' + p.parsed.y.toFixed(1) + '%</span>'
+                      + '</div>';
+              });
+              html += '</div>';
+            }
+            if (liabPts.length > 0) {
+              html += '<div class="ct-section">';
+              html += '<div class="ct-header liab">หนี้สิน</div>';
+              liabPts.filter(p => p.parsed.y > 0).sort((a,b) => b.parsed.y - a.parsed.y).forEach(p => {
+                const col = p.dataset.borderColor || p.dataset.backgroundColor;
+                html += '<div class="ct-row">'
+                      + '<span class="ct-swatch" style="background:' + col + '"></span>'
+                      + '<span class="ct-name">' + esc(p.dataset.label.replace(' (หนี้)', '')) + '</span>'
+                      + '<span class="ct-pct">' + p.parsed.y.toFixed(1) + '%</span>'
+                      + '</div>';
+              });
+              html += '</div>';
+            }
+            const total = tt.dataPoints.reduce((s, p) => s + p.parsed.y, 0);
+            html += '<div class="ct-total"><span>รวม</span><span>' + total.toFixed(1) + '%</span></div>';
+
+            catTooltipEl.innerHTML = html;
+            catTooltipEl.style.display = 'block';
+
+            const wrapRect = document.getElementById('catTrendWrap').getBoundingClientRect();
+            let left = tt.caretX + 14;
+            let top  = tt.caretY - 20;
+            if (left + 310 > wrapRect.width) left = tt.caretX - 310;
+            catTooltipEl.style.left = Math.max(0, left) + 'px';
+            catTooltipEl.style.top  = Math.max(0, top)  + 'px';
+          }
+        }
       },
       scales: {
-        x: { grid: { display: false }, ticks: { font: { size: 8 }, maxTicksLimit: 8 } },
-        y: { grid: { color: '#f1f5f9' }, ticks: { font: { size: 8 }, callback: v => fmt(v) } }
+        x: {
+          stacked: true,
+          grid: { display: false },
+          border: { display: false },
+          ticks: { font: { size: 8 }, color: '#94a3b8', maxTicksLimit: 10 }
+        },
+        y: {
+          stacked: true,
+          min: 0,
+          max: 100,
+          grid: { display: false },
+          border: { display: false },
+          ticks: {
+            font: { size: 8 }, color: '#94a3b8',
+            callback: v => v + '%',
+            stepSize: 25,
+          }
+        }
       }
     }
   });
@@ -2371,6 +2712,7 @@ updateStats = function() {
   updateGauge();
   updateRadar();
   updateBubble();
+  updateLiabRadar();
   updateFreedomBar();
 };
 </script>
